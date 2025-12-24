@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initializeApp() {
     // ランディングページのアニメーション
-    animateStatsCards();
-    animateBarChart();
+    animateStatNumbers();
+    animateGrowthChart();
     createParticles();
 
     // ボタングループのイベントリスナー
@@ -42,14 +42,14 @@ function initializeApp() {
 // ========================================
 // ランディングページ
 // ========================================
-function animateStatsCards() {
-    const cards = document.querySelectorAll('.stats-card-number');
-    if (!cards.length) return;
+function animateStatNumbers() {
+    const numbers = document.querySelectorAll('.stat-number');
+    if (!numbers.length) return;
 
-    cards.forEach((card, index) => {
-        const target = parseInt(card.dataset.target) || 0;
+    numbers.forEach((el, index) => {
+        const target = parseInt(el.dataset.target) || 0;
         const duration = 2000;
-        const delay = index * 200;
+        const delay = 800 + index * 150;
 
         setTimeout(() => {
             const startTime = performance.now();
@@ -62,7 +62,7 @@ function animateStatsCards() {
                 const easeOutQuart = 1 - Math.pow(1 - progress, 4);
                 const current = Math.floor(easeOutQuart * target);
 
-                card.textContent = current.toLocaleString();
+                el.textContent = current.toLocaleString();
 
                 if (progress < 1) {
                     requestAnimationFrame(update);
@@ -74,29 +74,36 @@ function animateStatsCards() {
     });
 }
 
-function animateBarChart() {
-    const bars = document.querySelectorAll('.chart-bar');
+function animateGrowthChart() {
+    const bars = document.querySelectorAll('.growth-bar');
     if (!bars.length) return;
 
+    // 棒グラフのアニメーション（右肩上がり）
     setTimeout(() => {
         bars.forEach((bar, index) => {
             const value = parseInt(bar.dataset.value) || 0;
-            const fill = bar.querySelector('.chart-bar-fill');
+            const fill = bar.querySelector('.growth-bar-fill');
+            const valueLabel = bar.querySelector('.growth-bar-value');
 
             setTimeout(() => {
                 if (fill) {
-                    fill.style.height = `${value}%`;
+                    // 最大値を基準にした高さ計算（右肩上がりに見せる）
+                    const maxHeight = 120; // px
+                    const height = (value / 100) * maxHeight;
+                    fill.style.height = `${height}px`;
                 }
-            }, index * 150);
+                // 値のラベルを表示
+                bar.classList.add('animated');
+            }, index * 200);
         });
-    }, 600);
+    }, 500);
 }
 
 function createParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
 
-    const particleCount = 20;
+    const particleCount = 15;
 
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -283,11 +290,11 @@ function updateCalculations() {
     const totalRevenue = insurance + selfPay;
     document.getElementById('totalRevenue').textContent = totalRevenue > 0 ? `${totalRevenue} 万円` : '-- 万円';
 
-    // 自費率
+    // 自費率（小数点以下切り捨て）
     let selfPayRate = 0;
     if (totalRevenue > 0) {
-        selfPayRate = (selfPay / totalRevenue) * 100;
-        document.getElementById('selfPayRate').textContent = `${selfPayRate.toFixed(1)} %`;
+        selfPayRate = Math.floor((selfPay / totalRevenue) * 100);
+        document.getElementById('selfPayRate').textContent = `${selfPayRate} %`;
     } else {
         document.getElementById('selfPayRate').textContent = '-- %';
     }
@@ -307,22 +314,34 @@ function updateVisualizationPanel() {
     document.getElementById('summaryYears').textContent = getYearsLabel(AppState.formData.yearsOpen) || '--';
     document.getElementById('summaryUnits').textContent = AppState.formData.units ? `${AppState.formData.units}台` : '--';
 
-    // メトリクスバー
+    // メトリクスバー（すべての数値データを反映）
     updateMetricBar('NewPatient', AppState.formData.newPatient, 150, '人');
+    updateMetricBar('DailyVisit', AppState.formData.dailyVisit, 150, '人');
     updateMetricBar('Insurance', AppState.formData.insurance, 2000, '万円');
     updateMetricBar('SelfPay', AppState.formData.selfPay, 2000, '万円');
     updateMetricBar('TotalRevenue', AppState.formData.totalRevenue, 4000, '万円');
     updateMetricBar('SelfPayRate', AppState.formData.selfPayRate, 100, '%');
+    updateMetricBar('Cancel', AppState.formData.cancel, 15, '%');
+    updateMetricBar('Recall', AppState.formData.recall, 100, '%');
+    updateMetricBar('Receipt', AppState.formData.receipt, 4000, '枚');
 }
 
 function updateMetricBar(name, value, max, unit) {
     const bar = document.getElementById(`bar${name}`);
     const metric = document.getElementById(`metric${name}`);
 
+    // 要素が存在しない場合はスキップ
+    if (!bar || !metric) return;
+
     if (value && value > 0) {
         const percentage = Math.min((value / max) * 100, 100);
         bar.style.width = `${percentage}%`;
-        metric.textContent = `${value}${unit}`;
+        // 率の表示は小数点以下切り捨て
+        if (unit === '%') {
+            metric.textContent = `${Math.floor(value)}${unit}`;
+        } else {
+            metric.textContent = `${value}${unit}`;
+        }
     } else {
         bar.style.width = '0%';
         metric.textContent = '--';
@@ -510,9 +529,10 @@ function displaySummary(summary) {
         { label: '保険収入', value: summary.insurance ? `${summary.insurance}万円` : '--' },
         { label: '自費収入', value: summary.selfPay ? `${summary.selfPay}万円` : '--' },
         { label: '月間医業収入', value: summary.totalRevenue ? `${summary.totalRevenue}万円` : '--', highlight: true },
-        { label: '自費率', value: summary.selfPayRate ? `${summary.selfPayRate.toFixed(1)}%` : '--', highlight: true },
-        { label: 'キャンセル率', value: summary.cancel ? `${summary.cancel}%` : '--' },
-        { label: 'リコール率', value: summary.recall ? `${summary.recall}%` : '--' }
+        { label: '自費率', value: summary.selfPayRate ? `${Math.floor(summary.selfPayRate)}%` : '--', highlight: true },
+        { label: 'キャンセル率', value: summary.cancel ? `${Math.floor(summary.cancel)}%` : '--' },
+        { label: 'リコール率', value: summary.recall ? `${Math.floor(summary.recall)}%` : '--' },
+        { label: 'レセプト枚数', value: summary.receipt ? `${summary.receipt}枚/月` : '--' }
     ];
 
     container.innerHTML = items.map(item => `

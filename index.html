@@ -14,84 +14,74 @@
         <!-- Landing Page -->
         <section id="landing" class="landing-page">
             <div class="landing-content">
-                <!-- Logo Section -->
-                <div class="brand-logo">
-                    <p class="brand-tagline">あなたの歯科医院も地域一番になれる！</p>
-                    <div class="brand-main">
-                        <svg class="brand-check" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 25L20 40L45 10" stroke="#DC2626" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <h1 class="brand-title">歯科医院地域一番実践会</h1>
-                    </div>
+                <!-- Main Title Section -->
+                <div class="main-title-section">
+                    <p class="tagline">歯科医院地域一番実践会</p>
+                    <h1 class="main-title">
+                        <span class="title-ai">AI</span>
+                        <span class="title-text">無料診断</span>
+                    </h1>
+                    <p class="main-subtitle">3,247件の成功事例データから、あなたの医院に最適な改善策を提案</p>
                 </div>
 
                 <div class="hero-section">
-                    <!-- Animated Stats Cards -->
-                    <div class="stats-cards">
-                        <div class="stats-card">
-                            <div class="stats-card-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                </svg>
-                            </div>
-                            <div class="stats-card-number" data-target="3247">0</div>
-                            <div class="stats-card-label">成功事例</div>
+                    <!-- Dynamic Growth Chart -->
+                    <div class="growth-chart-container">
+                        <div class="growth-chart-header">
+                            <span class="growth-chart-title">改善実績の推移</span>
+                            <span class="growth-chart-badge">5年連続成長</span>
                         </div>
-                        <div class="stats-card">
-                            <div class="stats-card-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                                </svg>
+                        <div class="growth-chart">
+                            <div class="growth-chart-bars">
+                                <div class="growth-bar" data-value="65" data-year="2020">
+                                    <div class="growth-bar-fill"></div>
+                                    <span class="growth-bar-value">65%</span>
+                                    <span class="growth-bar-year">2020</span>
+                                </div>
+                                <div class="growth-bar" data-value="72" data-year="2021">
+                                    <div class="growth-bar-fill"></div>
+                                    <span class="growth-bar-value">72%</span>
+                                    <span class="growth-bar-year">2021</span>
+                                </div>
+                                <div class="growth-bar" data-value="81" data-year="2022">
+                                    <div class="growth-bar-fill"></div>
+                                    <span class="growth-bar-value">81%</span>
+                                    <span class="growth-bar-year">2022</span>
+                                </div>
+                                <div class="growth-bar" data-value="89" data-year="2023">
+                                    <div class="growth-bar-fill"></div>
+                                    <span class="growth-bar-value">89%</span>
+                                    <span class="growth-bar-year">2023</span>
+                                </div>
+                                <div class="growth-bar" data-value="94" data-year="2024">
+                                    <div class="growth-bar-fill"></div>
+                                    <span class="growth-bar-value">94%</span>
+                                    <span class="growth-bar-year">2024</span>
+                                </div>
                             </div>
-                            <div class="stats-card-number" data-target="94">0</div>
-                            <div class="stats-card-label">改善達成率%</div>
-                        </div>
-                        <div class="stats-card">
-                            <div class="stats-card-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <polyline points="12 6 12 12 16 14"/>
-                                </svg>
-                            </div>
-                            <div class="stats-card-number" data-target="90">0</div>
-                            <div class="stats-card-label">秒で完了</div>
-                        </div>
-                    </div>
-
-                    <!-- Dynamic Bar Chart -->
-                    <div class="chart-container">
-                        <div class="chart-title">過去5年間の改善実績</div>
-                        <div class="bar-chart-animated">
-                            <div class="chart-bar" data-value="78" data-label="2020">
-                                <div class="chart-bar-fill"></div>
-                                <span class="chart-bar-label">2020</span>
-                            </div>
-                            <div class="chart-bar" data-value="85" data-label="2021">
-                                <div class="chart-bar-fill"></div>
-                                <span class="chart-bar-label">2021</span>
-                            </div>
-                            <div class="chart-bar" data-value="91" data-label="2022">
-                                <div class="chart-bar-fill"></div>
-                                <span class="chart-bar-label">2022</span>
-                            </div>
-                            <div class="chart-bar" data-value="96" data-label="2023">
-                                <div class="chart-bar-fill"></div>
-                                <span class="chart-bar-label">2023</span>
-                            </div>
-                            <div class="chart-bar" data-value="98" data-label="2024">
-                                <div class="chart-bar-fill"></div>
-                                <span class="chart-bar-label">2024</span>
-                            </div>
+                            <div class="growth-trend-line" id="trendLine"></div>
                         </div>
                     </div>
 
-                    <h2 class="hero-title">
-                        <span class="hero-title-highlight">AI</span>があなたの医院に<br>最適な改善策を提案
-                    </h2>
-                    <p class="hero-subtitle">ざっくり答えるだけ。約90秒で完了。</p>
+                    <!-- Stats Row -->
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="3247">0</span>
+                            <span class="stat-label">成功事例</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="94">0</span>
+                            <span class="stat-unit">%</span>
+                            <span class="stat-label">改善達成率</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="90">0</span>
+                            <span class="stat-unit">秒</span>
+                            <span class="stat-label">で完了</span>
+                        </div>
+                    </div>
 
                     <button class="cta-button primary pulse-animation" onclick="startDiagnosis()">
                         <span>無料でAI診断を始める</span>
