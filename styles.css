@@ -279,7 +279,7 @@ body {
 
 .growth-chart {
     position: relative;
-    height: 160px;
+    height: 120px;
 }
 
 .growth-chart-bars {
@@ -287,8 +287,7 @@ body {
     align-items: flex-end;
     justify-content: space-between;
     height: 100%;
-    gap: var(--space-3);
-    padding-bottom: var(--space-6);
+    gap: var(--space-2);
 }
 
 .growth-bar {
@@ -302,47 +301,14 @@ body {
 
 .growth-bar-fill {
     width: 100%;
-    max-width: 50px;
+    max-width: 40px;
     background: linear-gradient(180deg, var(--primary-400) 0%, var(--primary-600) 100%);
     border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     height: 0;
     transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: absolute;
-    bottom: var(--space-6);
-    box-shadow: 0 0 20px rgba(13, 148, 136, 0.3);
-}
-
-.growth-bar-value {
-    position: absolute;
-    bottom: calc(var(--space-6) + 5px);
-    font-family: var(--font-display);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: white;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease-out;
-}
-
-.growth-bar.animated .growth-bar-value {
-    opacity: 1;
-    transform: translateY(-100%);
-}
-
-.growth-bar-year {
-    position: absolute;
     bottom: 0;
-    font-size: 0.625rem;
-    color: var(--gray-500);
-}
-
-.growth-trend-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+    box-shadow: 0 0 20px rgba(13, 148, 136, 0.3);
 }
 
 /* Stats Row */
@@ -605,19 +571,9 @@ body {
 }
 
 .form-layout {
-    display: grid;
-    grid-template-columns: 1fr 380px;
+    display: flex;
+    justify-content: center;
     min-height: 100vh;
-}
-
-@media (max-width: 900px) {
-    .form-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .visualization-panel {
-        display: none;
-    }
 }
 
 /* Form Container */

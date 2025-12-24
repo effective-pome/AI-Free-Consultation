@@ -187,8 +187,6 @@ function setupButtonGroups() {
                 AppState.formData[field] = parseFloat(button.dataset.value);
                 // 計算を更新
                 updateCalculations();
-                // 可視化パネルを更新
-                updateVisualizationPanel();
             });
         });
     });
@@ -211,25 +209,18 @@ function setupInputListeners() {
     // 基本情報
     document.getElementById('clinicName')?.addEventListener('input', (e) => {
         AppState.formData.clinicName = e.target.value;
-        updateVisualizationPanel();
     });
 
     document.getElementById('region')?.addEventListener('change', (e) => {
         AppState.formData.region = e.target.value;
-        updateVisualizationPanel();
-        updateSimilarClinics();
     });
 
     document.getElementById('yearsOpen')?.addEventListener('change', (e) => {
         AppState.formData.yearsOpen = e.target.value;
-        updateVisualizationPanel();
-        updateSimilarClinics();
     });
 
     document.getElementById('units')?.addEventListener('change', (e) => {
         AppState.formData.units = e.target.value;
-        updateVisualizationPanel();
-        updateSimilarClinics();
     });
 
     // 具体的入力フィールド
@@ -254,7 +245,6 @@ function setupInputListeners() {
                     buttonGroup.querySelectorAll('.option-button').forEach(b => b.classList.remove('selected'));
                 }
                 updateCalculations();
-                updateVisualizationPanel();
             }
         });
     });
@@ -304,54 +294,6 @@ function updateCalculations() {
     AppState.formData.selfPayRate = selfPayRate;
 }
 
-// ========================================
-// 可視化パネル
-// ========================================
-function updateVisualizationPanel() {
-    // 基本情報
-    document.getElementById('summaryClinicName').textContent = AppState.formData.clinicName || '--';
-    document.getElementById('summaryRegion').textContent = getRegionLabel(AppState.formData.region) || '--';
-    document.getElementById('summaryYears').textContent = getYearsLabel(AppState.formData.yearsOpen) || '--';
-    document.getElementById('summaryUnits').textContent = AppState.formData.units ? `${AppState.formData.units}台` : '--';
-
-    // メトリクスバー（すべての数値データを反映）
-    updateMetricBar('NewPatient', AppState.formData.newPatient, 150, '人');
-    updateMetricBar('DailyVisit', AppState.formData.dailyVisit, 150, '人');
-    updateMetricBar('Insurance', AppState.formData.insurance, 2000, '万円');
-    updateMetricBar('SelfPay', AppState.formData.selfPay, 2000, '万円');
-    updateMetricBar('TotalRevenue', AppState.formData.totalRevenue, 4000, '万円');
-    updateMetricBar('SelfPayRate', AppState.formData.selfPayRate, 100, '%');
-    updateMetricBar('Cancel', AppState.formData.cancel, 15, '%');
-    updateMetricBar('Recall', AppState.formData.recall, 100, '%');
-    updateMetricBar('Receipt', AppState.formData.receipt, 4000, '枚');
-}
-
-function updateMetricBar(name, value, max, unit) {
-    const bar = document.getElementById(`bar${name}`);
-    const metric = document.getElementById(`metric${name}`);
-
-    // 要素が存在しない場合はスキップ
-    if (!bar || !metric) return;
-
-    if (value && value > 0) {
-        const percentage = Math.min((value / max) * 100, 100);
-        bar.style.width = `${percentage}%`;
-        // 率の表示は小数点以下切り捨て
-        if (unit === '%') {
-            metric.textContent = `${Math.floor(value)}${unit}`;
-        } else {
-            metric.textContent = `${value}${unit}`;
-        }
-    } else {
-        bar.style.width = '0%';
-        metric.textContent = '--';
-    }
-}
-
-function updateSimilarClinics() {
-    const count = KnowledgeBase.estimateSimilarClinics(AppState.formData);
-    document.getElementById('similarCount').textContent = count.toLocaleString();
-}
 
 
 // ========================================
@@ -707,9 +649,6 @@ function restartDiagnosis() {
 
     // 送信ボタンを無効化
     document.getElementById('submitButton').disabled = true;
-
-    // 可視化パネルをリセット
-    updateVisualizationPanel();
 
     // ローカルストレージをクリア
     localStorage.removeItem('dentalAIFormData');
