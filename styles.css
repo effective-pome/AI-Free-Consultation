@@ -1928,6 +1928,74 @@ input[type="checkbox"] {
     transform: scale(1.02);
 }
 
+/* Free Badge */
+.plan-free-badge {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--success-600);
+    background: var(--success-50);
+    border: 1px solid var(--success-200);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+}
+
+/* Premium Plan (Gold Design) */
+.plan-card.premium {
+    background: linear-gradient(135deg, #fef9e7 0%, #fff8e1 50%, #fffbf0 100%);
+    border-color: #d4a528;
+    box-shadow: 0 4px 20px rgba(212, 165, 40, 0.25), 0 0 40px rgba(255, 215, 0, 0.1);
+}
+
+.plan-card.premium:hover {
+    border-color: #c9a227;
+    box-shadow: 0 8px 30px rgba(212, 165, 40, 0.35), 0 0 60px rgba(255, 215, 0, 0.15);
+}
+
+.plan-card.premium .plan-badge {
+    background: linear-gradient(135deg, #d4a528 0%, #f4d03f 50%, #c9a227 100%);
+    color: #1a1a1a;
+}
+
+.plan-card.premium .plan-popular {
+    background: linear-gradient(135deg, #d4a528, #f4d03f);
+    color: #1a1a1a;
+    box-shadow: 0 4px 12px rgba(212, 165, 40, 0.4);
+}
+
+.plan-card.premium .plan-duration {
+    background: linear-gradient(135deg, #d4a528, #c9a227);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.plan-card.premium .plan-free-badge {
+    color: #b8860b;
+    background: linear-gradient(135deg, #fff8e1, #fef3c7);
+    border-color: #d4a528;
+}
+
+.plan-card.premium .plan-requirements {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(212, 165, 40, 0.2);
+}
+
+.plan-card.premium .plan-cta {
+    background: linear-gradient(135deg, #d4a528 0%, #f4d03f 50%, #c9a227 100%);
+    border: none;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.plan-card.premium .plan-cta:hover {
+    background: linear-gradient(135deg, #c9a227 0%, #e5c53a 50%, #b8960f 100%);
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(212, 165, 40, 0.4);
+}
+
 /* ========================================
    Application Form Modal
    ======================================== */
