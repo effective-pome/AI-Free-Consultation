@@ -740,3 +740,174 @@ function getStatusLabel(status) {
     };
     return labels[status] || status;
 }
+
+// ========================================
+// 相談プラン選択
+// ========================================
+const CONSULTATION_PLANS = {
+    light: {
+        name: 'お手軽相談',
+        duration: '30分',
+        badge: 'LIGHT'
+    },
+    standard: {
+        name: 'しっかり相談',
+        duration: '1時間',
+        badge: 'STANDARD'
+    },
+    premium: {
+        name: 'がっつり相談',
+        duration: '2時間',
+        badge: 'PREMIUM'
+    }
+};
+
+let selectedPlan = null;
+
+function openConsultationPlans() {
+    document.getElementById('consultationPlansModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeConsultationPlans() {
+    document.getElementById('consultationPlansModal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+function selectPlan(planType) {
+    selectedPlan = planType;
+    const plan = CONSULTATION_PLANS[planType];
+
+    // プラン情報をバナーに表示
+    document.getElementById('selectedPlanBanner').innerHTML = `
+        <div class="plan-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+        </div>
+        <div class="plan-info">
+            <h4>${plan.name}（${plan.duration}）</h4>
+            <p>選択中のプラン: ${plan.badge}</p>
+        </div>
+    `;
+
+    // フォームに診断データを自動入力
+    if (AppState.formData.clinicName) {
+        document.getElementById('appClinicName').value = AppState.formData.clinicName;
+    }
+
+    // プラン選択モーダルを閉じて申し込みフォームを開く
+    closeConsultationPlans();
+    document.getElementById('applicationFormModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeApplicationForm() {
+    document.getElementById('applicationFormModal').classList.add('hidden');
+    document.body.style.overflow = '';
+    // フォームをリセット
+    document.getElementById('applicationForm').reset();
+}
+
+function backToPlans() {
+    closeApplicationForm();
+    openConsultationPlans();
+}
+
+function closeApplicationComplete() {
+    document.getElementById('applicationCompleteModal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+async function submitApplication(event) {
+    event.preventDefault();
+
+    const formData = {
+        plan: CONSULTATION_PLANS[selectedPlan],
+        planType: selectedPlan,
+        clinicName: document.getElementById('appClinicName').value,
+        name: document.getElementById('appName').value,
+        position: document.getElementById('appPosition').value,
+        email: document.getElementById('appEmail').value,
+        phone: document.getElementById('appPhone').value,
+        submittedAt: new Date().toISOString()
+    };
+
+    // 完了画面のサマリーを生成
+    document.getElementById('completeSummary').innerHTML = `
+        <div class="summary-row">
+            <span class="summary-label">プラン</span>
+            <span class="summary-value">${formData.plan.name}（${formData.plan.duration}）</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">医院名</span>
+            <span class="summary-value">${formData.clinicName}</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">お名前</span>
+            <span class="summary-value">${formData.name}</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">役職</span>
+            <span class="summary-value">${formData.position}</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">メールアドレス</span>
+            <span class="summary-value">${formData.email}</span>
+        </div>
+        <div class="summary-row">
+            <span class="summary-label">電話番号</span>
+            <span class="summary-value">${formData.phone}</span>
+        </div>
+    `;
+
+    // メール送信（実際の実装ではバックエンドAPIを呼び出す）
+    try {
+        await sendApplicationEmail(formData);
+    } catch (error) {
+        console.error('メール送信エラー:', error);
+    }
+
+    // 申し込みフォームを閉じて完了画面を表示
+    closeApplicationForm();
+    document.getElementById('applicationCompleteModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // ローカルストレージに保存（分析用）
+    const applications = JSON.parse(localStorage.getItem('consultationApplications') || '[]');
+    applications.push(formData);
+    localStorage.setItem('consultationApplications', JSON.stringify(applications));
+}
+
+async function sendApplicationEmail(formData) {
+    // メール送信のシミュレーション
+    // 実際のプロダクションでは、バックエンドAPIを呼び出してメールを送信する
+    console.log('申し込み情報:', formData);
+
+    // mailto リンクを生成して確認メールの代わりとする
+    const subject = encodeURIComponent(`【無料相談申込】${formData.plan.name} - ${formData.clinicName}`);
+    const body = encodeURIComponent(`
+以下の内容で無料相談のお申し込みを受け付けました。
+
+■ プラン: ${formData.plan.name}（${formData.plan.duration}）
+■ 医院名: ${formData.clinicName}
+■ お名前: ${formData.name}
+■ 役職: ${formData.position}
+■ メールアドレス: ${formData.email}
+■ 電話番号: ${formData.phone}
+■ 申込日時: ${new Date(formData.submittedAt).toLocaleString('ja-JP')}
+
+担当者より2営業日以内にご連絡いたします。
+ご不明点がございましたら、045-440-0322までお電話ください。
+
+─────────────────────
+歯科医院地域一番実践会
+─────────────────────
+    `.trim());
+
+    // メールクライアントを開く（デモ用）
+    // window.location.href = `mailto:${formData.email}?subject=${subject}&body=${body}`;
+
+    return Promise.resolve();
+}

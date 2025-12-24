@@ -567,8 +567,8 @@
                     <!-- CTA Section -->
                     <div class="results-cta">
                         <h3 class="cta-title">詳しい改善プランを無料でご説明します</h3>
-                        <p class="cta-description">30分の無料相談で、具体的な施策をご提案いたします</p>
-                        <button class="cta-button primary large">
+                        <p class="cta-description">あなたの医院に最適な相談プランをお選びください</p>
+                        <button class="cta-button primary large" onclick="openConsultationPlans()">
                             <span>無料相談を予約する</span>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -585,6 +585,207 @@
                 </div>
             </div>
         </section>
+
+        <!-- Consultation Plans Modal -->
+        <div id="consultationPlansModal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeConsultationPlans()"></div>
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>無料相談プランを選択</h3>
+                    <button class="modal-close" onclick="closeConsultationPlans()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description plans-description">
+                        あなたのニーズに合わせた3つのプランをご用意しています
+                    </p>
+                    <div class="plans-grid">
+                        <!-- お手軽相談 -->
+                        <div class="plan-card" data-plan="light">
+                            <div class="plan-badge">LIGHT</div>
+                            <h4 class="plan-title">お手軽相談</h4>
+                            <div class="plan-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                <span>30分</span>
+                            </div>
+                            <p class="plan-description">
+                                特に相談したいことは明確ではないが、まずは話を聞いてみたい方におすすめ
+                            </p>
+                            <div class="plan-requirements">
+                                <h5>提出物</h5>
+                                <p class="no-requirements">特になし</p>
+                            </div>
+                            <button class="plan-cta" onclick="selectPlan('light')">
+                                このプランで申し込む
+                            </button>
+                        </div>
+
+                        <!-- しっかり相談 -->
+                        <div class="plan-card featured" data-plan="standard">
+                            <div class="plan-badge">STANDARD</div>
+                            <div class="plan-popular">人気</div>
+                            <h4 class="plan-title">しっかり相談</h4>
+                            <div class="plan-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                <span>1時間</span>
+                            </div>
+                            <p class="plan-description">
+                                医院の重要課題に対する明日から実践できる具体策の提案を受けてみたい方におすすめ
+                            </p>
+                            <div class="plan-requirements">
+                                <h5>提出物</h5>
+                                <ul>
+                                    <li>カウンセリングシート</li>
+                                </ul>
+                            </div>
+                            <button class="plan-cta" onclick="selectPlan('standard')">
+                                このプランで申し込む
+                            </button>
+                        </div>
+
+                        <!-- がっつり相談 -->
+                        <div class="plan-card" data-plan="premium">
+                            <div class="plan-badge">PREMIUM</div>
+                            <h4 class="plan-title">がっつり相談</h4>
+                            <div class="plan-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                <span>2時間</span>
+                            </div>
+                            <p class="plan-description">
+                                当社の経営コンサルティングを本格的に体験したい方におすすめ
+                            </p>
+                            <div class="plan-requirements">
+                                <h5>提出物</h5>
+                                <ul>
+                                    <li>カウンセリングシート</li>
+                                    <li>アポ帳</li>
+                                    <li>具体的なお悩み・課題の詳細</li>
+                                </ul>
+                            </div>
+                            <button class="plan-cta" onclick="selectPlan('premium')">
+                                このプランで申し込む
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form Modal -->
+        <div id="applicationFormModal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeApplicationForm()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="modal-back" onclick="backToPlans()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <h3>お申し込みフォーム</h3>
+                    <button class="modal-close" onclick="closeApplicationForm()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="selected-plan-banner" id="selectedPlanBanner">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <form id="applicationForm" onsubmit="submitApplication(event)">
+                        <div class="form-group">
+                            <label class="form-label">
+                                医院名
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="text" class="form-input" id="appClinicName" required placeholder="例：〇〇歯科医院">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                お名前
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="text" class="form-input" id="appName" required placeholder="例：山田 太郎">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                役職
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <select class="form-select" id="appPosition" required>
+                                <option value="">選択してください</option>
+                                <option value="院長">院長</option>
+                                <option value="副院長">副院長</option>
+                                <option value="事務長">事務長</option>
+                                <option value="院長夫人">院長夫人</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                メールアドレス
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="email" class="form-input" id="appEmail" required placeholder="例：info@example.com">
+                            <p class="input-hint">申し込み確認メールをお送りします</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                電話番号
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="tel" class="form-input" id="appPhone" required placeholder="例：045-123-4567">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="cta-button primary large full-width">
+                                <span>申し込みを確定する</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Complete Modal -->
+        <div id="applicationCompleteModal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeApplicationComplete()"></div>
+            <div class="modal-content">
+                <div class="modal-body application-complete">
+                    <div class="complete-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <path d="M22 4L12 14.01l-3-3"/>
+                        </svg>
+                    </div>
+                    <h3 class="complete-title">お申し込みを受け付けました</h3>
+                    <p class="complete-message">
+                        ご入力いただいたメールアドレスに確認メールをお送りしました。<br>
+                        担当者より2営業日以内にご連絡いたします。
+                    </p>
+                    <div class="complete-summary" id="completeSummary">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <button class="cta-button primary" onclick="closeApplicationComplete()">
+                        閉じる
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- API Settings Modal -->
         <div id="apiSettingsModal" class="modal hidden">
