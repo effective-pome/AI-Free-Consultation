@@ -140,8 +140,6 @@ function setupButtonGroups() {
                 updateCalculations();
                 // 可視化パネルを更新
                 updateVisualizationPanel();
-                // AIヒントを更新
-                updateAIHints();
             });
         });
     });
@@ -208,7 +206,6 @@ function setupInputListeners() {
                 }
                 updateCalculations();
                 updateVisualizationPanel();
-                updateAIHints();
             }
         });
     });
@@ -295,22 +292,6 @@ function updateSimilarClinics() {
     document.getElementById('similarCount').textContent = count.toLocaleString();
 }
 
-// ========================================
-// AIヒント
-// ========================================
-function updateAIHints() {
-    const hintsContainer = document.getElementById('aiHints');
-    const hints = KnowledgeBase.getRelevantHints(AppState.formData);
-
-    if (hints.length === 0) {
-        hintsContainer.innerHTML = '<p class="ai-hint-placeholder">データを入力するとAIからのヒントが表示されます</p>';
-        return;
-    }
-
-    hintsContainer.innerHTML = hints.map(hint =>
-        `<div class="ai-hint">${hint.message}</div>`
-    ).join('');
-}
 
 // ========================================
 // フォーム送信
@@ -649,7 +630,6 @@ function restartDiagnosis() {
 
     // 可視化パネルをリセット
     updateVisualizationPanel();
-    updateAIHints();
 
     // ローカルストレージをクリア
     localStorage.removeItem('dentalAIFormData');

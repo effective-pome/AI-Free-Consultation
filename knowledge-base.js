@@ -113,61 +113,6 @@ const KnowledgeBase = {
         'over20': { phase: 'renewal', challenges: ['newPatient', 'efficiency'], strengths: ['trust'] }
     },
 
-    // ========================================
-    // AIヒント表示条件
-    // ========================================
-    AI_HINTS: [
-        {
-            id: 'lowNewPatient',
-            condition: (data) => data.newPatient && data.newPatient <= 30,
-            message: '新患数が30人/月以下の医院は、Googleマップ対策で平均+35%の改善が見られています。',
-            priority: 1
-        },
-        {
-            id: 'lowSelfPayRate',
-            condition: (data) => {
-                if (!data.insurance || !data.selfPay) return false;
-                const rate = (data.selfPay / (data.insurance + data.selfPay)) * 100;
-                return rate <= 10;
-            },
-            message: '自費率10%以下の医院は、カウンセリング強化で平均1.8倍に向上しています。',
-            priority: 2
-        },
-        {
-            id: 'highCancel',
-            condition: (data) => data.cancel && data.cancel >= 8,
-            message: 'キャンセル率8%以上は業界平均より高めです。リマインド自動化で-40%の実績があります。',
-            priority: 3
-        },
-        {
-            id: 'lowRecall',
-            condition: (data) => data.recall && data.recall <= 40,
-            message: 'リコール率40%以下の医院は、LINE活用で平均2倍に改善しています。',
-            priority: 4
-        },
-        {
-            id: 'highRevenue',
-            condition: (data) => {
-                if (!data.insurance || !data.selfPay) return false;
-                const total = data.insurance + data.selfPay;
-                return total >= 1500;
-            },
-            message: '月間医業収入1500万円以上の医院は、組織体制の整備が成長の鍵になります。',
-            priority: 5
-        },
-        {
-            id: 'lowDailyVisit',
-            condition: (data) => data.dailyVisit && data.dailyVisit <= 20,
-            message: '1日来院数が少なめです。予約枠の最適化で稼働率を改善できる可能性があります。',
-            priority: 6
-        },
-        {
-            id: 'highReceipt',
-            condition: (data) => data.receipt && data.receipt >= 2000,
-            message: 'レセプト枚数が多い医院です。業務効率化により残業削減の余地があります。',
-            priority: 7
-        }
-    ],
 
     // ========================================
     // 課題別の改善提案データベース
@@ -526,16 +471,6 @@ const KnowledgeBase = {
             if (value > v) count++;
         }
         return Math.round((count / sorted.length) * 100);
-    },
-
-    /**
-     * 入力データに基づいて表示するAIヒントを取得
-     */
-    getRelevantHints(formData) {
-        return this.AI_HINTS
-            .filter(hint => hint.condition(formData))
-            .sort((a, b) => a.priority - b.priority)
-            .slice(0, 3); // 最大3件
     },
 
     /**
