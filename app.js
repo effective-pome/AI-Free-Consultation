@@ -574,15 +574,33 @@ function displayComparison(comparison) {
         }
     ];
 
-    container.innerHTML = items.map(item => `
-        <div class="comparison-card">
-            <div class="comparison-label">${item.label}</div>
-            <div class="comparison-value">上位 ${100 - item.percentile}%</div>
-            <span class="comparison-badge ${item.status === 'excellent' || item.status === 'good' ? 'good' : 'warning'}">
-                ${getStatusLabel(item.status)}
-            </span>
-        </div>
-    `).join('');
+    container.innerHTML = items.map(item => {
+        // 上位パーセントを計算（0%にならないように最低0.1%を保証）
+        let topPercent = 100 - item.percentile;
+        if (topPercent <= 0) {
+            topPercent = 0.1;
+        } else if (topPercent < 0.1) {
+            topPercent = 0.1;
+        }
+
+        // 小数点第一位まで表示（10未満は小数点表示、10以上は整数）
+        let displayPercent;
+        if (topPercent < 10) {
+            displayPercent = topPercent.toFixed(1);
+        } else {
+            displayPercent = Math.floor(topPercent);
+        }
+
+        return `
+            <div class="comparison-card">
+                <div class="comparison-label">${item.label}</div>
+                <div class="comparison-value">上位 ${displayPercent}%</div>
+                <span class="comparison-badge ${item.status === 'excellent' || item.status === 'good' ? 'good' : 'warning'}">
+                    ${getStatusLabel(item.status)}
+                </span>
+            </div>
+        `;
+    }).join('');
 }
 
 function displayRecommendations(recommendations, isApiGenerated) {

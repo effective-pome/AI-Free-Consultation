@@ -440,12 +440,15 @@ const KnowledgeBase = {
     },
 
     // ========================================
-    // パーセンタイル計算用データ
+    // パーセンタイル計算用データ（より細かい粒度）
     // ========================================
     PERCENTILE_DATA: {
-        newPatient: [10, 15, 20, 25, 30, 35, 40, 50, 60, 80],
-        selfPayRate: [5, 8, 10, 12, 15, 18, 22, 28, 35, 45],
-        recall: [20, 30, 35, 40, 45, 50, 55, 65, 75, 90]
+        // 新患数: 5%, 10%, 15%, ... 95% のパーセンタイル値
+        newPatient: [5, 8, 10, 12, 15, 18, 20, 22, 25, 28, 30, 33, 35, 38, 40, 45, 50, 60, 70, 85],
+        // 自費率: より細かい分布
+        selfPayRate: [3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 23, 26, 30, 35, 40, 48, 55],
+        // リコール率: より細かい分布
+        recall: [15, 20, 25, 28, 32, 35, 38, 42, 45, 48, 52, 55, 58, 62, 66, 70, 75, 80, 85, 92]
     },
 
     // ========================================
@@ -462,15 +465,40 @@ const KnowledgeBase = {
     // ========================================
 
     /**
-     * パーセンタイルを計算
+     * パーセンタイルを計算（より精密な値を返す）
+     * 線形補間を使用して、データポイント間の値も正確に計算
      */
     calculatePercentile(value, dataArray) {
         const sorted = [...dataArray].sort((a, b) => a - b);
-        let count = 0;
-        for (const v of sorted) {
-            if (value > v) count++;
+        const n = sorted.length;
+
+        // 最小値未満の場合
+        if (value <= sorted[0]) {
+            // 最小でも5%として計算（線形補間）
+            const ratio = Math.max(0, value / sorted[0]);
+            return Math.round(ratio * (100 / n) * 10) / 10;
         }
-        return Math.round((count / sorted.length) * 100);
+
+        // 最大値以上の場合
+        if (value >= sorted[n - 1]) {
+            // 最大でも99.9%を上限とする
+            const excess = (value - sorted[n - 1]) / sorted[n - 1];
+            const percentile = 95 + Math.min(4.9, excess * 10);
+            return Math.round(percentile * 10) / 10;
+        }
+
+        // 中間値の場合、線形補間
+        for (let i = 0; i < n - 1; i++) {
+            if (value >= sorted[i] && value < sorted[i + 1]) {
+                const lowerPercentile = ((i + 1) / n) * 100;
+                const upperPercentile = ((i + 2) / n) * 100;
+                const ratio = (value - sorted[i]) / (sorted[i + 1] - sorted[i]);
+                const percentile = lowerPercentile + ratio * (upperPercentile - lowerPercentile);
+                return Math.round(percentile * 10) / 10;
+            }
+        }
+
+        return Math.round((n / n) * 100 * 10) / 10;
     },
 
     /**

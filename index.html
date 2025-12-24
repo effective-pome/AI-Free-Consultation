@@ -528,6 +528,13 @@
                                     <span class="metric-value" id="metricNewPatient">--</span>
                                 </div>
                                 <div class="metric-row">
+                                    <span class="metric-label">来院数/日</span>
+                                    <div class="metric-bar-wrapper">
+                                        <div class="metric-bar" id="barDailyVisit" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="metricDailyVisit">--</span>
+                                </div>
+                                <div class="metric-row">
                                     <span class="metric-label">保険収入</span>
                                     <div class="metric-bar-wrapper">
                                         <div class="metric-bar" id="barInsurance" style="width: 0%"></div>
@@ -542,7 +549,7 @@
                                     <span class="metric-value" id="metricSelfPay">--</span>
                                 </div>
                                 <div class="metric-row calculated">
-                                    <span class="metric-label">月間医業収入</span>
+                                    <span class="metric-label">医業収入</span>
                                     <div class="metric-bar-wrapper">
                                         <div class="metric-bar success" id="barTotalRevenue" style="width: 0%"></div>
                                     </div>
@@ -554,6 +561,27 @@
                                         <div class="metric-bar success" id="barSelfPayRate" style="width: 0%"></div>
                                     </div>
                                     <span class="metric-value success" id="metricSelfPayRate">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">キャンセル率</span>
+                                    <div class="metric-bar-wrapper">
+                                        <div class="metric-bar warning" id="barCancel" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="metricCancel">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">リコール率</span>
+                                    <div class="metric-bar-wrapper">
+                                        <div class="metric-bar" id="barRecall" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="metricRecall">--</span>
+                                </div>
+                                <div class="metric-row">
+                                    <span class="metric-label">レセプト</span>
+                                    <div class="metric-bar-wrapper">
+                                        <div class="metric-bar" id="barReceipt" style="width: 0%"></div>
+                                    </div>
+                                    <span class="metric-value" id="metricReceipt">--</span>
                                 </div>
                             </div>
                         </div>
