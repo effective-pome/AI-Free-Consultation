@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initializeApp() {
     // ランディングページのアニメーション
-    animateStatsNumber();
+    animateStatsCards();
+    animateBarChart();
+    createParticles();
 
     // ボタングループのイベントリスナー
     setupButtonGroups();
@@ -40,30 +42,70 @@ function initializeApp() {
 // ========================================
 // ランディングページ
 // ========================================
-function animateStatsNumber() {
-    const element = document.getElementById('animatedNumber');
-    if (!element) return;
+function animateStatsCards() {
+    const cards = document.querySelectorAll('.stats-card-number');
+    if (!cards.length) return;
 
-    const target = 3247;
-    const duration = 2000;
-    const startTime = performance.now();
+    cards.forEach((card, index) => {
+        const target = parseInt(card.dataset.target) || 0;
+        const duration = 2000;
+        const delay = index * 200;
 
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
+        setTimeout(() => {
+            const startTime = performance.now();
 
-        // イージング関数
-        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-        const current = Math.floor(easeOutQuart * target);
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
 
-        element.textContent = current.toLocaleString();
+                // イージング関数
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const current = Math.floor(easeOutQuart * target);
 
-        if (progress < 1) {
+                card.textContent = current.toLocaleString();
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
             requestAnimationFrame(update);
-        }
-    }
+        }, delay);
+    });
+}
 
-    requestAnimationFrame(update);
+function animateBarChart() {
+    const bars = document.querySelectorAll('.chart-bar');
+    if (!bars.length) return;
+
+    setTimeout(() => {
+        bars.forEach((bar, index) => {
+            const value = parseInt(bar.dataset.value) || 0;
+            const fill = bar.querySelector('.chart-bar-fill');
+
+            setTimeout(() => {
+                if (fill) {
+                    fill.style.height = `${value}%`;
+                }
+            }, index * 150);
+        });
+    }, 600);
+}
+
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+
+    const particleCount = 20;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 15}s`;
+        particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+        container.appendChild(particle);
+    }
 }
 
 function startDiagnosis() {

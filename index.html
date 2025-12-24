@@ -14,38 +14,86 @@
         <!-- Landing Page -->
         <section id="landing" class="landing-page">
             <div class="landing-content">
-                <div class="logo">
-                    <div class="logo-icon">
-                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
-                            <path d="M12 20C12 15.5 15.5 12 20 12C24.5 12 28 15.5 28 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="20" cy="24" r="4" fill="currentColor"/>
+                <!-- Logo Section -->
+                <div class="brand-logo">
+                    <p class="brand-tagline">あなたの歯科医院も地域一番になれる！</p>
+                    <div class="brand-main">
+                        <svg class="brand-check" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 25L20 40L45 10" stroke="#DC2626" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
+                        <h1 class="brand-title">歯科医院地域一番実践会</h1>
                     </div>
-                    <span class="logo-text">Dental AI Consulting</span>
                 </div>
 
                 <div class="hero-section">
-                    <div class="stats-visualization">
-                        <div class="stats-header">
-                            <span class="stats-number" id="animatedNumber">0</span>
-                            <span class="stats-label">件の成功事例データ</span>
+                    <!-- Animated Stats Cards -->
+                    <div class="stats-cards">
+                        <div class="stats-card">
+                            <div class="stats-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                            <div class="stats-card-number" data-target="3247">0</div>
+                            <div class="stats-card-label">成功事例</div>
                         </div>
-                        <div class="bar-chart">
-                            <div class="bar" style="--height: 60%; --delay: 0s;"></div>
-                            <div class="bar" style="--height: 80%; --delay: 0.1s;"></div>
-                            <div class="bar" style="--height: 45%; --delay: 0.2s;"></div>
-                            <div class="bar" style="--height: 90%; --delay: 0.3s;"></div>
-                            <div class="bar" style="--height: 70%; --delay: 0.4s;"></div>
-                            <div class="bar" style="--height: 85%; --delay: 0.5s;"></div>
-                            <div class="bar" style="--height: 55%; --delay: 0.6s;"></div>
+                        <div class="stats-card">
+                            <div class="stats-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                            </div>
+                            <div class="stats-card-number" data-target="94">0</div>
+                            <div class="stats-card-label">改善達成率%</div>
+                        </div>
+                        <div class="stats-card">
+                            <div class="stats-card-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                            <div class="stats-card-number" data-target="90">0</div>
+                            <div class="stats-card-label">秒で完了</div>
                         </div>
                     </div>
 
-                    <h1 class="hero-title">AIがあなたの医院に<br>最適な改善策を提案</h1>
+                    <!-- Dynamic Bar Chart -->
+                    <div class="chart-container">
+                        <div class="chart-title">過去5年間の改善実績</div>
+                        <div class="bar-chart-animated">
+                            <div class="chart-bar" data-value="78" data-label="2020">
+                                <div class="chart-bar-fill"></div>
+                                <span class="chart-bar-label">2020</span>
+                            </div>
+                            <div class="chart-bar" data-value="85" data-label="2021">
+                                <div class="chart-bar-fill"></div>
+                                <span class="chart-bar-label">2021</span>
+                            </div>
+                            <div class="chart-bar" data-value="91" data-label="2022">
+                                <div class="chart-bar-fill"></div>
+                                <span class="chart-bar-label">2022</span>
+                            </div>
+                            <div class="chart-bar" data-value="96" data-label="2023">
+                                <div class="chart-bar-fill"></div>
+                                <span class="chart-bar-label">2023</span>
+                            </div>
+                            <div class="chart-bar" data-value="98" data-label="2024">
+                                <div class="chart-bar-fill"></div>
+                                <span class="chart-bar-label">2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="hero-title">
+                        <span class="hero-title-highlight">AI</span>があなたの医院に<br>最適な改善策を提案
+                    </h2>
                     <p class="hero-subtitle">ざっくり答えるだけ。約90秒で完了。</p>
 
-                    <button class="cta-button primary" onclick="startDiagnosis()">
+                    <button class="cta-button primary pulse-animation" onclick="startDiagnosis()">
                         <span>無料でAI診断を始める</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -74,6 +122,9 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Floating Particles -->
+            <div class="particles" id="particles"></div>
         </section>
 
         <!-- Form Section -->
