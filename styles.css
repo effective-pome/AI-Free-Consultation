@@ -1775,14 +1775,16 @@ input[type="checkbox"] {
 }
 
 .plan-card.featured {
-    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
-    border-color: var(--primary-400);
-    box-shadow: var(--shadow-md), var(--shadow-glow);
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0c1426 100%);
+    border: 2px solid transparent;
+    border-image: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef) 1;
+    box-shadow: 0 4px 20px rgba(42, 163, 255, 0.3), 0 0 40px rgba(217, 70, 239, 0.2);
+    color: white;
 }
 
 .plan-card.featured:hover {
-    border-color: var(--primary-500);
-    box-shadow: var(--shadow-xl), var(--shadow-glow);
+    box-shadow: 0 8px 30px rgba(42, 163, 255, 0.4), 0 0 60px rgba(217, 70, 239, 0.3);
+    transform: translateY(-6px);
 }
 
 .plan-badge {
@@ -1799,8 +1801,33 @@ input[type="checkbox"] {
 }
 
 .plan-card.featured .plan-badge {
-    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    background: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef);
     color: white;
+}
+
+.plan-card.featured .plan-title {
+    color: white;
+}
+
+.plan-card.featured .plan-description {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.plan-card.featured .plan-requirements {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.plan-card.featured .plan-requirements h5 {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.plan-card.featured .plan-requirements li {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.plan-card.featured .plan-requirements li::before {
+    color: #06b6d4;
 }
 
 .plan-popular {
@@ -1840,10 +1867,20 @@ input[type="checkbox"] {
 }
 
 .plan-card.featured .plan-duration {
-    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    background: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+.plan-card.featured .plan-duration svg {
+    color: #06b6d4;
+}
+
+.plan-card.featured .plan-popular {
+    background: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef);
+    color: white;
+    box-shadow: 0 4px 12px rgba(42, 163, 255, 0.4);
 }
 
 .plan-description {
@@ -1918,14 +1955,16 @@ input[type="checkbox"] {
 }
 
 .plan-card.featured .plan-cta {
-    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    background: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef);
     border: none;
     color: white;
+    font-weight: 700;
 }
 
 .plan-card.featured .plan-cta:hover {
-    background: linear-gradient(135deg, var(--primary-600), var(--accent-600));
+    background: linear-gradient(135deg, #1d8cd9, #059cb3, #c026d3);
     transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(42, 163, 255, 0.4);
 }
 
 /* Free Badge */
@@ -1942,55 +1981,43 @@ input[type="checkbox"] {
     border-radius: var(--radius-full);
 }
 
-/* Premium Plan (Gold Design) */
-.plan-card.premium {
+/* Gold Plan Design (しっかり相談) */
+.plan-card.gold {
     background: linear-gradient(135deg, #fef9e7 0%, #fff8e1 50%, #fffbf0 100%);
     border-color: #d4a528;
     box-shadow: 0 4px 20px rgba(212, 165, 40, 0.25), 0 0 40px rgba(255, 215, 0, 0.1);
 }
 
-.plan-card.premium:hover {
+.plan-card.gold:hover {
     border-color: #c9a227;
     box-shadow: 0 8px 30px rgba(212, 165, 40, 0.35), 0 0 60px rgba(255, 215, 0, 0.15);
 }
 
-.plan-card.premium .plan-badge {
+.plan-card.gold .plan-badge {
     background: linear-gradient(135deg, #d4a528 0%, #f4d03f 50%, #c9a227 100%);
     color: #1a1a1a;
 }
 
-.plan-card.premium .plan-popular {
-    background: linear-gradient(135deg, #d4a528, #f4d03f);
-    color: #1a1a1a;
-    box-shadow: 0 4px 12px rgba(212, 165, 40, 0.4);
-}
-
-.plan-card.premium .plan-duration {
+.plan-card.gold .plan-duration {
     background: linear-gradient(135deg, #d4a528, #c9a227);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.plan-card.premium .plan-free-badge {
-    color: #b8860b;
-    background: linear-gradient(135deg, #fff8e1, #fef3c7);
-    border-color: #d4a528;
-}
-
-.plan-card.premium .plan-requirements {
+.plan-card.gold .plan-requirements {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(212, 165, 40, 0.2);
 }
 
-.plan-card.premium .plan-cta {
+.plan-card.gold .plan-cta {
     background: linear-gradient(135deg, #d4a528 0%, #f4d03f 50%, #c9a227 100%);
     border: none;
     color: #1a1a1a;
     font-weight: 700;
 }
 
-.plan-card.premium .plan-cta:hover {
+.plan-card.gold .plan-cta:hover {
     background: linear-gradient(135deg, #c9a227 0%, #e5c53a 50%, #b8960f 100%);
     transform: scale(1.02);
     box-shadow: 0 6px 20px rgba(212, 165, 40, 0.4);
