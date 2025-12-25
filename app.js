@@ -145,8 +145,12 @@ function nextStep() {
         // データ保存
         saveFormData();
 
-        // スクロールトップ
-        document.querySelector('.form-container').scrollTo(0, 0);
+        // ページ上部にスクロール
+        const formContainer = document.querySelector('.form-container');
+        if (formContainer) {
+            formContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 
@@ -156,6 +160,13 @@ function goBack() {
         AppState.currentStep--;
         document.getElementById(`step${AppState.currentStep}`).classList.remove('hidden');
         updateProgress();
+
+        // ページ上部にスクロール
+        const formContainer = document.querySelector('.form-container');
+        if (formContainer) {
+            formContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
         // ランディングページに戻る
         document.getElementById('formSection').classList.add('hidden');
@@ -842,53 +853,6 @@ let selectedPlan = null;
 function openConsultationPlans() {
     document.getElementById('consultationPlansModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-
-    // モバイル用スクロールインジケーターをセットアップ
-    setupPlansScrollIndicator();
-}
-
-// プランカードのスクロールインジケーターをセットアップ
-function setupPlansScrollIndicator() {
-    const plansGrid = document.querySelector('.plans-grid');
-    const dots = document.querySelectorAll('.plans-scroll-hint .dot');
-
-    if (!plansGrid || !dots.length) return;
-
-    // スクロールイベントでインジケーターを更新
-    plansGrid.addEventListener('scroll', () => {
-        const scrollLeft = plansGrid.scrollLeft;
-        const cardWidth = plansGrid.querySelector('.plan-card')?.offsetWidth || 280;
-        const gap = 16;
-        const activeIndex = Math.round(scrollLeft / (cardWidth + gap));
-
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === activeIndex);
-        });
-    });
-
-    // ドットクリックでスクロール
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            const cardWidth = plansGrid.querySelector('.plan-card')?.offsetWidth || 280;
-            const gap = 16;
-            plansGrid.scrollTo({
-                left: index * (cardWidth + gap),
-                behavior: 'smooth'
-            });
-        });
-    });
-
-    // 初期状態で「おすすめ」のがっつり相談（3番目）を中央に表示
-    setTimeout(() => {
-        if (window.innerWidth <= 800) {
-            const cardWidth = plansGrid.querySelector('.plan-card')?.offsetWidth || 280;
-            const gap = 16;
-            plansGrid.scrollTo({
-                left: 2 * (cardWidth + gap),
-                behavior: 'smooth'
-            });
-        }
-    }, 100);
 }
 
 function closeConsultationPlans() {

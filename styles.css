@@ -1769,66 +1769,73 @@ input[type="checkbox"] {
 @media (max-width: 800px) {
     .plans-grid {
         display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
+        flex-direction: column;
         gap: var(--space-4);
-        padding: var(--space-4) var(--space-2);
-        margin: 0 calc(var(--space-4) * -1);
-        scrollbar-width: none;
-    }
-
-    .plans-grid::-webkit-scrollbar {
-        display: none;
+        padding: var(--space-2);
     }
 
     .plans-grid .plan-card {
-        flex: 0 0 85%;
-        min-width: 280px;
-        scroll-snap-align: center;
+        width: 100%;
     }
 
     .plans-grid .plan-card.featured {
         transform: scale(1);
+        order: -1; /* おすすめを一番上に表示 */
     }
 
     .plans-grid .plan-card.featured:hover {
         transform: translateY(-4px);
     }
 
-    /* スクロールインジケーター */
-    .plans-scroll-hint {
-        display: flex;
-        justify-content: center;
-        gap: var(--space-2);
-        margin-top: var(--space-3);
-    }
-
-    .plans-scroll-hint .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--gray-300);
-        transition: all 0.3s ease;
-    }
-
-    .plans-scroll-hint .dot.active {
-        background: var(--primary-500);
-        transform: scale(1.2);
-    }
-
+    /* スクロールインジケーター（モバイルでは非表示） */
+    .plans-scroll-hint,
     .scroll-hint-text {
-        display: block;
-        text-align: center;
-        font-size: 0.75rem;
-        color: var(--gray-500);
-        margin-top: var(--space-2);
-        animation: pulse-hint 2s ease-in-out infinite;
+        display: none !important;
+    }
+}
+
+/* タブレット向け（3カード横並び、中央大きく） */
+@media (min-width: 600px) and (max-width: 800px) {
+    .plans-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr 1fr;
+        gap: var(--space-3);
+        align-items: center;
+        padding: var(--space-4);
     }
 
-    @keyframes pulse-hint {
-        0%, 100% { opacity: 0.5; }
-        50% { opacity: 1; }
+    .plans-grid .plan-card {
+        order: 0;
+    }
+
+    /* お手軽相談（左） */
+    .plans-grid .plan-card[data-plan="light"] {
+        order: 1;
+        transform: scale(0.9);
+        opacity: 0.9;
+    }
+
+    /* しっかり相談（右） */
+    .plans-grid .plan-card.gold {
+        order: 3;
+        transform: scale(0.9);
+        opacity: 0.9;
+    }
+
+    /* がっつり相談（中央・大きく） */
+    .plans-grid .plan-card.featured {
+        order: 2;
+        transform: scale(1.02);
+        z-index: 10;
+    }
+
+    .plans-grid .plan-card.featured:hover {
+        transform: scale(1.05);
+    }
+
+    .plans-grid .plan-card:not(.featured):hover {
+        transform: scale(0.95);
+        opacity: 1;
     }
 }
 
