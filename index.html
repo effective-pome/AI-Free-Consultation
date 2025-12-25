@@ -123,7 +123,7 @@
                             <div class="progress-bar">
                                 <div class="progress-fill" id="progressFill"></div>
                             </div>
-                            <span class="progress-text" id="progressText">STEP 1/4</span>
+                            <span class="progress-text" id="progressText">STEP 1/3</span>
                         </div>
                         <div class="time-estimate" id="timeEstimate">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -161,9 +161,9 @@
                         <div class="form-group">
                             <label class="form-label">
                                 医院名
-                                <span class="optional-badge">任意</span>
+                                <span class="required-badge">必須</span>
                             </label>
-                            <input type="text" class="form-input" id="clinicName" placeholder="例：さくら歯科クリニック">
+                            <input type="text" class="form-input" id="clinicName" placeholder="例：さくら歯科クリニック" required>
                         </div>
 
                         <div class="form-group">
@@ -221,7 +221,6 @@
                         </div>
 
                         <div class="step-actions">
-                            <button class="skip-link" onclick="nextStep()">わからない項目はスキップ →</button>
                             <button class="cta-button primary" onclick="nextStep()">
                                 次へ
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -231,10 +230,10 @@
                         </div>
                     </div>
 
-                    <!-- Step 2: Current Numbers -->
+                    <!-- Step 2: Current Numbers & Metrics (統合) -->
                     <div class="step hidden" id="step2">
                         <div class="step-header">
-                            <h2 class="step-title">現状の数値</h2>
+                            <h2 class="step-title">現状の数値・指標</h2>
                             <p class="step-description">だいたいの数値で構いません</p>
                         </div>
 
@@ -304,24 +303,6 @@
                             </div>
                         </div>
 
-                        <div class="step-actions">
-                            <button class="skip-link" onclick="nextStep()">わからない項目はスキップ →</button>
-                            <button class="cta-button primary" onclick="nextStep()">
-                                次へ
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Metrics -->
-                    <div class="step hidden" id="step3">
-                        <div class="step-header">
-                            <h2 class="step-title">各種指標</h2>
-                            <p class="step-description">わかる範囲で入力してください</p>
-                        </div>
-
                         <div class="form-group">
                             <label class="form-label">キャンセル率</label>
                             <div class="button-group" data-field="cancel">
@@ -363,7 +344,6 @@
                         </div>
 
                         <div class="step-actions">
-                            <button class="skip-link" onclick="nextStep()">わからない項目はスキップ →</button>
                             <button class="cta-button primary" onclick="nextStep()">
                                 次へ
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -373,8 +353,8 @@
                         </div>
                     </div>
 
-                    <!-- Step 4: Priority & Concerns -->
-                    <div class="step hidden" id="step4">
+                    <!-- Step 3: Priority & Concerns -->
+                    <div class="step hidden" id="step3">
                         <div class="step-header">
                             <h2 class="step-title">課題選択・その他お悩み</h2>
                             <p class="step-description">最も解決したい課題を選んでください</p>

@@ -1775,16 +1775,42 @@ input[type="checkbox"] {
 }
 
 .plan-card.featured {
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0c1426 100%);
-    border: 2px solid transparent;
-    border-image: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef) 1;
-    box-shadow: 0 4px 20px rgba(42, 163, 255, 0.3), 0 0 40px rgba(217, 70, 239, 0.2);
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1035 30%, #0d1025 70%, #050510 100%);
+    border: none;
+    position: relative;
     color: white;
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+.plan-card.featured::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(135deg, #00d4ff, #7c3aed, #f43f5e, #fbbf24, #00d4ff);
+    background-size: 300% 300%;
+    border-radius: calc(var(--radius-xl) + 3px);
+    z-index: -1;
+    animation: premium-glow 4s ease-in-out infinite;
+}
+
+.plan-card.featured::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1035 30%, #0d1025 70%, #050510 100%);
+    border-radius: var(--radius-xl);
+    z-index: -1;
+}
+
+@keyframes premium-glow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 .plan-card.featured:hover {
-    box-shadow: 0 8px 30px rgba(42, 163, 255, 0.4), 0 0 60px rgba(217, 70, 239, 0.3);
-    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(124, 58, 237, 0.5), 0 0 100px rgba(0, 212, 255, 0.3);
+    transform: scale(1.08) translateY(-8px);
 }
 
 .plan-badge {
@@ -1801,12 +1827,27 @@ input[type="checkbox"] {
 }
 
 .plan-card.featured .plan-badge {
-    background: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef);
+    background: linear-gradient(135deg, #00d4ff, #7c3aed, #f43f5e);
+    background-size: 200% 200%;
+    animation: badge-shimmer 3s ease-in-out infinite;
     color: white;
+    font-size: 0.75rem;
+    padding: var(--space-2) var(--space-4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes badge-shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 .plan-card.featured .plan-title {
     color: white;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .plan-card.featured .plan-description {
@@ -1832,15 +1873,25 @@ input[type="checkbox"] {
 
 .plan-popular {
     position: absolute;
-    top: -10px;
-    right: var(--space-4);
-    font-size: 0.625rem;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
     font-weight: 700;
-    color: white;
-    background: linear-gradient(135deg, var(--accent-500), var(--primary-500));
-    padding: var(--space-1) var(--space-3);
+    letter-spacing: 0.05em;
+    color: #0a0a1a;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
+    background-size: 200% 200%;
+    animation: gold-shimmer 2s ease-in-out infinite;
+    padding: var(--space-2) var(--space-5);
     border-radius: var(--radius-full);
-    box-shadow: 0 4px 12px rgba(217, 70, 239, 0.3);
+    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.5), 0 0 30px rgba(251, 191, 36, 0.3);
+    z-index: 20;
+}
+
+@keyframes gold-shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 .plan-title {
@@ -1955,16 +2006,26 @@ input[type="checkbox"] {
 }
 
 .plan-card.featured .plan-cta {
-    background: linear-gradient(135deg, #2aa3ff, #06b6d4, #d946ef);
+    background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #f43f5e 100%);
+    background-size: 200% 200%;
+    animation: cta-gradient 3s ease-in-out infinite;
     border: none;
     color: white;
     font-weight: 700;
+    font-size: 1rem;
+    padding: var(--space-4) var(--space-6);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+}
+
+@keyframes cta-gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 .plan-card.featured .plan-cta:hover {
-    background: linear-gradient(135deg, #1d8cd9, #059cb3, #c026d3);
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(42, 163, 255, 0.4);
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.6), 0 0 40px rgba(0, 212, 255, 0.3);
 }
 
 /* Free Badge */

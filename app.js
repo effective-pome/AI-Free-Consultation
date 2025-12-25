@@ -7,7 +7,7 @@
 // ========================================
 const AppState = {
     currentStep: 1,
-    totalSteps: 4,
+    totalSteps: 3,
     formData: {},
     apiKey: null,
     useApi: false
@@ -169,7 +169,7 @@ function updateProgress() {
     document.getElementById('progressText').textContent = `STEP ${AppState.currentStep}/${AppState.totalSteps}`;
 
     // 残り時間の更新
-    const timePerStep = [15, 30, 30, 15];
+    const timePerStep = [15, 45, 15];
     let remainingTime = 0;
     for (let i = AppState.currentStep - 1; i < AppState.totalSteps; i++) {
         remainingTime += timePerStep[i];
@@ -498,7 +498,6 @@ function displayResults(results) {
 function displaySummary(summary) {
     const container = document.getElementById('resultsSummary');
     const items = [
-        { label: 'お名前', value: summary.userName || '--' },
         { label: '新患数', value: summary.newPatient ? `${summary.newPatient}人/月` : '--' },
         { label: '月間医業収入', value: summary.totalRevenue ? `${summary.totalRevenue}万円` : '--', highlight: true },
         { label: '自費率', value: summary.selfPayRate ? `${Math.floor(summary.selfPayRate)}%` : '--', highlight: true },
