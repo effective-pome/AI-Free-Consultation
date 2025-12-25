@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI診断結果のお知らせ</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    /* Reset */
+    body, table, td, p, a, li, blockquote {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', 'Yu Gothic', sans-serif;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+    }
+
+    /* Container */
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #0D3B66 0%, #1a5490 100%);
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      color: #ffffff;
+      font-size: 24px;
+      margin: 0;
+      font-weight: bold;
+    }
+
+    .header .subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    /* Content */
+    .content {
+      padding: 30px 25px;
+    }
+
+    .greeting {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .intro-text {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 25px;
+    }
+
+    /* Summary Box */
+    .summary-box {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 25px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .summary-box h2 {
+      font-size: 16px;
+      color: #0D3B66;
+      margin: 0 0 15px 0;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #0D3B66;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed #ddd;
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      color: #666;
+      font-size: 13px;
+    }
+
+    .summary-value {
+      color: #333;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    /* Priority Highlight */
+    .priority-highlight {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+      color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .priority-highlight .label {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .priority-highlight .value {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    /* PDF Notice */
+    .pdf-notice {
+      background: #e8f5e9;
+      border-left: 4px solid #4caf50;
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .pdf-notice h3 {
+      color: #2e7d32;
+      font-size: 14px;
+      margin: 0 0 8px 0;
+    }
+
+    .pdf-notice p {
+      color: #555;
+      font-size: 13px;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Recommendations Preview */
+    .recommendations-preview {
+      margin-bottom: 25px;
+    }
+
+    .recommendations-preview h3 {
+      font-size: 15px;
+      color: #0D3B66;
+      margin-bottom: 15px;
+    }
+
+    .recommendation-item {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .recommendation-item::before {
+      content: "✓";
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: #0D3B66;
+      color: #fff;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 20px;
+      font-size: 12px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    .recommendation-item span {
+      color: #333;
+      font-size: 14px;
+    }
+
+    /* CTA Button */
+    .cta-section {
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .cta-section h3 {
+      color: #fff;
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
+
+    .cta-section p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 13px;
+      margin: 0 0 20px 0;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: #ffffff;
+      color: #667eea;
+      padding: 15px 40px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button:hover {
+      background: #f8f9fa;
+    }
+
+    /* Contact Info */
+    .contact-info {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      margin-bottom: 25px;
+    }
+
+    .contact-info h3 {
+      font-size: 14px;
+      color: #333;
+      margin: 0 0 15px 0;
+    }
+
+    .contact-item {
+      font-size: 13px;
+      color: #555;
+      padding: 5px 0;
+    }
+
+    /* Footer */
+    .footer {
+      background: #333;
+      color: #aaa;
+      padding: 25px 20px;
+      text-align: center;
+    }
+
+    .footer .company {
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .footer p {
+      font-size: 11px;
+      margin: 5px 0;
+      line-height: 1.6;
+    }
+
+    .footer .disclaimer {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #555;
+      font-size: 10px;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 600px) {
+      .email-container {
+        width: 100% !important;
+      }
+
+      .content {
+        padding: 20px 15px !important;
+      }
+
+      .header h1 {
+        font-size: 20px !important;
+      }
+
+      .cta-button {
+        padding: 12px 30px !important;
+        font-size: 14px !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+
+          <!-- Header -->
+          <tr>
+            <td class="header">
+              <h1>AI診断結果のお知らせ</h1>
+              <p class="subtitle">歯科医院地域一番実践会</p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td class="content">
+
+              <!-- Greeting -->
+              <p class="greeting">
+                <?= data.userName || 'お客' ?>様
+              </p>
+
+              <!-- Intro -->
+              <p class="intro-text">
+                この度は「歯科医院AI診断」をご利用いただき、誠にありがとうございます。<br>
+                3,247件以上の成功事例データベースに基づいて、貴院の診断結果とアドバイスをまとめました。
+              </p>
+
+              <!-- PDF Notice -->
+              <div class="pdf-notice">
+                <h3>PDFアドバイスシートを添付しました</h3>
+                <p>
+                  診断結果の詳細と具体的な改善提案をPDFにまとめました。<br>
+                  添付ファイルをダウンロードしてご確認ください。
+                </p>
+              </div>
+
+              <!-- Summary Box -->
+              <div class="summary-box">
+                <h2>診断サマリー</h2>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="summary-label">医院名</td>
+                    <td class="summary-value" align="right"><?= data.clinicName || '-' ?></td>
+                  </tr>
+                  <tr>
+                    <td class="summary-label">地域</td>
+                    <td class="summary-value" align="right"><?= getRegionName(data.region) ?></td>
+                  </tr>
+                  <tr>
+                    <td class="summary-label">開業年数</td>
+                    <td class="summary-value" align="right"><?= getYearsOpenName(data.yearsOpen) ?></td>
+                  </tr>
+                  <? if (data.newPatient) { ?>
+                  <tr>
+                    <td class="summary-label">新患数/月</td>
+                    <td class="summary-value" align="right"><?= data.newPatient ?>人</td>
+                  </tr>
+                  <? } ?>
+                  <? if (data.totalRevenue) { ?>
+                  <tr>
+                    <td class="summary-label">月商</td>
+                    <td class="summary-value" align="right"><?= data.totalRevenue ?>万円</td>
+                  </tr>
+                  <? } ?>
+                  <? if (data.selfPayRate) { ?>
+                  <tr>
+                    <td class="summary-label">自費率</td>
+                    <td class="summary-value" align="right"><?= data.selfPayRate ?>%</td>
+                  </tr>
+                  <? } ?>
+                </table>
+              </div>
+
+              <!-- Priority Highlight -->
+              <div class="priority-highlight">
+                <div class="label">あなたの最優先課題</div>
+                <div class="value"><?= getPriorityName(data.priority) ?></div>
+              </div>
+
+              <!-- Recommendations Preview -->
+              <div class="recommendations-preview">
+                <h3>主な改善提案（抜粋）</h3>
+                <? var recs = recommendations; ?>
+                <? if (recs && recs.items) { ?>
+                  <? for (var i = 0; i < Math.min(3, recs.items.length); i++) { ?>
+                    <? var item = recs.items[i]; ?>
+                    <div class="recommendation-item">
+                      <span><?= typeof item === 'string' ? item : (item.title || item) ?></span>
+                    </div>
+                  <? } ?>
+                <? } else { ?>
+                  <div class="recommendation-item">
+                    <span>詳細はPDFアドバイスシートをご確認ください</span>
+                  </div>
+                <? } ?>
+              </div>
+
+              <!-- CTA Section -->
+              <div class="cta-section">
+                <h3>次のステップ</h3>
+                <p>診断結果について詳しくご説明させていただきます。<br>無料相談をご予約ください。</p>
+                <a href="mailto:<?= CONFIG.ADMIN_EMAIL ?>?subject=無料相談の予約（<?= data.clinicName || '' ?>）" class="cta-button">
+                  無料相談を予約する
+                </a>
+              </div>
+
+              <!-- Contact Info -->
+              <div class="contact-info">
+                <h3>お問い合わせ</h3>
+                <div class="contact-item">
+                  ご不明な点がございましたら、お気軽にお問い合わせください。
+                </div>
+                <div class="contact-item" style="margin-top: 10px;">
+                  <strong>歯科医院地域一番実践会</strong>
+                </div>
+              </div>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td class="footer">
+              <div class="company">歯科医院地域一番実践会</div>
+              <p>3,247件以上の成功事例に基づくAI診断サービス</p>
+              <div class="disclaimer">
+                <p>このメールは自動送信されています。</p>
+                <p>心当たりのない場合は、お手数ですがこのメールを破棄してください。</p>
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    // サーバーサイド用ヘルパー関数
+    function getRegionName(code) {
+      const regions = {
+        'hokkaido': '北海道',
+        'tohoku': '東北',
+        'kanto': '関東',
+        'chubu': '中部',
+        'tokai': '東海',
+        'kinki': '近畿',
+        'chugoku': '中国',
+        'shikoku': '四国',
+        'kyushu': '九州・沖縄'
+      };
+      return regions[code] || code || '未選択';
+    }
+
+    function getYearsOpenName(code) {
+      const years = {
+        'under3': '3年未満',
+        '3to5': '3〜5年',
+        '5to10': '5〜10年',
+        '10to20': '10〜20年',
+        'over20': '20年以上'
+      };
+      return years[code] || code || '未選択';
+    }
+
+    function getPriorityName(code) {
+      const priorities = {
+        'newPatient': '新患獲得',
+        'selfPay': '自費率向上',
+        'cancel': 'キャンセル対策',
+        'staff': 'スタッフ採用・定着',
+        'efficiency': '業務効率化'
+      };
+      return priorities[code] || code || '未選択';
+    }
+  </script>
+</body>
+</html>
