@@ -191,9 +191,46 @@ function setupButtonGroups() {
                 button.classList.add('selected');
                 // 値を保存
                 AppState.formData[field] = parseFloat(button.dataset.value);
+
+                // 次の入力項目に自動スクロール
+                scrollToNextFormGroup(group);
             });
         });
     });
+}
+
+// 次のフォームグループにスクロール
+function scrollToNextFormGroup(currentGroup) {
+    const formGroups = Array.from(document.querySelectorAll('.step:not(.hidden) .form-group'));
+    const currentIndex = formGroups.findIndex(g => g.contains(currentGroup));
+
+    if (currentIndex !== -1 && currentIndex < formGroups.length - 1) {
+        // 次のグループにスクロール
+        const nextGroup = formGroups[currentIndex + 1];
+        setTimeout(() => {
+            nextGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 200);
+    } else {
+        // 最後のグループの場合はCTAボタンにスクロール
+        scrollToCTAButton();
+    }
+}
+
+// CTAボタンにスクロールしてアピール
+function scrollToCTAButton() {
+    const currentStep = document.querySelector('.step:not(.hidden)');
+    const ctaButton = currentStep?.querySelector('.step-actions .cta-button');
+
+    if (ctaButton) {
+        setTimeout(() => {
+            ctaButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // アピールアニメーション
+            ctaButton.classList.add('cta-highlight');
+            setTimeout(() => {
+                ctaButton.classList.remove('cta-highlight');
+            }, 2000);
+        }, 300);
+    }
 }
 
 function toggleSpecificInput(button) {
@@ -275,7 +312,17 @@ function selectPriority(button) {
     // 値を保存
     AppState.formData.priority = button.dataset.value;
     // 送信ボタンを有効化
-    document.getElementById('submitButton').disabled = false;
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = false;
+
+    // CTAボタンにスクロールしてアピール
+    setTimeout(() => {
+        submitButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        submitButton.classList.add('cta-highlight');
+        setTimeout(() => {
+            submitButton.classList.remove('cta-highlight');
+        }, 2000);
+    }, 300);
 }
 
 
@@ -795,6 +842,53 @@ let selectedPlan = null;
 function openConsultationPlans() {
     document.getElementById('consultationPlansModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+
+    // モバイル用スクロールインジケーターをセットアップ
+    setupPlansScrollIndicator();
+}
+
+// プランカードのスクロールインジケーターをセットアップ
+function setupPlansScrollIndicator() {
+    const plansGrid = document.querySelector('.plans-grid');
+    const dots = document.querySelectorAll('.plans-scroll-hint .dot');
+
+    if (!plansGrid || !dots.length) return;
+
+    // スクロールイベントでインジケーターを更新
+    plansGrid.addEventListener('scroll', () => {
+        const scrollLeft = plansGrid.scrollLeft;
+        const cardWidth = plansGrid.querySelector('.plan-card')?.offsetWidth || 280;
+        const gap = 16;
+        const activeIndex = Math.round(scrollLeft / (cardWidth + gap));
+
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeIndex);
+        });
+    });
+
+    // ドットクリックでスクロール
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const cardWidth = plansGrid.querySelector('.plan-card')?.offsetWidth || 280;
+            const gap = 16;
+            plansGrid.scrollTo({
+                left: index * (cardWidth + gap),
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // 初期状態で「おすすめ」のがっつり相談（3番目）を中央に表示
+    setTimeout(() => {
+        if (window.innerWidth <= 800) {
+            const cardWidth = plansGrid.querySelector('.plan-card')?.offsetWidth || 280;
+            const gap = 16;
+            plansGrid.scrollTo({
+                left: 2 * (cardWidth + gap),
+                behavior: 'smooth'
+            });
+        }
+    }, 100);
 }
 
 function closeConsultationPlans() {
@@ -823,6 +917,12 @@ function selectPlan(planType) {
     // フォームに診断データを自動入力
     if (AppState.formData.clinicName) {
         document.getElementById('appClinicName').value = AppState.formData.clinicName;
+    }
+    if (AppState.formData.userName) {
+        document.getElementById('appName').value = AppState.formData.userName;
+    }
+    if (AppState.formData.userEmail) {
+        document.getElementById('appEmail').value = AppState.formData.userEmail;
     }
 
     // プラン選択モーダルを閉じて申し込みフォームを開く

@@ -555,6 +555,22 @@ body {
     font-size: 1.125rem;
 }
 
+/* CTAハイライトアニメーション */
+.cta-button.cta-highlight {
+    animation: cta-pulse 0.6s ease-in-out 3;
+}
+
+@keyframes cta-pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(var(--primary-500-rgb), 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(var(--primary-500-rgb), 0.6), 0 0 40px rgba(var(--primary-500-rgb), 0.4);
+    }
+}
+
 /* Trust Badges */
 .trust-badges {
     display: flex;
@@ -1752,8 +1768,79 @@ input[type="checkbox"] {
 
 @media (max-width: 800px) {
     .plans-grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
         gap: var(--space-4);
+        padding: var(--space-4) var(--space-2);
+        margin: 0 calc(var(--space-4) * -1);
+        scrollbar-width: none;
+    }
+
+    .plans-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .plans-grid .plan-card {
+        flex: 0 0 85%;
+        min-width: 280px;
+        scroll-snap-align: center;
+    }
+
+    .plans-grid .plan-card.featured {
+        transform: scale(1);
+    }
+
+    .plans-grid .plan-card.featured:hover {
+        transform: translateY(-4px);
+    }
+
+    /* スクロールインジケーター */
+    .plans-scroll-hint {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-2);
+        margin-top: var(--space-3);
+    }
+
+    .plans-scroll-hint .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--gray-300);
+        transition: all 0.3s ease;
+    }
+
+    .plans-scroll-hint .dot.active {
+        background: var(--primary-500);
+        transform: scale(1.2);
+    }
+
+    .scroll-hint-text {
+        display: block;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--gray-500);
+        margin-top: var(--space-2);
+        animation: pulse-hint 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-hint {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+    }
+}
+
+/* デスクトップではスクロールヒントを非表示 */
+.plans-scroll-hint,
+.scroll-hint-text {
+    display: none;
+}
+
+@media (max-width: 800px) {
+    .plans-scroll-hint {
+        display: flex;
     }
 }
 
