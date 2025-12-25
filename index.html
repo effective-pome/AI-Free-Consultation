@@ -143,6 +143,23 @@
 
                         <div class="form-group">
                             <label class="form-label">
+                                お名前
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="text" class="form-input" id="userName" placeholder="例：山田 太郎" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                メールアドレス
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="email" class="form-input" id="userEmail" placeholder="例：info@example.com" required>
+                            <p class="input-hint">診断結果をお送りします</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
                                 医院名
                                 <span class="optional-badge">任意</span>
                             </label>
@@ -229,7 +246,7 @@
                                 <button class="option-button" data-value="40">30-50人</button>
                                 <button class="option-button" data-value="65">50-80人</button>
                                 <button class="option-button" data-value="90">80-100人</button>
-                                <button class="option-button" data-value="100">100〜人</button>
+                                <button class="option-button" data-value="100">100人〜</button>
                             </div>
                             <div class="specific-input-wrapper">
                                 <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
@@ -243,81 +260,47 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">1日の平均来院数</label>
-                            <div class="button-group" data-field="dailyVisit">
-                                <button class="option-button" data-value="15">〜15人</button>
-                                <button class="option-button" data-value="22">15-30人</button>
-                                <button class="option-button" data-value="40">30-50人</button>
-                                <button class="option-button" data-value="65">50-80人</button>
-                                <button class="option-button" data-value="90">80-100人</button>
-                                <button class="option-button" data-value="100">100〜人</button>
+                            <label class="form-label">月間の医業収入</label>
+                            <div class="button-group" data-field="totalRevenue">
+                                <button class="option-button" data-value="150">〜300万円</button>
+                                <button class="option-button" data-value="400">300-500万円</button>
+                                <button class="option-button" data-value="600">500-700万円</button>
+                                <button class="option-button" data-value="800">700-900万円</button>
+                                <button class="option-button" data-value="1050">900-1200万円</button>
+                                <button class="option-button" data-value="1350">1200-1500万円</button>
+                                <button class="option-button" data-value="1750">1500-2000万円</button>
+                                <button class="option-button" data-value="2250">2000-2500万円</button>
+                                <button class="option-button" data-value="2750">2500-3000万円</button>
+                                <button class="option-button" data-value="3000">3000万円〜</button>
                             </div>
                             <div class="specific-input-wrapper">
                                 <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
                                     具体的に入力する
                                 </button>
                                 <div class="specific-input hidden">
-                                    <input type="number" class="form-input" id="dailyVisitSpecific" placeholder="人数を入力" min="0" max="150">
-                                    <span class="input-unit">人/日</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">月間の保険収入</label>
-                            <div class="button-group" data-field="insurance">
-                                <button class="option-button" data-value="200">〜200万円</button>
-                                <button class="option-button" data-value="300">200-400万円</button>
-                                <button class="option-button" data-value="500">400-600万円</button>
-                                <button class="option-button" data-value="700">600-800万円</button>
-                                <button class="option-button" data-value="900">800-1000万円</button>
-                                <button class="option-button" data-value="1200">1000-1400万円</button>
-                                <button class="option-button" data-value="1550">1400-1700万円</button>
-                                <button class="option-button" data-value="1700">1700〜万円</button>
-                            </div>
-                            <div class="specific-input-wrapper">
-                                <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
-                                    具体的に入力する
-                                </button>
-                                <div class="specific-input hidden">
-                                    <input type="number" class="form-input" id="insuranceSpecific" placeholder="金額を入力" min="0" max="2000">
+                                    <input type="number" class="form-input" id="totalRevenueSpecific" placeholder="金額を入力" min="0" max="5000">
                                     <span class="input-unit">万円/月</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">月間の自費収入</label>
-                            <div class="button-group" data-field="selfPay">
-                                <button class="option-button" data-value="50">〜50万円</button>
-                                <button class="option-button" data-value="75">50-100万円</button>
-                                <button class="option-button" data-value="150">100-200万円</button>
-                                <button class="option-button" data-value="300">200-400万円</button>
-                                <button class="option-button" data-value="550">400-700万円</button>
-                                <button class="option-button" data-value="850">700-1000万円</button>
-                                <button class="option-button" data-value="1250">1000-1500万円</button>
-                                <button class="option-button" data-value="1500">1500〜万円</button>
+                            <label class="form-label">自費率</label>
+                            <div class="button-group" data-field="selfPayRate">
+                                <button class="option-button" data-value="10">〜20%</button>
+                                <button class="option-button" data-value="25">20-30%</button>
+                                <button class="option-button" data-value="35">30-40%</button>
+                                <button class="option-button" data-value="45">40-50%</button>
+                                <button class="option-button" data-value="55">50%〜</button>
                             </div>
                             <div class="specific-input-wrapper">
                                 <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
                                     具体的に入力する
                                 </button>
                                 <div class="specific-input hidden">
-                                    <input type="number" class="form-input" id="selfPaySpecific" placeholder="金額を入力" min="0" max="2000">
-                                    <span class="input-unit">万円/月</span>
+                                    <input type="number" class="form-input" id="selfPayRateSpecific" placeholder="自費率を入力" min="0" max="100">
+                                    <span class="input-unit">%</span>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Auto-calculated display -->
-                        <div class="calculated-display">
-                            <div class="calculated-item">
-                                <span class="calculated-label">月間医業収入</span>
-                                <span class="calculated-value" id="totalRevenue">-- 万円</span>
-                            </div>
-                            <div class="calculated-item">
-                                <span class="calculated-label">自費率</span>
-                                <span class="calculated-value" id="selfPayRate">-- %</span>
                             </div>
                         </div>
 
@@ -342,20 +325,19 @@
                         <div class="form-group">
                             <label class="form-label">キャンセル率</label>
                             <div class="button-group" data-field="cancel">
-                                <button class="option-button" data-value="2">〜2%</button>
-                                <button class="option-button" data-value="3">2-4%</button>
-                                <button class="option-button" data-value="5">4-6%</button>
-                                <button class="option-button" data-value="7">6-8%</button>
+                                <button class="option-button" data-value="3">〜5%</button>
+                                <button class="option-button" data-value="6">5-8%</button>
                                 <button class="option-button" data-value="9">8-10%</button>
                                 <button class="option-button" data-value="11">10-12%</button>
-                                <button class="option-button" data-value="12">12%〜</button>
+                                <button class="option-button" data-value="13">12-15%</button>
+                                <button class="option-button" data-value="16">15%〜</button>
                             </div>
                             <div class="specific-input-wrapper">
                                 <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
                                     具体的に入力する
                                 </button>
                                 <div class="specific-input hidden">
-                                    <input type="number" class="form-input" id="cancelSpecific" placeholder="キャンセル率を入力" min="0" max="15" step="0.1">
+                                    <input type="number" class="form-input" id="cancelSpecific" placeholder="キャンセル率を入力" min="0" max="30" step="0.1">
                                     <span class="input-unit">%</span>
                                 </div>
                             </div>
@@ -364,13 +346,10 @@
                         <div class="form-group">
                             <label class="form-label">リコール率</label>
                             <div class="button-group" data-field="recall">
-                                <button class="option-button" data-value="10">〜10%</button>
-                                <button class="option-button" data-value="17">10-25%</button>
-                                <button class="option-button" data-value="32">25-40%</button>
-                                <button class="option-button" data-value="47">40-55%</button>
-                                <button class="option-button" data-value="62">55-70%</button>
-                                <button class="option-button" data-value="77">70-85%</button>
-                                <button class="option-button" data-value="85">85%〜</button>
+                                <button class="option-button" data-value="15">〜30%</button>
+                                <button class="option-button" data-value="45">30-60%</button>
+                                <button class="option-button" data-value="70">60-80%</button>
+                                <button class="option-button" data-value="85">80%〜</button>
                             </div>
                             <div class="specific-input-wrapper">
                                 <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
@@ -379,29 +358,6 @@
                                 <div class="specific-input hidden">
                                     <input type="number" class="form-input" id="recallSpecific" placeholder="リコール率を入力" min="0" max="100">
                                     <span class="input-unit">%</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">レセプト枚数（月間）</label>
-                            <div class="button-group" data-field="receipt">
-                                <button class="option-button" data-value="300">〜300枚</button>
-                                <button class="option-button" data-value="450">300-600枚</button>
-                                <button class="option-button" data-value="800">600-1000枚</button>
-                                <button class="option-button" data-value="1250">1000-1500枚</button>
-                                <button class="option-button" data-value="1750">1500-2000枚</button>
-                                <button class="option-button" data-value="2250">2000-2500枚</button>
-                                <button class="option-button" data-value="2750">2500-3000枚</button>
-                                <button class="option-button" data-value="3000">3000〜枚</button>
-                            </div>
-                            <div class="specific-input-wrapper">
-                                <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
-                                    具体的に入力する
-                                </button>
-                                <div class="specific-input hidden">
-                                    <input type="number" class="form-input" id="receiptSpecific" placeholder="枚数を入力" min="0" max="4000">
-                                    <span class="input-unit">枚/月</span>
                                 </div>
                             </div>
                         </div>

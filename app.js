@@ -185,8 +185,6 @@ function setupButtonGroups() {
                 button.classList.add('selected');
                 // 値を保存
                 AppState.formData[field] = parseFloat(button.dataset.value);
-                // 計算を更新
-                updateCalculations();
             });
         });
     });
@@ -206,7 +204,15 @@ function toggleSpecificInput(button) {
 // 入力フィールドのリスナー
 // ========================================
 function setupInputListeners() {
-    // 基本情報
+    // 基本情報（名前・メールアドレス）
+    document.getElementById('userName')?.addEventListener('input', (e) => {
+        AppState.formData.userName = e.target.value;
+    });
+
+    document.getElementById('userEmail')?.addEventListener('input', (e) => {
+        AppState.formData.userEmail = e.target.value;
+    });
+
     document.getElementById('clinicName')?.addEventListener('input', (e) => {
         AppState.formData.clinicName = e.target.value;
     });
@@ -226,12 +232,10 @@ function setupInputListeners() {
     // 具体的入力フィールド
     const specificFields = [
         { id: 'newPatientSpecific', field: 'newPatient' },
-        { id: 'dailyVisitSpecific', field: 'dailyVisit' },
-        { id: 'insuranceSpecific', field: 'insurance' },
-        { id: 'selfPaySpecific', field: 'selfPay' },
+        { id: 'totalRevenueSpecific', field: 'totalRevenue' },
+        { id: 'selfPayRateSpecific', field: 'selfPayRate' },
         { id: 'cancelSpecific', field: 'cancel' },
-        { id: 'recallSpecific', field: 'recall' },
-        { id: 'receiptSpecific', field: 'receipt' }
+        { id: 'recallSpecific', field: 'recall' }
     ];
 
     specificFields.forEach(({ id, field }) => {
@@ -244,7 +248,6 @@ function setupInputListeners() {
                 if (buttonGroup) {
                     buttonGroup.querySelectorAll('.option-button').forEach(b => b.classList.remove('selected'));
                 }
-                updateCalculations();
             }
         });
     });
@@ -269,30 +272,6 @@ function selectPriority(button) {
     document.getElementById('submitButton').disabled = false;
 }
 
-// ========================================
-// 計算処理
-// ========================================
-function updateCalculations() {
-    const insurance = AppState.formData.insurance || 0;
-    const selfPay = AppState.formData.selfPay || 0;
-
-    // 月間医業収入
-    const totalRevenue = insurance + selfPay;
-    document.getElementById('totalRevenue').textContent = totalRevenue > 0 ? `${totalRevenue} 万円` : '-- 万円';
-
-    // 自費率（小数点以下切り捨て）
-    let selfPayRate = 0;
-    if (totalRevenue > 0) {
-        selfPayRate = Math.floor((selfPay / totalRevenue) * 100);
-        document.getElementById('selfPayRate').textContent = `${selfPayRate} %`;
-    } else {
-        document.getElementById('selfPayRate').textContent = '-- %';
-    }
-
-    // データ保存
-    AppState.formData.totalRevenue = totalRevenue;
-    AppState.formData.selfPayRate = selfPayRate;
-}
 
 
 
@@ -329,6 +308,11 @@ async function submitForm() {
 
     // 結果を表示
     displayResults(recommendations);
+
+    // 診断結果をメールで送信
+    if (AppState.formData.userEmail) {
+        await sendDiagnosisResultEmail(recommendations);
+    }
 }
 
 async function runLoadingAnimation() {
@@ -466,15 +450,12 @@ function displayResults(results) {
 function displaySummary(summary) {
     const container = document.getElementById('resultsSummary');
     const items = [
+        { label: 'お名前', value: summary.userName || '--' },
         { label: '新患数', value: summary.newPatient ? `${summary.newPatient}人/月` : '--' },
-        { label: '来院数/日', value: summary.dailyVisit ? `${summary.dailyVisit}人` : '--' },
-        { label: '保険収入', value: summary.insurance ? `${summary.insurance}万円` : '--' },
-        { label: '自費収入', value: summary.selfPay ? `${summary.selfPay}万円` : '--' },
         { label: '月間医業収入', value: summary.totalRevenue ? `${summary.totalRevenue}万円` : '--', highlight: true },
         { label: '自費率', value: summary.selfPayRate ? `${Math.floor(summary.selfPayRate)}%` : '--', highlight: true },
         { label: 'キャンセル率', value: summary.cancel ? `${Math.floor(summary.cancel)}%` : '--' },
-        { label: 'リコール率', value: summary.recall ? `${Math.floor(summary.recall)}%` : '--' },
-        { label: 'レセプト枚数', value: summary.receipt ? `${summary.receipt}枚/月` : '--' }
+        { label: 'リコール率', value: summary.recall ? `${Math.floor(summary.recall)}%` : '--' }
     ];
 
     container.innerHTML = items.map(item => `
@@ -908,6 +889,94 @@ async function sendApplicationEmail(formData) {
 
     // メールクライアントを開く（デモ用）
     // window.location.href = `mailto:${formData.email}?subject=${subject}&body=${body}`;
+
+    return Promise.resolve();
+}
+
+// ========================================
+// 診断結果メール送信
+// ========================================
+async function sendDiagnosisResultEmail(recommendations) {
+    const formData = AppState.formData;
+    const comparison = recommendations.comparison;
+
+    // 優先課題のラベル取得
+    const priorityLabels = {
+        newPatient: '新患を増やしたい',
+        selfPay: '自費率を上げたい',
+        cancel: 'キャンセルを減らしたい',
+        staff: 'スタッフの定着・採用',
+        efficiency: '業務を効率化したい'
+    };
+
+    // メール本文を生成
+    const emailContent = {
+        to: formData.userEmail,
+        name: formData.userName,
+        clinicName: formData.clinicName || '未入力',
+        subject: '【AI無料診断】診断結果のお知らせ',
+        body: `
+${formData.userName} 様
+
+この度はAI無料診断をご利用いただき、誠にありがとうございます。
+診断結果をお送りいたします。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ 入力データサマリー
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+医院名: ${formData.clinicName || '未入力'}
+新患数: ${formData.newPatient ? formData.newPatient + '人/月' : '未入力'}
+月間医業収入: ${formData.totalRevenue ? formData.totalRevenue + '万円' : '未入力'}
+自費率: ${formData.selfPayRate ? Math.floor(formData.selfPayRate) + '%' : '未入力'}
+キャンセル率: ${formData.cancel ? Math.floor(formData.cancel) + '%' : '未入力'}
+リコール率: ${formData.recall ? Math.floor(formData.recall) + '%' : '未入力'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ 類似医院との比較
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+新患獲得力: 上位 ${Math.max(0.1, 100 - comparison.newPatientPower.percentile).toFixed(1)}%
+自費転換力: 上位 ${Math.max(0.1, 100 - comparison.selfPayPower.percentile).toFixed(1)}%
+患者定着率: 上位 ${Math.max(0.1, 100 - comparison.patientRetention.percentile).toFixed(1)}%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ 最も解決したい課題
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${priorityLabels[formData.priority] || formData.priority}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+■ AIからの提案
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${recommendations.recommendations.items.map((item, i) => `
+【${i + 1}】${item.title}
+${item.description}
+期待効果: ${item.effect}
+`).join('\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+詳しい改善プランについては、無料相談をご予約ください。
+あなたの医院に最適な改善策をご提案いたします。
+
+▼ 無料相談のご予約はこちら
+電話: 045-440-0322（平日 9:00-18:00）
+
+─────────────────────
+歯科医院地域一番実践会
+─────────────────────
+        `.trim()
+    };
+
+    // コンソールにログ出力（実際の実装ではバックエンドAPIを呼び出す）
+    console.log('診断結果メール送信:', emailContent);
+
+    // ローカルストレージに保存（分析用）
+    const diagnosisResults = JSON.parse(localStorage.getItem('diagnosisResults') || '[]');
+    diagnosisResults.push({
+        ...emailContent,
+        sentAt: new Date().toISOString(),
+        formData: formData
+    });
+    localStorage.setItem('diagnosisResults', JSON.stringify(diagnosisResults));
 
     return Promise.resolve();
 }

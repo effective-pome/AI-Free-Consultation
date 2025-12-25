@@ -557,10 +557,9 @@ const KnowledgeBase = {
         }
 
         // 自費転換力
-        if (formData.insurance && formData.selfPay) {
-            const rate = (formData.selfPay / (formData.insurance + formData.selfPay)) * 100;
+        if (formData.selfPayRate) {
             comparison.selfPayPower.percentile = this.calculatePercentile(
-                rate,
+                formData.selfPayRate,
                 this.PERCENTILE_DATA.selfPayRate
             );
             comparison.selfPayPower.status = this.getStatus(comparison.selfPayPower.percentile);
