@@ -14,6 +14,12 @@ const AppState = {
 };
 
 // ========================================
+// GAS連携設定
+// ========================================
+// Google Apps ScriptのウェブアプリURL（デプロイ後に設定してください）
+const GAS_WEBAPP_URL = 'YOUR_GAS_WEBAPP_URL_HERE';
+
+// ========================================
 // 初期化
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -309,9 +315,51 @@ async function submitForm() {
     // 結果を表示
     displayResults(recommendations);
 
-    // 診断結果をメールで送信
+    // GASにデータを送信（PDFアドバイスシートをメール送信）
     if (AppState.formData.userEmail) {
-        await sendDiagnosisResultEmail(recommendations);
+        sendToGAS(AppState.formData, recommendations);
+    }
+}
+
+// ========================================
+// GAS連携（メール・PDF送信）
+// ========================================
+async function sendToGAS(formData, recommendations) {
+    // URLが設定されていない場合はスキップ
+    if (!GAS_WEBAPP_URL || GAS_WEBAPP_URL === 'YOUR_GAS_WEBAPP_URL_HERE') {
+        console.log('GAS未設定: PDFメール送信をスキップ');
+        return;
+    }
+
+    // 送信データを作成
+    const payload = {
+        userName: formData.userName,
+        userEmail: formData.userEmail,
+        clinicName: formData.clinicName,
+        region: formData.region,
+        yearsOpen: formData.yearsOpen,
+        units: formData.units,
+        newPatient: formData.newPatient,
+        totalRevenue: formData.totalRevenue,
+        selfPayRate: formData.selfPayRate,
+        cancel: formData.cancel,
+        recall: formData.recall,
+        priority: formData.priority,
+        otherConcerns: formData.otherConcerns,
+        recommendations: recommendations,
+        timestamp: new Date().toISOString()
+    };
+
+    try {
+        await fetch(GAS_WEBAPP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        console.log('GAS送信完了: PDFアドバイスシートをメール送信しました');
+    } catch (error) {
+        console.error('GAS送信エラー:', error);
     }
 }
 
