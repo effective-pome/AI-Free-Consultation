@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI無料診断 | Dental AI Consulting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Landing Page -->
+        <section id="landing" class="landing-page">
+            <div class="landing-content">
+                <!-- Main Title Section -->
+                <div class="main-title-section">
+                    <p class="tagline">歯科医院地域一番実践会</p>
+                    <h1 class="main-title">
+                        <span class="title-ai">AI</span>
+                        <span class="title-text">無料診断</span>
+                    </h1>
+                    <p class="main-subtitle">3,247件の成功事例データから、あなたの医院に最適な改善策を提案</p>
+                </div>
+
+                <div class="hero-section">
+                    <!-- Dynamic Growth Chart -->
+                    <div class="growth-chart-container">
+                        <div class="growth-chart">
+                            <div class="growth-chart-bars">
+                                <div class="growth-bar" data-value="35">
+                                    <div class="growth-bar-fill"></div>
+                                </div>
+                                <div class="growth-bar" data-value="45">
+                                    <div class="growth-bar-fill"></div>
+                                </div>
+                                <div class="growth-bar" data-value="52">
+                                    <div class="growth-bar-fill"></div>
+                                </div>
+                                <div class="growth-bar" data-value="60">
+                                    <div class="growth-bar-fill"></div>
+                                </div>
+                                <div class="growth-bar" data-value="70">
+                                    <div class="growth-bar-fill"></div>
+                                </div>
+                                <div class="growth-bar" data-value="82">
+                                    <div class="growth-bar-fill"></div>
+                                </div>
+                                <div class="growth-bar" data-value="94">
+                                    <div class="growth-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="3247">0</span>
+                            <span class="stat-label">成功事例</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="94">0</span>
+                            <span class="stat-unit">%</span>
+                            <span class="stat-label">改善達成率</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="90">0</span>
+                            <span class="stat-unit">秒</span>
+                            <span class="stat-label">で完了</span>
+                        </div>
+                    </div>
+
+                    <button class="cta-button primary pulse-animation" onclick="startDiagnosis()">
+                        <span>無料でAI診断を始める</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+
+                    <div class="trust-badges">
+                        <div class="badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>だいたいの数値でOK</span>
+                        </div>
+                        <div class="badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>途中で保存できます</span>
+                        </div>
+                        <div class="badge">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>入力内容は暗号化して保護</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Particles -->
+            <div class="particles" id="particles"></div>
+        </section>
+
+        <!-- Form Section -->
+        <section id="formSection" class="form-section hidden">
+            <div class="form-layout">
+                <!-- Left: Form -->
+                <div class="form-container">
+                    <div class="form-header">
+                        <button class="back-button" onclick="goBack()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                        <div class="progress-info">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <span class="progress-text" id="progressText">STEP 1/4</span>
+                        </div>
+                        <div class="time-estimate" id="timeEstimate">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <span>残り約75秒</span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Basic Info -->
+                    <div class="step" id="step1">
+                        <div class="step-header">
+                            <h2 class="step-title">基本情報</h2>
+                            <p class="step-description">医院の基本情報を入力してください</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                お名前
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="text" class="form-input" id="userName" placeholder="例：山田 太郎" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                メールアドレス
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="email" class="form-input" id="userEmail" placeholder="例：info@example.com" required>
+                            <p class="input-hint">診断結果をお送りします</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                医院名
+                                <span class="optional-badge">任意</span>
+                            </label>
+                            <input type="text" class="form-input" id="clinicName" placeholder="例：さくら歯科クリニック">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                地方
+                                <span class="optional-badge">任意</span>
+                            </label>
+                            <select class="form-select" id="region">
+                                <option value="">選択してください</option>
+                                <option value="hokkaido">北海道</option>
+                                <option value="tohoku">東北</option>
+                                <option value="kanto">関東</option>
+                                <option value="chubu">中部</option>
+                                <option value="tokai">東海</option>
+                                <option value="kinki">近畿</option>
+                                <option value="chugoku">中国</option>
+                                <option value="shikoku">四国</option>
+                                <option value="kyushu">九州・沖縄</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    開業年数
+                                    <span class="optional-badge">任意</span>
+                                </label>
+                                <select class="form-select" id="yearsOpen">
+                                    <option value="">選択してください</option>
+                                    <option value="under3">3年未満</option>
+                                    <option value="3to5">3〜5年</option>
+                                    <option value="5to10">5〜10年</option>
+                                    <option value="10to20">10〜20年</option>
+                                    <option value="over20">20年以上</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    ユニット数
+                                    <span class="optional-badge">任意</span>
+                                </label>
+                                <select class="form-select" id="units">
+                                    <option value="">選択してください</option>
+                                    <option value="1">1台</option>
+                                    <option value="2">2台</option>
+                                    <option value="3">3台</option>
+                                    <option value="4">4台</option>
+                                    <option value="5">5台</option>
+                                    <option value="6-7">6〜7台</option>
+                                    <option value="8-10">8〜10台</option>
+                                    <option value="11+">11台以上</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="step-actions">
+                            <button class="skip-link" onclick="nextStep()">わからない項目はスキップ →</button>
+                            <button class="cta-button primary" onclick="nextStep()">
+                                次へ
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Current Numbers -->
+                    <div class="step hidden" id="step2">
+                        <div class="step-header">
+                            <h2 class="step-title">現状の数値</h2>
+                            <p class="step-description">だいたいの数値で構いません</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">月間の新患数</label>
+                            <div class="button-group" data-field="newPatient">
+                                <button class="option-button" data-value="15">〜15人</button>
+                                <button class="option-button" data-value="22">15-30人</button>
+                                <button class="option-button" data-value="40">30-50人</button>
+                                <button class="option-button" data-value="65">50-80人</button>
+                                <button class="option-button" data-value="90">80-100人</button>
+                                <button class="option-button" data-value="100">100人〜</button>
+                            </div>
+                            <div class="specific-input-wrapper">
+                                <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
+                                    具体的に入力する
+                                </button>
+                                <div class="specific-input hidden">
+                                    <input type="number" class="form-input" id="newPatientSpecific" placeholder="人数を入力" min="0" max="150">
+                                    <span class="input-unit">人/月</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">月間の医業収入</label>
+                            <div class="button-group" data-field="totalRevenue">
+                                <button class="option-button" data-value="150">〜300万円</button>
+                                <button class="option-button" data-value="400">300-500万円</button>
+                                <button class="option-button" data-value="600">500-700万円</button>
+                                <button class="option-button" data-value="800">700-900万円</button>
+                                <button class="option-button" data-value="1050">900-1200万円</button>
+                                <button class="option-button" data-value="1350">1200-1500万円</button>
+                                <button class="option-button" data-value="1750">1500-2000万円</button>
+                                <button class="option-button" data-value="2250">2000-2500万円</button>
+                                <button class="option-button" data-value="2750">2500-3000万円</button>
+                                <button class="option-button" data-value="3000">3000万円〜</button>
+                            </div>
+                            <div class="specific-input-wrapper">
+                                <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
+                                    具体的に入力する
+                                </button>
+                                <div class="specific-input hidden">
+                                    <input type="number" class="form-input" id="totalRevenueSpecific" placeholder="金額を入力" min="0" max="5000">
+                                    <span class="input-unit">万円/月</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">自費率</label>
+                            <div class="button-group" data-field="selfPayRate">
+                                <button class="option-button" data-value="10">〜20%</button>
+                                <button class="option-button" data-value="25">20-30%</button>
+                                <button class="option-button" data-value="35">30-40%</button>
+                                <button class="option-button" data-value="45">40-50%</button>
+                                <button class="option-button" data-value="55">50%〜</button>
+                            </div>
+                            <div class="specific-input-wrapper">
+                                <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
+                                    具体的に入力する
+                                </button>
+                                <div class="specific-input hidden">
+                                    <input type="number" class="form-input" id="selfPayRateSpecific" placeholder="自費率を入力" min="0" max="100">
+                                    <span class="input-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-actions">
+                            <button class="skip-link" onclick="nextStep()">わからない項目はスキップ →</button>
+                            <button class="cta-button primary" onclick="nextStep()">
+                                次へ
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Metrics -->
+                    <div class="step hidden" id="step3">
+                        <div class="step-header">
+                            <h2 class="step-title">各種指標</h2>
+                            <p class="step-description">わかる範囲で入力してください</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">キャンセル率</label>
+                            <div class="button-group" data-field="cancel">
+                                <button class="option-button" data-value="3">〜5%</button>
+                                <button class="option-button" data-value="6">5-8%</button>
+                                <button class="option-button" data-value="9">8-10%</button>
+                                <button class="option-button" data-value="11">10-12%</button>
+                                <button class="option-button" data-value="13">12-15%</button>
+                                <button class="option-button" data-value="16">15%〜</button>
+                            </div>
+                            <div class="specific-input-wrapper">
+                                <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
+                                    具体的に入力する
+                                </button>
+                                <div class="specific-input hidden">
+                                    <input type="number" class="form-input" id="cancelSpecific" placeholder="キャンセル率を入力" min="0" max="30" step="0.1">
+                                    <span class="input-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">リコール率</label>
+                            <div class="button-group" data-field="recall">
+                                <button class="option-button" data-value="15">〜30%</button>
+                                <button class="option-button" data-value="45">30-60%</button>
+                                <button class="option-button" data-value="70">60-80%</button>
+                                <button class="option-button" data-value="85">80%〜</button>
+                            </div>
+                            <div class="specific-input-wrapper">
+                                <button class="specific-input-toggle" onclick="toggleSpecificInput(this)">
+                                    具体的に入力する
+                                </button>
+                                <div class="specific-input hidden">
+                                    <input type="number" class="form-input" id="recallSpecific" placeholder="リコール率を入力" min="0" max="100">
+                                    <span class="input-unit">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-actions">
+                            <button class="skip-link" onclick="nextStep()">わからない項目はスキップ →</button>
+                            <button class="cta-button primary" onclick="nextStep()">
+                                次へ
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Priority & Concerns -->
+                    <div class="step hidden" id="step4">
+                        <div class="step-header">
+                            <h2 class="step-title">課題選択・その他お悩み</h2>
+                            <p class="step-description">最も解決したい課題を選んでください</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                最も解決したい課題
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <div class="priority-grid">
+                                <button class="priority-button" data-value="newPatient" onclick="selectPriority(this)">
+                                    <span class="priority-icon">📈</span>
+                                    <span class="priority-text">新患を増やしたい</span>
+                                </button>
+                                <button class="priority-button" data-value="selfPay" onclick="selectPriority(this)">
+                                    <span class="priority-icon">💰</span>
+                                    <span class="priority-text">自費率を上げたい</span>
+                                </button>
+                                <button class="priority-button" data-value="cancel" onclick="selectPriority(this)">
+                                    <span class="priority-icon">📅</span>
+                                    <span class="priority-text">キャンセルを減らしたい</span>
+                                </button>
+                                <button class="priority-button" data-value="staff" onclick="selectPriority(this)">
+                                    <span class="priority-icon">👥</span>
+                                    <span class="priority-text">スタッフの定着・採用</span>
+                                </button>
+                                <button class="priority-button" data-value="efficiency" onclick="selectPriority(this)">
+                                    <span class="priority-icon">⚡</span>
+                                    <span class="priority-text">業務を効率化したい</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                その他のお悩み
+                                <span class="optional-badge">任意</span>
+                            </label>
+                            <textarea class="form-textarea" id="otherConcerns" placeholder="その他、具体的なお悩みや状況があればご記入ください。例：スタッフの離職が続いている、Web集客がうまくいかない、など"></textarea>
+                        </div>
+
+                        <div class="step-actions">
+                            <button class="cta-button primary large" onclick="submitForm()" id="submitButton" disabled>
+                                <span>AI診断結果を見る</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                            <p class="submit-note">※ 課題を選択すると診断結果を表示できます</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Screen -->
+        <section id="loadingScreen" class="loading-screen hidden">
+            <div class="loading-content">
+                <div class="loading-animation">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-progress">
+                        <div class="loading-progress-bar" id="loadingProgressBar"></div>
+                    </div>
+                </div>
+                <h2 class="loading-title">AI分析中...</h2>
+                <p class="loading-subtitle">3,247件の事例から最適な改善策を抽出しています</p>
+                <div class="loading-steps">
+                    <div class="loading-step active" id="loadingStep1">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>データ分析中...</span>
+                    </div>
+                    <div class="loading-step" id="loadingStep2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>類似医院を検索中...</span>
+                    </div>
+                    <div class="loading-step" id="loadingStep3">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>改善提案を生成中...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Screen -->
+        <section id="resultsScreen" class="results-screen hidden">
+            <div class="results-container">
+                <div class="results-header">
+                    <div class="results-logo">
+                        <div class="logo-icon small">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 20C12 15.5 15.5 12 20 12C24.5 12 28 15.5 28 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="20" cy="24" r="4" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <span>AI診断結果</span>
+                    </div>
+                    <button class="restart-button" onclick="restartDiagnosis()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 4v6h6M23 20v-6h-6"/>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+                        </svg>
+                        最初からやり直す
+                    </button>
+                </div>
+
+                <div class="results-content">
+                    <!-- Input Summary -->
+                    <div class="results-section">
+                        <h3 class="results-section-title">入力データサマリー</h3>
+                        <div class="results-summary-grid" id="resultsSummary">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Comparison -->
+                    <div class="results-section">
+                        <h3 class="results-section-title">類似医院との比較</h3>
+                        <div class="comparison-grid" id="comparisonGrid">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- AI Recommendations -->
+                    <div class="results-section ai-recommendations">
+                        <h3 class="results-section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ai-icon">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5"/>
+                                <path d="M2 12l10 5 10-5"/>
+                            </svg>
+                            AIからの提案
+                        </h3>
+                        <div class="recommendations-list" id="recommendationsList">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- CTA Section -->
+                    <div class="results-cta">
+                        <h3 class="cta-title">詳しい改善プランを無料でご説明します</h3>
+                        <p class="cta-description">あなたの医院に最適な相談プランをお選びください</p>
+                        <button class="cta-button primary large" onclick="openConsultationPlans()">
+                            <span>無料相談を予約する</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                        <div class="cta-phone">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            <span>045-440-0322</span>
+                            <span class="phone-hours">（平日 9:00-18:00）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Consultation Plans Modal -->
+        <div id="consultationPlansModal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeConsultationPlans()"></div>
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h3>無料相談プランを選択</h3>
+                    <button class="modal-close" onclick="closeConsultationPlans()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description plans-description">
+                        あなたのニーズに合わせた3つのプランをご用意しています
+                    </p>
+                    <div class="plans-grid">
+                        <!-- お手軽相談 -->
+                        <div class="plan-card" data-plan="light">
+                            <div class="plan-free-badge">無料</div>
+                            <div class="plan-badge">LIGHT</div>
+                            <h4 class="plan-title">お手軽相談</h4>
+                            <div class="plan-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                <span>30分</span>
+                            </div>
+                            <p class="plan-description">
+                                特に相談したいことは明確ではないが、まずは話を聞いてみたい方におすすめ
+                            </p>
+                            <div class="plan-requirements">
+                                <h5>提出物</h5>
+                                <p class="no-requirements">特になし</p>
+                            </div>
+                            <button class="plan-cta" onclick="selectPlan('light')">
+                                このプランで申し込む
+                            </button>
+                        </div>
+
+                        <!-- しっかり相談 -->
+                        <div class="plan-card gold" data-plan="standard">
+                            <div class="plan-free-badge">無料</div>
+                            <div class="plan-badge">STANDARD</div>
+                            <h4 class="plan-title">しっかり相談</h4>
+                            <div class="plan-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                <span>1時間</span>
+                            </div>
+                            <p class="plan-description">
+                                医院の重要課題に対する明日から実践できる具体策の提案を受けてみたい方におすすめ
+                            </p>
+                            <div class="plan-requirements">
+                                <h5>提出物</h5>
+                                <ul>
+                                    <li>カウンセリングシート</li>
+                                </ul>
+                            </div>
+                            <button class="plan-cta" onclick="selectPlan('standard')">
+                                このプランで申し込む
+                            </button>
+                        </div>
+
+                        <!-- がっつり相談 -->
+                        <div class="plan-card featured" data-plan="premium">
+                            <div class="plan-free-badge">無料</div>
+                            <div class="plan-badge">PREMIUM</div>
+                            <div class="plan-popular">おすすめ</div>
+                            <h4 class="plan-title">がっつり相談</h4>
+                            <div class="plan-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                                <span>2時間</span>
+                            </div>
+                            <p class="plan-description">
+                                当社の経営コンサルティングを本格的に体験したい方におすすめ
+                            </p>
+                            <div class="plan-requirements">
+                                <h5>提出物</h5>
+                                <ul>
+                                    <li>カウンセリングシート</li>
+                                    <li>アポ帳</li>
+                                    <li>具体的なお悩み・課題の詳細</li>
+                                </ul>
+                            </div>
+                            <button class="plan-cta" onclick="selectPlan('premium')">
+                                このプランで申し込む
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form Modal -->
+        <div id="applicationFormModal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeApplicationForm()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="modal-back" onclick="backToPlans()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <h3>お申し込みフォーム</h3>
+                    <button class="modal-close" onclick="closeApplicationForm()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="selected-plan-banner" id="selectedPlanBanner">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <form id="applicationForm" onsubmit="submitApplication(event)">
+                        <div class="form-group">
+                            <label class="form-label">
+                                医院名
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="text" class="form-input" id="appClinicName" required placeholder="例：〇〇歯科医院">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                お名前
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="text" class="form-input" id="appName" required placeholder="例：山田 太郎">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                役職
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <select class="form-select" id="appPosition" required>
+                                <option value="">選択してください</option>
+                                <option value="院長">院長</option>
+                                <option value="副院長">副院長</option>
+                                <option value="事務長">事務長</option>
+                                <option value="院長夫人">院長夫人</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                メールアドレス
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="email" class="form-input" id="appEmail" required placeholder="例：info@example.com">
+                            <p class="input-hint">申し込み確認メールをお送りします</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                電話番号
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <input type="tel" class="form-input" id="appPhone" required placeholder="例：045-123-4567">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="cta-button primary large full-width">
+                                <span>申し込みを確定する</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Complete Modal -->
+        <div id="applicationCompleteModal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeApplicationComplete()"></div>
+            <div class="modal-content">
+                <div class="modal-body application-complete">
+                    <div class="complete-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <path d="M22 4L12 14.01l-3-3"/>
+                        </svg>
+                    </div>
+                    <h3 class="complete-title">お申し込みを受け付けました</h3>
+                    <p class="complete-message">
+                        ご入力いただいたメールアドレスに確認メールをお送りしました。<br>
+                        担当者より2営業日以内にご連絡いたします。
+                    </p>
+                    <div class="complete-summary" id="completeSummary">
+                        <!-- Dynamically populated -->
+                    </div>
+                    <button class="cta-button primary" onclick="closeApplicationComplete()">
+                        閉じる
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Settings Modal -->
+        <div id="apiSettingsModal" class="modal hidden">
+            <div class="modal-overlay" onclick="closeApiSettings()"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>API設定</h3>
+                    <button class="modal-close" onclick="closeApiSettings()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-description">
+                        Gemini APIを使用して、より高度なAI分析を行うことができます。
+                        APIキーはブラウザのローカルストレージに保存され、サーバーには送信されません。
+                    </p>
+                    <div class="form-group">
+                        <label class="form-label">Gemini API Key</label>
+                        <input type="password" class="form-input" id="apiKeyInput" placeholder="AIza...">
+                        <p class="input-hint">Google AI StudioからAPIキーを取得してください</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" id="useApiCheckbox">
+                            API連携を有効にする
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="cta-button secondary" onclick="closeApiSettings()">キャンセル</button>
+                    <button class="cta-button primary" onclick="saveApiSettings()">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Button -->
+        <button class="settings-button" onclick="openApiSettings()" title="API設定">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        </button>
+    </div>
+
+    <script src="knowledge-base.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
