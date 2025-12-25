@@ -15,7 +15,7 @@
 // ========================================
 const GAS_CONFIG = {
   // GAS WebアプリのURL（デプロイ後に設定）
-  WEBAPP_URL: 'YOUR_GAS_WEBAPP_URL_HERE',
+  WEBAPP_URL: 'https://script.google.com/macros/s/AKfycbwZZVAm0UjDw_bZD4-OpjOG89ScUzCi2yh-q2XxTHH7vRqYT9gJm_1Qi_-zHsXBSmnH6A/exec',
 
   // リトライ設定
   MAX_RETRIES: 3,
