@@ -258,29 +258,64 @@ function toggleSpecificInput(button) {
 // 入力フィールドのリスナー
 // ========================================
 function setupInputListeners() {
+    // Step 1の入力フィールド順序（自動スクロール用）
+    const step1Fields = ['userName', 'userEmail', 'clinicName', 'region', 'yearsOpen', 'units'];
+
+    // 次のフィールドに自動スクロール
+    function scrollToNextField(currentFieldId) {
+        const currentIndex = step1Fields.indexOf(currentFieldId);
+        if (currentIndex !== -1 && currentIndex < step1Fields.length - 1) {
+            const nextFieldId = step1Fields[currentIndex + 1];
+            const nextField = document.getElementById(nextFieldId);
+            if (nextField) {
+                setTimeout(() => {
+                    const formGroup = nextField.closest('.form-group');
+                    if (formGroup) {
+                        formGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 150);
+            }
+        } else if (currentIndex === step1Fields.length - 1) {
+            // 最後のフィールドの場合はCTAボタンにスクロール
+            scrollToCTAButton();
+        }
+    }
+
     // 基本情報（名前・メールアドレス）
     document.getElementById('userName')?.addEventListener('input', (e) => {
         AppState.formData.userName = e.target.value;
+    });
+    document.getElementById('userName')?.addEventListener('blur', (e) => {
+        if (e.target.value.trim()) scrollToNextField('userName');
     });
 
     document.getElementById('userEmail')?.addEventListener('input', (e) => {
         AppState.formData.userEmail = e.target.value;
     });
+    document.getElementById('userEmail')?.addEventListener('blur', (e) => {
+        if (e.target.value.trim()) scrollToNextField('userEmail');
+    });
 
     document.getElementById('clinicName')?.addEventListener('input', (e) => {
         AppState.formData.clinicName = e.target.value;
     });
+    document.getElementById('clinicName')?.addEventListener('blur', (e) => {
+        if (e.target.value.trim()) scrollToNextField('clinicName');
+    });
 
     document.getElementById('region')?.addEventListener('change', (e) => {
         AppState.formData.region = e.target.value;
+        if (e.target.value) scrollToNextField('region');
     });
 
     document.getElementById('yearsOpen')?.addEventListener('change', (e) => {
         AppState.formData.yearsOpen = e.target.value;
+        if (e.target.value) scrollToNextField('yearsOpen');
     });
 
     document.getElementById('units')?.addEventListener('change', (e) => {
         AppState.formData.units = e.target.value;
+        if (e.target.value) scrollToNextField('units');
     });
 
     // 具体的入力フィールド
@@ -853,6 +888,15 @@ let selectedPlan = null;
 function openConsultationPlans() {
     document.getElementById('consultationPlansModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+
+    // モバイル時、中央の「がっつり相談」カードにスクロール
+    setTimeout(() => {
+        const plansGrid = document.querySelector('.plans-grid');
+        const featuredCard = plansGrid?.querySelector('.plan-card.featured');
+        if (plansGrid && featuredCard && window.innerWidth < 600) {
+            featuredCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+    }, 100);
 }
 
 function closeConsultationPlans() {

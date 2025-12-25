@@ -1766,36 +1766,52 @@ input[type="checkbox"] {
     gap: var(--space-5);
 }
 
-@media (max-width: 800px) {
+/* モバイル：横スクロール、中央カード大きく、隣のカードが見える */
+@media (max-width: 599px) {
     .plans-grid {
         display: flex;
-        flex-direction: column;
-        gap: var(--space-4);
-        padding: var(--space-2);
+        flex-direction: row;
+        gap: var(--space-3);
+        padding: var(--space-3);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* スクロールバーを非表示 */
+    .plans-grid::-webkit-scrollbar {
+        display: none;
+    }
+    .plans-grid {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 
     .plans-grid .plan-card {
-        width: 100%;
+        flex: 0 0 75%;
+        min-width: 260px;
+        max-width: 300px;
+        scroll-snap-align: center;
+        transition: transform 0.3s ease, opacity 0.3s ease;
     }
+
+    /* カード順序：お手軽 → がっつり（中央） → しっかり */
+    .plans-grid .plan-card[data-plan="light"] { order: 1; }
+    .plans-grid .plan-card.featured { order: 2; }
+    .plans-grid .plan-card.gold { order: 3; }
 
     .plans-grid .plan-card.featured {
         transform: scale(1);
-        order: -1; /* おすすめを一番上に表示 */
     }
 
     .plans-grid .plan-card.featured:hover {
         transform: translateY(-4px);
     }
-
-    /* スクロールインジケーター（モバイルでは非表示） */
-    .plans-scroll-hint,
-    .scroll-hint-text {
-        display: none !important;
-    }
 }
 
 /* タブレット向け（3カード横並び、中央大きく） */
-@media (min-width: 600px) and (max-width: 800px) {
+@media (min-width: 600px) and (max-width: 900px) {
     .plans-grid {
         display: grid;
         grid-template-columns: 1fr 1.2fr 1fr;
@@ -1839,13 +1855,29 @@ input[type="checkbox"] {
     }
 }
 
-/* デスクトップではスクロールヒントを非表示 */
-.plans-scroll-hint,
-.scroll-hint-text {
+/* スクロールヒント - モバイルで表示 */
+.plans-scroll-hint {
     display: none;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    color: var(--gray-500);
+    font-size: var(--text-sm);
 }
 
-@media (max-width: 800px) {
+.plans-scroll-hint svg {
+    width: 20px;
+    height: 20px;
+    animation: swipe-hint 1.5s ease-in-out infinite;
+}
+
+@keyframes swipe-hint {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(8px); }
+}
+
+@media (max-width: 599px) {
     .plans-scroll-hint {
         display: flex;
     }
