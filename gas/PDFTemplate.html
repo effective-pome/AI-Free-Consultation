@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>AI診断アドバイスシート</title>
   <style>
-    /* PDF用スタイル */
+    /* ベーススタイル */
     * {
       margin: 0;
       padding: 0;
@@ -13,216 +13,351 @@
 
     body {
       font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
-      font-size: 11pt;
-      line-height: 1.6;
-      color: #333;
+      font-size: 10pt;
+      line-height: 1.7;
+      color: #1a1a2e;
       background: #fff;
     }
 
     .container {
       max-width: 210mm;
       margin: 0 auto;
-      padding: 15mm;
+      padding: 12mm 15mm;
     }
 
-    /* ヘッダー */
+    /* ========================================
+       ヘッダー
+    ======================================== */
     .header {
       text-align: center;
       margin-bottom: 20px;
       padding-bottom: 15px;
-      border-bottom: 3px solid #0D3B66;
+      border-bottom: 2px solid #0D3B66;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
     }
 
     .header h1 {
-      font-size: 20pt;
+      font-size: 22pt;
       color: #0D3B66;
       margin-bottom: 5px;
+      letter-spacing: 2px;
     }
 
     .header .subtitle {
-      font-size: 11pt;
+      font-size: 10pt;
       color: #666;
+      margin-bottom: 8px;
     }
 
     .header .date {
-      font-size: 10pt;
+      font-size: 9pt;
       color: #888;
-      margin-top: 10px;
     }
 
-    /* クリニック情報 */
+    /* ========================================
+       クリニック情報
+    ======================================== */
     .clinic-info {
       background: linear-gradient(135deg, #0D3B66 0%, #1a5490 100%);
       color: #fff;
-      padding: 15px 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
+      padding: 18px 22px;
+      border-radius: 10px;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 15px rgba(13, 59, 102, 0.2);
     }
 
     .clinic-info h2 {
-      font-size: 14pt;
-      margin-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.3);
-      padding-bottom: 8px;
+      font-size: 15pt;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.25);
     }
 
     .clinic-info .info-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
 
     .clinic-info .info-item {
-      font-size: 10pt;
+      font-size: 9.5pt;
+      display: flex;
+      gap: 8px;
     }
 
     .clinic-info .info-label {
-      opacity: 0.8;
+      opacity: 0.75;
+      min-width: 70px;
     }
 
-    /* セクション */
+    .clinic-info .info-value {
+      font-weight: 500;
+    }
+
+    /* ========================================
+       セクション共通
+    ======================================== */
     .section {
-      margin-bottom: 25px;
+      margin-bottom: 22px;
     }
 
     .section-title {
-      font-size: 14pt;
+      font-size: 13pt;
       color: #0D3B66;
-      padding: 8px 15px;
-      background: #f0f7ff;
+      padding: 10px 15px;
+      background: linear-gradient(90deg, #f0f7ff 0%, #fff 100%);
       border-left: 4px solid #0D3B66;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    /* ========================================
+       入力データサマリー
+    ======================================== */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
       margin-bottom: 15px;
     }
 
-    /* 診断サマリー */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
     .summary-card {
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 12px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px 10px;
       text-align: center;
-      border: 1px solid #e0e0e0;
-    }
-
-    .summary-card .value {
-      font-size: 18pt;
-      font-weight: bold;
-      color: #0D3B66;
+      border: 1px solid #e8e8e8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
     .summary-card .label {
+      font-size: 8.5pt;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .summary-card .value {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #0D3B66;
+    }
+
+    .summary-card .unit {
+      font-size: 9pt;
+      color: #888;
+      font-weight: 400;
+    }
+
+    .summary-card.highlight {
+      background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+      border-color: #667eea;
+    }
+
+    .summary-card.highlight .value {
+      color: #667eea;
+    }
+
+    /* その他のお悩み */
+    .other-concerns {
+      background: #fafbfc;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 12px 15px;
+      margin-top: 10px;
+    }
+
+    .other-concerns .label {
       font-size: 9pt;
       color: #666;
-      margin-top: 3px;
+      margin-bottom: 5px;
     }
 
-    .summary-card .comparison {
-      font-size: 8pt;
-      margin-top: 5px;
-      padding: 2px 6px;
+    .other-concerns .content {
+      font-size: 10pt;
+      color: #333;
+    }
+
+    /* ========================================
+       類似医院との比較
+    ======================================== */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .comparison-card {
+      background: #fff;
       border-radius: 10px;
-    }
-
-    .comparison.up {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .comparison.down {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    .comparison.neutral {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    /* 最優先課題 */
-    .priority-box {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
-      color: #fff;
-      padding: 15px 20px;
-      border-radius: 8px;
+      padding: 16px;
       text-align: center;
-      margin-bottom: 20px;
+      border: 1px solid #e8e8e8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .comparison-card .label {
+      font-size: 10pt;
+      color: #555;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .comparison-card .percentile {
+      font-size: 22pt;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .comparison-card .percentile-label {
+      font-size: 9pt;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .comparison-card .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 9pt;
+      font-weight: 500;
+    }
+
+    .comparison-card.excellent .percentile { color: #10b981; }
+    .comparison-card.excellent .badge { background: #d1fae5; color: #065f46; }
+
+    .comparison-card.good .percentile { color: #3b82f6; }
+    .comparison-card.good .badge { background: #dbeafe; color: #1e40af; }
+
+    .comparison-card.average .percentile { color: #f59e0b; }
+    .comparison-card.average .badge { background: #fef3c7; color: #92400e; }
+
+    .comparison-card.needs-improvement .percentile { color: #ef4444; }
+    .comparison-card.needs-improvement .badge { background: #fee2e2; color: #991b1b; }
+
+    /* ========================================
+       最優先課題
+    ======================================== */
+    .priority-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 18px 22px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .priority-box .icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .priority-box .content {
+      text-align: left;
     }
 
     .priority-box .label {
-      font-size: 10pt;
-      opacity: 0.9;
+      font-size: 9pt;
+      opacity: 0.85;
+      margin-bottom: 4px;
     }
 
     .priority-box .value {
       font-size: 16pt;
-      font-weight: bold;
-      margin-top: 5px;
+      font-weight: 700;
     }
 
-    /* 改善提案 */
+    /* ========================================
+       AIからの提案
+    ======================================== */
     .recommendation-list {
       list-style: none;
     }
 
     .recommendation-item {
       background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 16px 18px;
       margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .recommendation-item .header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+      border: none;
+      padding: 0;
+    }
+
+    .recommendation-item .number {
+      width: 26px;
+      height: 26px;
+      background: linear-gradient(135deg, #0D3B66 0%, #1a5490 100%);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11pt;
+      font-weight: 600;
+      flex-shrink: 0;
     }
 
     .recommendation-item h4 {
-      font-size: 12pt;
+      font-size: 11pt;
       color: #0D3B66;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
+      font-weight: 600;
+      line-height: 1.5;
     }
 
-    .recommendation-item h4::before {
-      content: "✓";
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      background: #0D3B66;
-      color: #fff;
-      border-radius: 50%;
-      text-align: center;
-      line-height: 20px;
-      font-size: 10pt;
-      margin-right: 10px;
-    }
-
-    .recommendation-item p {
-      font-size: 10pt;
+    .recommendation-item .description {
+      font-size: 9.5pt;
       color: #555;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      padding-left: 38px;
     }
 
     .recommendation-steps {
       background: #f8f9fa;
-      padding: 10px 15px;
-      border-radius: 5px;
-      margin-top: 10px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-left: 38px;
     }
 
     .recommendation-steps h5 {
-      font-size: 10pt;
+      font-size: 9.5pt;
       color: #333;
       margin-bottom: 8px;
+      font-weight: 600;
     }
 
     .recommendation-steps ol {
-      margin-left: 20px;
+      margin-left: 18px;
       font-size: 9pt;
-      color: #666;
+      color: #555;
     }
 
     .recommendation-steps li {
@@ -231,98 +366,92 @@
 
     .recommendation-effect {
       display: inline-block;
-      background: #e8f5e9;
-      color: #2e7d32;
-      padding: 4px 10px;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      color: #065f46;
+      padding: 5px 12px;
       border-radius: 15px;
       font-size: 9pt;
       margin-top: 10px;
+      margin-left: 38px;
+      font-weight: 500;
     }
 
-    /* アクションプラン */
+    /* ========================================
+       アクションプラン
+    ======================================== */
     .action-plan {
-      background: #fffde7;
-      border: 2px solid #ffc107;
-      border-radius: 8px;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 2px solid #fbbf24;
+      border-radius: 10px;
       padding: 20px;
     }
 
     .action-plan h3 {
-      font-size: 13pt;
-      color: #f57f17;
+      font-size: 12pt;
+      color: #b45309;
       margin-bottom: 15px;
       text-align: center;
+      font-weight: 600;
     }
 
     .action-timeline {
-      position: relative;
-      padding-left: 30px;
-    }
-
-    .action-timeline::before {
-      content: '';
-      position: absolute;
-      left: 10px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: #ffc107;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
     }
 
     .timeline-item {
-      position: relative;
-      margin-bottom: 15px;
-      padding-left: 15px;
-    }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -24px;
-      top: 5px;
-      width: 12px;
-      height: 12px;
-      background: #ffc107;
-      border-radius: 50%;
+      text-align: center;
+      padding: 12px 8px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     .timeline-item .period {
       font-size: 10pt;
-      font-weight: bold;
-      color: #f57f17;
+      font-weight: 600;
+      color: #b45309;
+      margin-bottom: 6px;
     }
 
     .timeline-item .task {
-      font-size: 10pt;
-      color: #333;
-      margin-top: 3px;
+      font-size: 8.5pt;
+      color: #555;
+      line-height: 1.5;
     }
 
-    /* CTA */
+    /* ========================================
+       CTA
+    ======================================== */
     .cta-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0D3B66 0%, #1a5490 100%);
       color: #fff;
-      padding: 20px;
-      border-radius: 8px;
+      padding: 22px;
+      border-radius: 10px;
       text-align: center;
-      margin-top: 25px;
+      margin-top: 22px;
+      box-shadow: 0 4px 15px rgba(13, 59, 102, 0.2);
     }
 
     .cta-section h3 {
-      font-size: 14pt;
+      font-size: 13pt;
       margin-bottom: 10px;
+      font-weight: 600;
     }
 
     .cta-section p {
       font-size: 10pt;
       opacity: 0.9;
       margin-bottom: 15px;
+      line-height: 1.7;
     }
 
     .cta-box {
-      background: rgba(255,255,255,0.2);
-      padding: 15px;
-      border-radius: 5px;
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      padding: 12px 25px;
+      border-radius: 8px;
     }
 
     .cta-box .label {
@@ -331,28 +460,33 @@
     }
 
     .cta-box .value {
-      font-size: 12pt;
-      font-weight: bold;
-      margin-top: 5px;
+      font-size: 11pt;
+      font-weight: 600;
+      margin-top: 4px;
     }
 
-    /* フッター */
+    /* ========================================
+       フッター
+    ======================================== */
     .footer {
-      margin-top: 30px;
+      margin-top: 25px;
       padding-top: 15px;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid #e8e8e8;
       text-align: center;
-      font-size: 9pt;
+      font-size: 8.5pt;
       color: #888;
     }
 
     .footer .company {
-      font-weight: bold;
+      font-weight: 600;
       color: #0D3B66;
+      font-size: 10pt;
       margin-bottom: 5px;
     }
 
-    /* 印刷用調整 */
+    /* ========================================
+       印刷用調整
+    ======================================== */
     @media print {
       body {
         print-color-adjust: exact;
@@ -360,11 +494,11 @@
       }
 
       .container {
-        padding: 10mm;
+        padding: 8mm 12mm;
       }
 
-      .recommendation-item,
-      .section {
+      .section,
+      .recommendation-item {
         page-break-inside: avoid;
       }
     }
@@ -375,7 +509,7 @@
     <!-- ヘッダー -->
     <header class="header">
       <h1>AI診断 アドバイスシート</h1>
-      <p class="subtitle">歯科医院地域一番実践会 - 3,247件の成功事例に基づく診断結果</p>
+      <p class="subtitle">歯科医院地域一番実践会 - 3,247件の成功事例に基づく診断</p>
       <p class="date">診断日: <?= diagnosisDate ?></p>
     </header>
 
@@ -385,86 +519,101 @@
       <div class="info-grid">
         <div class="info-item">
           <span class="info-label">ご担当者:</span>
-          <?= data.userName || '-' ?> 様
+          <span class="info-value"><?= data.userName || '-' ?> 様</span>
         </div>
         <div class="info-item">
           <span class="info-label">地域:</span>
-          <?= getRegionName(data.region) ?>
+          <span class="info-value"><?= getRegionName(data.region) ?></span>
         </div>
         <div class="info-item">
           <span class="info-label">開業年数:</span>
-          <?= getYearsOpenName(data.yearsOpen) ?>
+          <span class="info-value"><?= getYearsOpenName(data.yearsOpen) ?></span>
         </div>
         <div class="info-item">
           <span class="info-label">ユニット数:</span>
-          <?= data.units || '-' ?> 台
+          <span class="info-value"><?= data.units || '-' ?> 台</span>
         </div>
       </div>
     </div>
 
-    <!-- 診断サマリー -->
+    <!-- 入力データサマリー -->
     <section class="section">
-      <h3 class="section-title">診断サマリー</h3>
+      <h3 class="section-title">入力データサマリー</h3>
       <div class="summary-grid">
-        <? if (data.newPatient) { ?>
         <div class="summary-card">
-          <div class="value"><?= data.newPatient ?></div>
-          <div class="label">新患数/月</div>
-          <? if (comparison.newPatient) { ?>
-          <div class="comparison <?= comparison.newPatient.vsAverage >= 0 ? 'up' : 'down' ?>">
-            業界平均比 <?= comparison.newPatient.vsAverage >= 0 ? '+' : '' ?><?= comparison.newPatient.vsAverage ?>%
-          </div>
-          <? } ?>
+          <div class="label">新患数</div>
+          <div class="value"><?= data.newPatient || '--' ?><span class="unit">人/月</span></div>
         </div>
-        <? } ?>
-
-        <? if (data.totalRevenue) { ?>
-        <div class="summary-card">
-          <div class="value"><?= data.totalRevenue ?></div>
-          <div class="label">月商（万円）</div>
-          <? if (comparison.totalRevenue) { ?>
-          <div class="comparison <?= comparison.totalRevenue.vsAverage >= 0 ? 'up' : 'down' ?>">
-            業界平均比 <?= comparison.totalRevenue.vsAverage >= 0 ? '+' : '' ?><?= comparison.totalRevenue.vsAverage ?>%
-          </div>
-          <? } ?>
+        <div class="summary-card highlight">
+          <div class="label">月間医業収入</div>
+          <div class="value"><?= data.totalRevenue || '--' ?><span class="unit">万円</span></div>
         </div>
-        <? } ?>
-
-        <? if (data.selfPayRate) { ?>
-        <div class="summary-card">
-          <div class="value"><?= data.selfPayRate ?>%</div>
+        <div class="summary-card highlight">
           <div class="label">自費率</div>
-          <? if (comparison.selfPayRate) { ?>
-          <div class="comparison <?= comparison.selfPayRate.vsAverage >= 0 ? 'up' : 'down' ?>">
-            業界平均比 <?= comparison.selfPayRate.vsAverage >= 0 ? '+' : '' ?><?= comparison.selfPayRate.vsAverage ?>%
-          </div>
-          <? } ?>
+          <div class="value"><?= data.selfPayRate ? Math.floor(data.selfPayRate) : '--' ?><span class="unit">%</span></div>
         </div>
-        <? } ?>
-
-        <? if (data.cancel) { ?>
         <div class="summary-card">
-          <div class="value"><?= data.cancel ?>%</div>
           <div class="label">キャンセル率</div>
-          <? if (comparison.cancel) { ?>
-          <div class="comparison <?= comparison.cancel.vsAverage >= 0 ? 'up' : 'down' ?>">
-            業界平均比 <?= comparison.cancel.vsAverage >= 0 ? '+' : '' ?><?= comparison.cancel.vsAverage ?>%
-          </div>
-          <? } ?>
+          <div class="value"><?= data.cancel ? Math.floor(data.cancel) : '--' ?><span class="unit">%</span></div>
         </div>
-        <? } ?>
+        <div class="summary-card">
+          <div class="label">リコール率</div>
+          <div class="value"><?= data.recall ? Math.floor(data.recall) : '--' ?><span class="unit">%</span></div>
+        </div>
       </div>
 
-      <!-- 最優先課題 -->
-      <div class="priority-box">
-        <div class="label">あなたの最優先課題</div>
-        <div class="value"><?= getPriorityName(data.priority) ?></div>
+      <? if (data.otherConcerns) { ?>
+      <div class="other-concerns">
+        <div class="label">その他のお悩み</div>
+        <div class="content"><?= data.otherConcerns ?></div>
+      </div>
+      <? } ?>
+    </section>
+
+    <!-- 類似医院との比較 -->
+    <section class="section">
+      <h3 class="section-title">類似医院との比較</h3>
+      <div class="comparison-grid">
+        <? var npStatus = comparison.newPatientPower ? comparison.newPatientPower.status : 'average'; ?>
+        <div class="comparison-card <?= npStatus ?>">
+          <div class="label">新患獲得力</div>
+          <div class="percentile">上位 <?= comparison.newPatientPower ? formatPercentile(comparison.newPatientPower.percentile) : '--' ?>%</div>
+          <div class="percentile-label">業界内順位</div>
+          <span class="badge"><?= getStatusLabel(npStatus) ?></span>
+        </div>
+
+        <? var spStatus = comparison.selfPayPower ? comparison.selfPayPower.status : 'average'; ?>
+        <div class="comparison-card <?= spStatus ?>">
+          <div class="label">自費転換力</div>
+          <div class="percentile">上位 <?= comparison.selfPayPower ? formatPercentile(comparison.selfPayPower.percentile) : '--' ?>%</div>
+          <div class="percentile-label">業界内順位</div>
+          <span class="badge"><?= getStatusLabel(spStatus) ?></span>
+        </div>
+
+        <? var prStatus = comparison.patientRetention ? comparison.patientRetention.status : 'average'; ?>
+        <div class="comparison-card <?= prStatus ?>">
+          <div class="label">患者定着率</div>
+          <div class="percentile">上位 <?= comparison.patientRetention ? formatPercentile(comparison.patientRetention.percentile) : '--' ?>%</div>
+          <div class="percentile-label">業界内順位</div>
+          <span class="badge"><?= getStatusLabel(prStatus) ?></span>
+        </div>
       </div>
     </section>
 
-    <!-- 改善提案 -->
+    <!-- 最優先課題 -->
     <section class="section">
-      <h3 class="section-title">具体的な改善提案</h3>
+      <div class="priority-box">
+        <div class="icon">🎯</div>
+        <div class="content">
+          <div class="label">あなたの最優先課題</div>
+          <div class="value"><?= getPriorityName(data.priority) ?></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AIからの提案 -->
+    <section class="section">
+      <h3 class="section-title">AIからの提案</h3>
       <ul class="recommendation-list">
         <? var recs = recommendations; ?>
         <? if (recs && recs.items) { ?>
@@ -472,13 +621,19 @@
             <? var item = recs.items[i]; ?>
             <? if (typeof item === 'string') { ?>
             <li class="recommendation-item">
-              <h4><?= item ?></h4>
+              <div class="header">
+                <span class="number"><?= i + 1 ?></span>
+                <h4><?= item ?></h4>
+              </div>
             </li>
             <? } else { ?>
             <li class="recommendation-item">
-              <h4><?= item.title || item ?></h4>
+              <div class="header">
+                <span class="number"><?= i + 1 ?></span>
+                <h4><?= item.title || item ?></h4>
+              </div>
               <? if (item.description) { ?>
-              <p><?= item.description ?></p>
+              <p class="description"><?= item.description ?></p>
               <? } ?>
               <? if (item.steps && item.steps.length > 0) { ?>
               <div class="recommendation-steps">
@@ -491,15 +646,18 @@
               </div>
               <? } ?>
               <? if (item.effect) { ?>
-              <span class="recommendation-effect"><?= item.effect ?></span>
+              <span class="recommendation-effect">期待効果: <?= item.effect ?></span>
               <? } ?>
             </li>
             <? } ?>
           <? } ?>
         <? } else { ?>
         <li class="recommendation-item">
-          <h4>診断結果に基づく改善提案</h4>
-          <p>詳細な分析結果については、無料相談にてご説明いたします。</p>
+          <div class="header">
+            <span class="number">1</span>
+            <h4>診断結果に基づく改善提案</h4>
+          </div>
+          <p class="description">詳細な分析結果については、無料相談にてご説明いたします。</p>
         </li>
         <? } ?>
       </ul>
@@ -508,41 +666,31 @@
     <!-- アクションプラン -->
     <section class="section">
       <div class="action-plan">
-        <h3>推奨アクションプラン</h3>
+        <h3>📋 推奨アクションプラン</h3>
         <div class="action-timeline">
           <div class="timeline-item">
             <div class="period">今すぐ</div>
-            <div class="task">無料相談のご予約 - 診断結果の詳細解説</div>
+            <div class="task">無料相談のご予約<br>診断結果の詳細解説</div>
           </div>
           <div class="timeline-item">
             <div class="period">1週間以内</div>
-            <div class="task">現状の課題を院内で共有・優先順位の確認</div>
+            <div class="task">課題を院内で共有<br>優先順位の確認</div>
           </div>
           <div class="timeline-item">
             <div class="period">1ヶ月以内</div>
-            <div class="task">最優先課題への取り組み開始</div>
+            <div class="task">最優先課題への<br>取り組み開始</div>
           </div>
           <div class="timeline-item">
             <div class="period">3ヶ月後</div>
-            <div class="task">効果測定・次のステップへ</div>
+            <div class="task">効果測定<br>次のステップへ</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- その他のお悩み -->
-    <? if (data.otherConcerns) { ?>
-    <section class="section">
-      <h3 class="section-title">ご記入いただいたお悩み</h3>
-      <p style="padding: 15px; background: #f8f9fa; border-radius: 5px; font-size: 10pt;">
-        <?= data.otherConcerns ?>
-      </p>
-    </section>
-    <? } ?>
-
     <!-- CTA -->
     <div class="cta-section">
-      <h3>次のステップ：無料相談のご案内</h3>
+      <h3>🤝 次のステップ：無料相談のご案内</h3>
       <p>診断結果について、より詳しくご説明させていただきます。<br>具体的な改善プランをご一緒に作成しましょう。</p>
       <div class="cta-box">
         <div class="label">無料相談のご予約</div>
@@ -595,6 +743,23 @@
         'efficiency': '業務効率化'
       };
       return priorities[code] || code || '未選択';
+    }
+
+    function getStatusLabel(status) {
+      const labels = {
+        'excellent': '非常に優秀',
+        'good': '優秀',
+        'average': '平均的',
+        'needs-improvement': '改善の余地あり'
+      };
+      return labels[status] || '平均的';
+    }
+
+    function formatPercentile(percentile) {
+      let topPercent = 100 - percentile;
+      if (topPercent <= 0) topPercent = 0.1;
+      if (topPercent < 10) return topPercent.toFixed(1);
+      return Math.floor(topPercent);
     }
   </script>
 </body>

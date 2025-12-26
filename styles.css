@@ -1709,37 +1709,6 @@ body {
     border-top: 1px solid var(--gray-100);
 }
 
-/* Settings Button */
-.settings-button {
-    position: fixed;
-    bottom: var(--space-6);
-    right: var(--space-6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-full);
-    cursor: pointer;
-    box-shadow: var(--shadow-lg);
-    transition: all var(--transition-fast);
-    z-index: 100;
-}
-
-.settings-button svg {
-    width: 24px;
-    height: 24px;
-    color: var(--gray-600);
-}
-
-.settings-button:hover {
-    background: var(--gray-50);
-    border-color: var(--gray-300);
-    transform: rotate(45deg);
-}
-
 /* Checkbox styling */
 input[type="checkbox"] {
     width: 18px;
@@ -2484,7 +2453,6 @@ input[type="checkbox"] {
 
 /* Print styles */
 @media print {
-    .settings-button,
     .restart-button,
     .results-cta {
         display: none;
