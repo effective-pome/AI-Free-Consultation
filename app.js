@@ -17,7 +17,7 @@ const AppState = {
 // GAS連携設定
 // ========================================
 // Google Apps ScriptのウェブアプリURL（デプロイ後に設定してください）
-const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwZZVAm0UjDw_bZD4-OpjOG89ScUzCi2yh-q2XxTHH7vRqYT9gJm_1Qi_-zHsXBSmnH6A/exec';
+const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycby9ExSP9tz3JEhPpri_B8gVNpK5JLn_JppcFNypiksW33mVjvU95_lAtBeHM6SHQj3DcA/exec';
 
 // ========================================
 // 初期化
