@@ -223,60 +223,315 @@ function createHeaderRow(sheet) {
  * @returns {Blob} PDFファイルのBlob
  */
 function generatePDFAdviceSheet(data) {
-  // HTMLテンプレートを取得
-  const template = HtmlService.createTemplateFromFile('PDFTemplate');
-
-  // テンプレートにデータを渡す
-  template.data = data;
-  template.diagnosisDate = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy年MM月dd日');
-  template.recommendations = formatRecommendations(data);
-  template.comparison = generateComparisonData(data);
-
-  // HTMLを生成
-  const htmlContent = template.evaluate().getContent();
-
-  // HTMLをPDFに変換
-  const pdfBlob = convertHtmlToPdf(htmlContent, data.clinicName || '診断結果');
-
+  // Google Doc経由でスタイル付きPDFを生成
+  const pdfBlob = createStyledPDF(data, data.clinicName || '診断結果');
   return pdfBlob;
 }
 
 /**
- * HTMLをPDFに変換
+ * スタイル付きPDFを生成（Google Doc経由）
+ * @param {Object} data - 診断データ
+ * @param {string} fileName - ファイル名
+ * @returns {Blob} PDFファイルのBlob
  */
-function convertHtmlToPdf(htmlContent, fileName) {
-  // 一時的なGoogle Docを作成してPDF化
-  const doc = DocumentApp.create('temp_' + new Date().getTime());
-  const docId = doc.getId();
+function createStyledPDF(data, fileName) {
+  // Google Documentを作成
+  const doc = DocumentApp.create(fileName + '_アドバイスシート_' + new Date().getTime());
+  const body = doc.getBody();
 
   try {
-    // HTMLの内容をDocに挿入（簡易版）
-    const body = doc.getBody();
+    // ドキュメントのスタイル設定
+    body.setMarginTop(40);
+    body.setMarginBottom(40);
+    body.setMarginLeft(50);
+    body.setMarginRight(50);
 
-    // HTMLからテキストを抽出して整形
-    const plainText = htmlContent
-      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-      .replace(/<[^>]+>/g, '\n')
-      .replace(/\n\s*\n/g, '\n\n')
-      .trim();
+    // ========================================
+    // ヘッダー
+    // ========================================
+    const title = body.appendParagraph('AI診断 アドバイスシート');
+    title.setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    title.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    title.setForegroundColor('#0D3B66');
 
-    body.setText(plainText);
+    const subtitle = body.appendParagraph('歯科医院地域一番実践会 - 3,247件の成功事例に基づく診断');
+    subtitle.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    subtitle.setForegroundColor('#666666');
+    subtitle.setFontSize(10);
+
+    const diagnosisDate = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'yyyy年MM月dd日');
+    const dateText = body.appendParagraph('診断日: ' + diagnosisDate);
+    dateText.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    dateText.setForegroundColor('#888888');
+    dateText.setFontSize(9);
+
+    body.appendParagraph('').setSpacingAfter(10);
+
+    // ========================================
+    // クリニック情報
+    // ========================================
+    const clinicHeader = body.appendParagraph('【 ' + (data.clinicName || '医院名未入力') + ' 様 】');
+    clinicHeader.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    clinicHeader.setForegroundColor('#0D3B66');
+    clinicHeader.setBackgroundColor('#f0f7ff');
+
+    const clinicInfo = body.appendParagraph(
+      'ご担当者: ' + (data.userName || '-') + ' 様　|　' +
+      '地域: ' + getRegionName(data.region) + '　|　' +
+      '開業年数: ' + getYearsOpenName(data.yearsOpen) + '　|　' +
+      'ユニット数: ' + (data.units || '-') + ' 台'
+    );
+    clinicInfo.setFontSize(9);
+    clinicInfo.setForegroundColor('#555555');
+
+    body.appendParagraph('').setSpacingAfter(15);
+
+    // ========================================
+    // 入力データサマリー
+    // ========================================
+    const summaryHeader = body.appendParagraph('■ 入力データサマリー');
+    summaryHeader.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    summaryHeader.setForegroundColor('#0D3B66');
+
+    // サマリーテーブル
+    const summaryTable = body.appendTable([
+      ['新患数', '月間医業収入', '自費率', 'キャンセル率', 'リコール率'],
+      [
+        (data.newPatient || '--') + ' 人/月',
+        (data.totalRevenue || '--') + ' 万円',
+        (data.selfPayRate ? Math.floor(data.selfPayRate) : '--') + ' %',
+        (data.cancel ? Math.floor(data.cancel) : '--') + ' %',
+        (data.recall ? Math.floor(data.recall) : '--') + ' %'
+      ]
+    ]);
+
+    // テーブルスタイル
+    formatTable(summaryTable, '#0D3B66');
+
+    // その他のお悩み
+    if (data.otherConcerns) {
+      body.appendParagraph('').setSpacingAfter(5);
+      const concernsLabel = body.appendParagraph('その他のお悩み:');
+      concernsLabel.setFontSize(9);
+      concernsLabel.setForegroundColor('#666666');
+
+      const concerns = body.appendParagraph(data.otherConcerns);
+      concerns.setFontSize(10);
+      concerns.setBackgroundColor('#fafafa');
+    }
+
+    body.appendParagraph('').setSpacingAfter(15);
+
+    // ========================================
+    // 類似医院との比較
+    // ========================================
+    const comparisonHeader = body.appendParagraph('■ 類似医院との比較');
+    comparisonHeader.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    comparisonHeader.setForegroundColor('#0D3B66');
+
+    const comparison = generateComparisonData(data);
+
+    const comparisonTable = body.appendTable([
+      ['新患獲得力', '自費転換力', '患者定着率'],
+      [
+        '上位 ' + formatPercentile(comparison.newPatientPower.percentile) + '%\n' + getStatusLabel(comparison.newPatientPower.status),
+        '上位 ' + formatPercentile(comparison.selfPayPower.percentile) + '%\n' + getStatusLabel(comparison.selfPayPower.status),
+        '上位 ' + formatPercentile(comparison.patientRetention.percentile) + '%\n' + getStatusLabel(comparison.patientRetention.status)
+      ]
+    ]);
+
+    formatTable(comparisonTable, '#667eea');
+
+    body.appendParagraph('').setSpacingAfter(15);
+
+    // ========================================
+    // 最優先課題
+    // ========================================
+    const priorityHeader = body.appendParagraph('★ あなたの最優先課題: ' + getPriorityName(data.priority));
+    priorityHeader.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    priorityHeader.setForegroundColor('#764ba2');
+    priorityHeader.setBackgroundColor('#f8f5ff');
+
+    body.appendParagraph('').setSpacingAfter(15);
+
+    // ========================================
+    // AIからの提案
+    // ========================================
+    const recHeader = body.appendParagraph('■ AIからの提案');
+    recHeader.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    recHeader.setForegroundColor('#0D3B66');
+
+    const recommendations = formatRecommendations(data);
+    if (recommendations && recommendations.items) {
+      for (let i = 0; i < Math.min(recommendations.items.length, 4); i++) {
+        const item = recommendations.items[i];
+        const itemTitle = typeof item === 'string' ? item : (item.title || item);
+
+        const recItem = body.appendParagraph((i + 1) + '. ' + itemTitle);
+        recItem.setFontSize(11);
+        recItem.setForegroundColor('#0D3B66');
+        recItem.setBold(true);
+
+        if (typeof item !== 'string' && item.description) {
+          const desc = body.appendParagraph('   ' + item.description);
+          desc.setFontSize(9);
+          desc.setForegroundColor('#555555');
+        }
+
+        if (typeof item !== 'string' && item.steps && item.steps.length > 0) {
+          const stepsLabel = body.appendParagraph('   【実行ステップ】');
+          stepsLabel.setFontSize(9);
+          stepsLabel.setForegroundColor('#333333');
+
+          for (let j = 0; j < Math.min(item.steps.length, 5); j++) {
+            const step = body.appendParagraph('      ' + (j + 1) + ') ' + item.steps[j]);
+            step.setFontSize(9);
+            step.setForegroundColor('#666666');
+          }
+        }
+
+        if (typeof item !== 'string' && item.effect) {
+          const effect = body.appendParagraph('   → 期待効果: ' + item.effect);
+          effect.setFontSize(9);
+          effect.setForegroundColor('#2e7d32');
+        }
+
+        body.appendParagraph('').setSpacingAfter(5);
+      }
+    }
+
+    body.appendParagraph('').setSpacingAfter(15);
+
+    // ========================================
+    // アクションプラン
+    // ========================================
+    const actionHeader = body.appendParagraph('■ 推奨アクションプラン');
+    actionHeader.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    actionHeader.setForegroundColor('#b45309');
+    actionHeader.setBackgroundColor('#fffbeb');
+
+    const actionTable = body.appendTable([
+      ['今すぐ', '1週間以内', '1ヶ月以内', '3ヶ月後'],
+      [
+        '無料相談のご予約\n診断結果の詳細解説',
+        '課題を院内で共有\n優先順位の確認',
+        '最優先課題への\n取り組み開始',
+        '効果測定\n次のステップへ'
+      ]
+    ]);
+
+    formatTable(actionTable, '#fbbf24');
+
+    body.appendParagraph('').setSpacingAfter(15);
+
+    // ========================================
+    // CTA
+    // ========================================
+    const ctaHeader = body.appendParagraph('【 次のステップ：無料相談のご案内 】');
+    ctaHeader.setHeading(DocumentApp.ParagraphHeading.HEADING3);
+    ctaHeader.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    ctaHeader.setForegroundColor('#0D3B66');
+    ctaHeader.setBackgroundColor('#e8f4ff');
+
+    const ctaText = body.appendParagraph('診断結果について、より詳しくご説明させていただきます。\n具体的な改善プランをご一緒に作成しましょう。');
+    ctaText.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    ctaText.setFontSize(10);
+
+    body.appendParagraph('').setSpacingAfter(15);
+
+    // ========================================
+    // フッター
+    // ========================================
+    const footer = body.appendParagraph('歯科医院地域一番実践会');
+    footer.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    footer.setForegroundColor('#0D3B66');
+    footer.setBold(true);
+
+    const footerNote = body.appendParagraph('このアドバイスシートは、AI診断システムにより自動生成されました。');
+    footerNote.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    footerNote.setFontSize(8);
+    footerNote.setForegroundColor('#888888');
+
+    // ドキュメントを保存
     doc.saveAndClose();
 
     // PDFとしてエクスポート
-    const pdfBlob = DriveApp.getFileById(docId).getAs('application/pdf');
-    pdfBlob.setName(fileName + '_アドバイスシート.pdf');
+    const pdfBlob = DriveApp.getFileById(doc.getId()).getAs('application/pdf');
+    pdfBlob.setName((data.clinicName || '診断結果') + '_アドバイスシート.pdf');
 
     // 一時ファイルを削除
-    DriveApp.getFileById(docId).setTrashed(true);
+    DriveApp.getFileById(doc.getId()).setTrashed(true);
 
     return pdfBlob;
+
   } catch (error) {
     // エラー時は一時ファイルを削除
-    DriveApp.getFileById(docId).setTrashed(true);
+    try {
+      DriveApp.getFileById(doc.getId()).setTrashed(true);
+    } catch (e) {}
     throw error;
   }
+}
+
+/**
+ * テーブルのスタイルを設定
+ */
+function formatTable(table, headerColor) {
+  // ヘッダー行のスタイル
+  const headerRow = table.getRow(0);
+  for (let i = 0; i < headerRow.getNumCells(); i++) {
+    const cell = headerRow.getCell(i);
+    cell.setBackgroundColor(headerColor);
+    cell.getChild(0).asParagraph().setForegroundColor('#FFFFFF');
+    cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+    cell.getChild(0).asParagraph().setBold(true);
+    cell.setPaddingTop(8);
+    cell.setPaddingBottom(8);
+  }
+
+  // データ行のスタイル
+  if (table.getNumRows() > 1) {
+    const dataRow = table.getRow(1);
+    for (let i = 0; i < dataRow.getNumCells(); i++) {
+      const cell = dataRow.getCell(i);
+      cell.setBackgroundColor('#f8f9fa');
+      cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+      cell.setPaddingTop(10);
+      cell.setPaddingBottom(10);
+    }
+  }
+}
+
+/**
+ * パーセンタイルをフォーマット
+ */
+function formatPercentile(percentile) {
+  let topPercent = 100 - percentile;
+  if (topPercent <= 0) topPercent = 0.1;
+  if (topPercent < 10) return topPercent.toFixed(1);
+  return Math.floor(topPercent);
+}
+
+/**
+ * ステータスラベルを取得
+ */
+function getStatusLabel(status) {
+  const labels = {
+    'excellent': '非常に優秀',
+    'good': '優秀',
+    'average': '平均的',
+    'needs-improvement': '改善の余地あり'
+  };
+  return labels[status] || '平均的';
+}
+
+/**
+ * HTMLをPDFに変換（旧バージョン - 使用しない）
+ */
+function convertHtmlToPdf(htmlContent, fileName) {
+  // 新しいcreateStyledPDF関数を使用するため、この関数は使用しない
+  // 互換性のために残す
+  return createStyledPDF({}, fileName);
 }
 
 /**
@@ -559,53 +814,64 @@ function getDefaultRecommendations(priority) {
  * 比較データを生成
  */
 function generateComparisonData(data) {
-  // 業界ベンチマークとの比較
+  // 業界ベンチマーク
   const benchmarks = {
-    newPatient: { average: 35, excellent: 80 },
-    totalRevenue: { average: 650, excellent: 1800 },
-    selfPayRate: { average: 15, excellent: 35 },
-    cancel: { average: 7, excellent: 3 }
+    newPatient: { average: 35, excellent: 80, max: 150 },
+    selfPayRate: { average: 15, excellent: 35, max: 60 },
+    recall: { average: 50, excellent: 80, max: 100 },
+    cancel: { average: 7, excellent: 3, min: 0 }
   };
 
-  const comparison = {};
+  // パーセンタイルを計算するヘルパー関数
+  function calculatePercentile(value, benchmark, isReverse = false) {
+    if (value === undefined || value === null) return 50;
 
-  if (data.newPatient) {
-    comparison.newPatient = {
-      value: data.newPatient,
-      vsAverage: Math.round((data.newPatient / benchmarks.newPatient.average - 1) * 100),
-      level: data.newPatient >= benchmarks.newPatient.excellent ? '優秀' :
-             data.newPatient >= benchmarks.newPatient.average ? '平均以上' : '改善余地あり'
-    };
+    if (isReverse) {
+      // キャンセル率など、低い方が良い指標
+      if (value <= benchmark.excellent) return 95;
+      if (value <= benchmark.average) return 70;
+      return Math.max(20, 50 - (value - benchmark.average) * 3);
+    } else {
+      // 新患数など、高い方が良い指標
+      if (value >= benchmark.excellent) return 95;
+      if (value >= benchmark.average) return 70;
+      return Math.max(20, (value / benchmark.average) * 50);
+    }
   }
 
-  if (data.totalRevenue) {
-    comparison.totalRevenue = {
-      value: data.totalRevenue,
-      vsAverage: Math.round((data.totalRevenue / benchmarks.totalRevenue.average - 1) * 100),
-      level: data.totalRevenue >= benchmarks.totalRevenue.excellent ? '優秀' :
-             data.totalRevenue >= benchmarks.totalRevenue.average ? '平均以上' : '改善余地あり'
-    };
+  // ステータスを判定するヘルパー関数
+  function getStatus(percentile) {
+    if (percentile >= 90) return 'excellent';
+    if (percentile >= 70) return 'good';
+    if (percentile >= 40) return 'average';
+    return 'needs-improvement';
   }
 
-  if (data.selfPayRate) {
-    comparison.selfPayRate = {
-      value: data.selfPayRate,
-      vsAverage: Math.round((data.selfPayRate / benchmarks.selfPayRate.average - 1) * 100),
-      level: data.selfPayRate >= benchmarks.selfPayRate.excellent ? '優秀' :
-             data.selfPayRate >= benchmarks.selfPayRate.average ? '平均以上' : '改善余地あり'
-    };
-  }
+  // 新患獲得力（新患数ベース）
+  const npPercentile = calculatePercentile(data.newPatient, benchmarks.newPatient);
 
-  if (data.cancel) {
-    comparison.cancel = {
-      value: data.cancel,
-      vsAverage: Math.round((1 - data.cancel / benchmarks.cancel.average) * 100),
-      level: data.cancel <= benchmarks.cancel.excellent ? '優秀' :
-             data.cancel <= benchmarks.cancel.average ? '平均以上' : '改善余地あり'
-    };
-  }
+  // 自費転換力（自費率ベース）
+  const spPercentile = calculatePercentile(data.selfPayRate, benchmarks.selfPayRate);
 
-  return comparison;
+  // 患者定着率（リコール率とキャンセル率を組み合わせ）
+  const recallPercentile = calculatePercentile(data.recall, benchmarks.recall);
+  const cancelPercentile = calculatePercentile(data.cancel, benchmarks.cancel, true);
+  const prPercentile = Math.round((recallPercentile + cancelPercentile) / 2);
+
+  return {
+    newPatientPower: {
+      percentile: npPercentile,
+      status: getStatus(npPercentile)
+    },
+    selfPayPower: {
+      percentile: spPercentile,
+      status: getStatus(spPercentile)
+    },
+    patientRetention: {
+      percentile: prPercentile,
+      status: getStatus(prPercentile)
+    }
+  };
 }
 
 // ========================================
