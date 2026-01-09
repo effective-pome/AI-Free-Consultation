@@ -707,7 +707,11 @@ function displayRecommendations(recommendations, isApiGenerated) {
     }
 
     // 標準の推薦を表示（3件まで）
-    html += recommendations.items.slice(0, 3).map((item, index) => `
+    html += recommendations.items.slice(0, 3).map((item, index) => {
+        const hasDetailedActions = item.detailedActions && item.detailedActions.length > 0;
+        const detailsId = `details-${index}`;
+
+        return `
         <div class="recommendation-card">
             <div class="recommendation-header">
                 <div class="recommendation-number">${index + 1}</div>
@@ -716,8 +720,10 @@ function displayRecommendations(recommendations, isApiGenerated) {
             <div class="recommendation-body">
                 <p class="recommendation-description">${item.description}</p>
                 ${item.additionalNote ? `<p class="recommendation-description" style="color: var(--accent-500);"><strong>※ ${item.additionalNote}</strong></p>` : ''}
+
+                <!-- 基本ステップ（概要） -->
                 <div class="recommendation-steps">
-                    ${(item.steps || []).map(step => `
+                    ${(item.steps || []).slice(0, 3).map(step => `
                         <div class="recommendation-step">
                             <svg class="recommendation-step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="20 6 9 17 4 12"/>
@@ -726,6 +732,7 @@ function displayRecommendations(recommendations, isApiGenerated) {
                         </div>
                     `).join('')}
                 </div>
+
                 <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
                     <span class="recommendation-effect">${item.effect || ''}</span>
                 </div>
@@ -734,9 +741,59 @@ function displayRecommendations(recommendations, isApiGenerated) {
                     ${item.period ? `<span>期間: ${item.period}</span>` : ''}
                     ${item.cost ? `<span>費用: ${item.cost}</span>` : ''}
                 </div>
+
+                ${hasDetailedActions ? `
+                <!-- 詳しくボタン -->
+                <button class="details-toggle-btn" onclick="toggleDetails('${detailsId}')" id="btn-${detailsId}">
+                    <span>詳しく見る</span>
+                    <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+
+                <!-- 詳細アクション（折りたたみ） -->
+                <div class="detailed-actions-container" id="${detailsId}" style="display: none;">
+                    <div class="detailed-actions-header">
+                        <span>📋</span> 今すぐ実行できる具体的アクション
+                    </div>
+                    <div class="detailed-actions-list">
+                        ${item.detailedActions.map((action, actionIndex) => `
+                            <div class="detailed-action-item">
+                                <div class="action-number">${actionIndex + 1}</div>
+                                <div class="action-content">
+                                    <div class="action-title">${action.title}</div>
+                                    <div class="action-description">${action.description}</div>
+                                    ${action.immediateSteps ? `
+                                        <div class="immediate-steps">
+                                            <div class="immediate-steps-header">▼ 今日からできること</div>
+                                            ${action.immediateSteps.map(step => `
+                                                <div class="immediate-step">
+                                                    <span class="step-bullet">•</span>
+                                                    <span>${step}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    ` : ''}
+                                    ${action.tools ? `
+                                        <div class="action-tools">
+                                            <span class="tools-label">活用ツール:</span> ${action.tools}
+                                        </div>
+                                    ` : ''}
+                                    ${action.tip ? `
+                                        <div class="action-tip">
+                                            <span class="tip-icon">💡</span> ${action.tip}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 
     // 成功事例を表示
     if (recommendations.successCases && recommendations.successCases.length > 0) {
@@ -760,6 +817,22 @@ function displayRecommendations(recommendations, isApiGenerated) {
     }
 
     container.innerHTML = html;
+}
+
+// 詳細表示の切り替え
+function toggleDetails(detailsId) {
+    const detailsEl = document.getElementById(detailsId);
+    const btnEl = document.getElementById(`btn-${detailsId}`);
+
+    if (detailsEl.style.display === 'none') {
+        detailsEl.style.display = 'block';
+        btnEl.classList.add('expanded');
+        btnEl.querySelector('span').textContent = '閉じる';
+    } else {
+        detailsEl.style.display = 'none';
+        btnEl.classList.remove('expanded');
+        btnEl.querySelector('span').textContent = '詳しく見る';
+    }
 }
 
 function formatAIResponse(text) {

@@ -2577,3 +2577,218 @@ input[type="checkbox"] {
     opacity: 0.8;
     cursor: wait;
 }
+
+/* ========================================
+   詳細アクション表示（折りたたみ）
+   ======================================== */
+
+/* 詳しくボタン */
+.details-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    margin-top: 16px;
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%);
+    border: 2px solid var(--primary-200);
+    border-radius: var(--radius-lg);
+    color: var(--primary-700);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.details-toggle-btn:hover {
+    background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+    border-color: var(--primary-300);
+    transform: translateY(-1px);
+}
+
+.details-toggle-btn .toggle-icon {
+    transition: transform var(--transition-base);
+}
+
+.details-toggle-btn.expanded .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* 詳細アクションコンテナ */
+.detailed-actions-container {
+    margin-top: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--primary-200);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.detailed-actions-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-800);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary-300);
+}
+
+.detailed-actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 個別アクションアイテム */
+.detailed-action-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+}
+
+.action-number {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 6px;
+}
+
+.action-description {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+/* 今日からできること */
+.immediate-steps {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--success-400);
+}
+
+.immediate-steps-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--success-700);
+    margin-bottom: 8px;
+}
+
+.immediate-step {
+    display: flex;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: 4px;
+}
+
+.step-bullet {
+    color: var(--success-500);
+    font-weight: 700;
+}
+
+/* 活用ツール */
+.action-tools {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    background: var(--gray-100);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+}
+
+.tools-label {
+    font-weight: 600;
+    color: var(--gray-600);
+}
+
+/* ヒント */
+.action-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--accent-700);
+    background: linear-gradient(135deg, var(--accent-50) 0%, #fdf4ff 100%);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--accent-100);
+    line-height: 1.5;
+}
+
+.tip-icon {
+    flex-shrink: 0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .detailed-actions-container {
+        padding: 14px;
+    }
+
+    .detailed-action-item {
+        padding: 12px;
+    }
+
+    .action-number {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+    }
+
+    .action-title {
+        font-size: 0.9rem;
+    }
+
+    .action-description {
+        font-size: 0.8rem;
+    }
+
+    .immediate-steps {
+        padding: 10px;
+    }
+
+    .immediate-step {
+        font-size: 0.75rem;
+    }
+}
