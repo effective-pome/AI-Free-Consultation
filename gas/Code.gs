@@ -101,23 +101,19 @@ function processDiagnosisData(data) {
   // 1. スプレッドシートに保存
   const rowNumber = saveToSpreadsheet(data);
 
-  // 2. PDFアドバイスシートを生成
-  const pdfBlob = generatePDFAdviceSheet(data);
+  // 2. ユーザーにメール送信（診断結果をメール本文に記載）
+  sendEmailToUser(data);
 
-  // 3. PDFをGoogle Driveに保存
-  const pdfUrl = savePDFToDrive(pdfBlob, data);
-
-  // 4. ユーザーにメール送信
-  sendEmailToUser(data, pdfBlob);
-
-  // 5. 管理者に通知
+  // 3. 管理者に通知
   sendAdminNotification(data, rowNumber);
+
+  // 4. CCメールアドレスにも送信
+  sendCCNotification(data);
 
   return {
     success: true,
-    message: 'アドバイスシートをメールで送信しました',
-    rowNumber: rowNumber,
-    pdfUrl: pdfUrl
+    message: '診断結果をメールで送信しました',
+    rowNumber: rowNumber
   };
 }
 
@@ -571,48 +567,39 @@ function savePDFToDrive(pdfBlob, data) {
 // ========================================
 
 /**
- * ユーザーにアドバイスシートをメール送信
+ * ユーザーに診断結果をメール送信（本文に記載）
  */
-function sendEmailToUser(data, pdfBlob) {
+function sendEmailToUser(data) {
   if (!data.userEmail) {
     console.log('メールアドレスが未設定のためスキップ');
     return;
   }
 
-  // メールテンプレートを取得
-  const template = HtmlService.createTemplateFromFile('EmailTemplate');
-  template.data = data;
-  template.recommendations = formatRecommendationsForEmail(data);
+  // 日程調整URLを取得（常に取得、無料サポート希望時は目立つ位置に配置）
+  const schedulingUrl = getSchedulingUrl();
 
-  // 無料サポート希望時は日程調整URLを取得
-  const schedulingUrl = data.wantsFreeSupport ? getSchedulingUrl() : null;
-  template.schedulingUrl = schedulingUrl;
-
-  const htmlBody = template.evaluate().getContent();
-  const plainBody = createPlainTextEmail(data, schedulingUrl);
+  // メール本文を作成
+  const plainBody = createDiagnosisEmail(data, schedulingUrl);
+  const htmlBody = createDiagnosisEmailHtml(data, schedulingUrl);
 
   // メール送信オプション
   const options = {
     name: CONFIG.SENDER_NAME,
-    htmlBody: htmlBody,
-    attachments: [pdfBlob]
+    htmlBody: htmlBody
   };
 
   // 件名
-  const subject = `【AI診断結果】${data.clinicName || 'お客様'}のアドバイスシート`;
+  const subject = `【AI診断結果】${data.clinicName || 'お客様'}の診断レポート`;
 
   // メール送信
   GmailApp.sendEmail(data.userEmail, subject, plainBody, options);
   console.log('メール送信完了: ' + data.userEmail);
-
-  // CCメールアドレスにも送信（入力情報の共有）
-  sendCCNotification(data, pdfBlob);
 }
 
 /**
  * CC送信先にデータを共有
  */
-function sendCCNotification(data, pdfBlob) {
+function sendCCNotification(data) {
   const ccEmails = getSettingValue('CC_EMAILS') || CONFIG.CC_EMAILS;
 
   if (!ccEmails || ccEmails.length === 0) {
@@ -657,8 +644,7 @@ ${data.otherConcerns || 'なし'}
 `;
 
   const options = {
-    name: CONFIG.SENDER_NAME,
-    attachments: [pdfBlob]
+    name: CONFIG.SENDER_NAME
   };
 
   // 各CC宛先に送信
@@ -791,48 +777,237 @@ https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/edit
 }
 
 /**
- * プレーンテキストメール本文を作成
+ * 診断結果メール本文を作成（プレーンテキスト）
  */
-function createPlainTextEmail(data, schedulingUrl) {
-  let supportSection = '';
+function createDiagnosisEmail(data, schedulingUrl) {
+  const comparison = generateComparisonData(data);
+  const recommendations = formatRecommendations(data);
 
+  // 日程調整セクション（最初に配置）
+  let schedulingSection = '';
   if (data.wantsFreeSupport && schedulingUrl) {
-    supportSection = `
-━━━━━━━━━━━━━━━━━━━━━━━
-■ 無料サポートのご予約
-━━━━━━━━━━━━━━━━━━━━━━━
-無料サポートをご希望いただきありがとうございます。
-下記のURLから日程をご予約ください。
+    schedulingSection = `
+╔═══════════════════════════════════════╗
+║  【無料サポート】日程予約のご案内      ║
+╚═══════════════════════════════════════╝
 
-▼ 日程予約はこちら
+無料サポートをご希望いただきありがとうございます！
+経営コンサルタントが30分間、診断結果について
+詳しくご説明させていただきます。
+
+▼▼▼ 今すぐ日程を予約する ▼▼▼
 ${schedulingUrl}
 
-経営コンサルタントが30分間、医院の現状について
-フォローさせていただきます。
+━━━━━━━━━━━━━━━━━━━━━━━
 
 `;
   }
 
-  return `
-${data.userName || 'お客'}様
+  // 推奨事項のテキスト
+  let recommendationsText = '';
+  if (recommendations && recommendations.items) {
+    recommendationsText = recommendations.items.slice(0, 3).map((item, i) => {
+      const title = typeof item === 'string' ? item : (item.title || item);
+      const desc = typeof item !== 'string' && item.description ? item.description : '';
+      const effect = typeof item !== 'string' && item.effect ? item.effect : '';
+      return `【${i + 1}】${title}
+   ${desc}
+   → ${effect}`;
+    }).join('\n\n');
+  }
 
-この度は「歯科医院AI診断」をご利用いただき、誠にありがとうございます。
+  return `${schedulingSection}${data.userName || 'お客'}様
 
-診断結果とアドバイスシートをPDFにてお送りいたします。
-添付ファイルをご確認ください。
+この度は「歯科医院AI診断」をご利用いただき、
+誠にありがとうございます。
+
+診断結果をお送りいたします。
 
 ━━━━━━━━━━━━━━━━━━━━━━━
-■ 診断結果サマリー
+■ 基本情報
 ━━━━━━━━━━━━━━━━━━━━━━━
 医院名: ${data.clinicName || '未入力'}
 診断日: ${new Date().toLocaleDateString('ja-JP')}
-最優先課題: ${getPriorityName(data.priority)}
+地域: ${getRegionName(data.region)}
+開業年数: ${getYearsOpenName(data.yearsOpen)}
+ユニット数: ${data.units || '-'}台
 
-詳細なアドバイスは添付のPDFをご覧ください。
-${supportSection}
+━━━━━━━━━━━━━━━━━━━━━━━
+■ 入力データサマリー
+━━━━━━━━━━━━━━━━━━━━━━━
+新患数: ${data.newPatient || '--'}人/月
+月間医業収入: ${data.totalRevenue || '--'}万円
+自費率: ${data.selfPayRate ? Math.floor(data.selfPayRate) : '--'}%
+キャンセル率: ${data.cancel ? Math.floor(data.cancel) : '--'}%
+リコール率: ${data.recall ? Math.floor(data.recall) : '--'}%
+
+━━━━━━━━━━━━━━━━━━━━━━━
+■ 類似医院との比較
+━━━━━━━━━━━━━━━━━━━━━━━
+新患獲得力: 上位 ${formatPercentile(comparison.newPatientPower.percentile)}%（${getStatusLabel(comparison.newPatientPower.status)}）
+自費転換力: 上位 ${formatPercentile(comparison.selfPayPower.percentile)}%（${getStatusLabel(comparison.selfPayPower.status)}）
+患者定着率: 上位 ${formatPercentile(comparison.patientRetention.percentile)}%（${getStatusLabel(comparison.patientRetention.status)}）
+
+━━━━━━━━━━━━━━━━━━━━━━━
+★ あなたの最優先課題
+━━━━━━━━━━━━━━━━━━━━━━━
+${getPriorityName(data.priority)}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+■ AIからの提案
+━━━━━━━━━━━━━━━━━━━━━━━
+${recommendationsText}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+■ 推奨アクションプラン
+━━━━━━━━━━━━━━━━━━━━━━━
+【今すぐ】無料サポートのご予約
+【1週間以内】課題を院内で共有
+【1ヶ月以内】最優先課題への取り組み開始
+【3ヶ月後】効果測定・次のステップへ
+
 ━━━━━━━━━━━━━━━━━━━━━━━
 歯科医院地域一番実践会
 ━━━━━━━━━━━━━━━━━━━━━━━
+このメールはAI診断システムから自動送信されています。
+`;
+}
+
+/**
+ * 診断結果メール本文を作成（HTML）
+ */
+function createDiagnosisEmailHtml(data, schedulingUrl) {
+  const comparison = generateComparisonData(data);
+  const recommendations = formatRecommendations(data);
+
+  // 日程調整ボタン（最初に配置）
+  let schedulingButton = '';
+  if (data.wantsFreeSupport && schedulingUrl) {
+    schedulingButton = `
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center;">
+      <h2 style="color: white; margin: 0 0 12px 0; font-size: 18px;">🎉 無料サポートのご予約</h2>
+      <p style="color: rgba(255,255,255,0.9); margin: 0 0 16px 0; font-size: 14px;">
+        経営コンサルタントが30分間、診断結果について詳しくご説明いたします
+      </p>
+      <a href="${schedulingUrl}" style="display: inline-block; background: white; color: #667eea; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">
+        📅 今すぐ日程を予約する
+      </a>
+    </div>
+    `;
+  }
+
+  // 推奨事項のHTML
+  let recommendationsHtml = '';
+  if (recommendations && recommendations.items) {
+    recommendationsHtml = recommendations.items.slice(0, 3).map((item, i) => {
+      const title = typeof item === 'string' ? item : (item.title || item);
+      const desc = typeof item !== 'string' && item.description ? item.description : '';
+      const effect = typeof item !== 'string' && item.effect ? item.effect : '';
+      return `
+      <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #667eea;">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+          <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 8px;">${i + 1}</span>
+          <strong style="color: #1a1a2e; font-size: 14px;">${title}</strong>
+        </div>
+        ${desc ? `<p style="color: #555; font-size: 13px; margin: 0 0 8px 32px; line-height: 1.5;">${desc}</p>` : ''}
+        ${effect ? `<p style="color: #10b981; font-size: 12px; margin: 0 0 0 32px; font-weight: 500;">→ ${effect}</p>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background: #f5f5f5;">
+  <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+    ${schedulingButton}
+
+    <h1 style="color: #0D3B66; font-size: 20px; margin: 0 0 8px 0; text-align: center;">AI診断結果レポート</h1>
+    <p style="color: #666; font-size: 12px; text-align: center; margin: 0 0 24px 0;">歯科医院地域一番実践会</p>
+
+    <p style="font-size: 15px; margin-bottom: 20px;">
+      <strong>${data.userName || 'お客'}様</strong><br>
+      この度は「歯科医院AI診断」をご利用いただき、誠にありがとうございます。
+    </p>
+
+    <!-- 基本情報 -->
+    <div style="background: #f0f7ff; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+      <h3 style="color: #0D3B66; font-size: 14px; margin: 0 0 12px 0; border-bottom: 1px solid #d8f1ff; padding-bottom: 8px;">📋 基本情報</h3>
+      <table style="width: 100%; font-size: 13px;">
+        <tr><td style="color: #666; padding: 4px 0;">医院名:</td><td style="color: #333; font-weight: 500;">${data.clinicName || '未入力'}</td></tr>
+        <tr><td style="color: #666; padding: 4px 0;">診断日:</td><td style="color: #333;">${new Date().toLocaleDateString('ja-JP')}</td></tr>
+        <tr><td style="color: #666; padding: 4px 0;">地域:</td><td style="color: #333;">${getRegionName(data.region)}</td></tr>
+        <tr><td style="color: #666; padding: 4px 0;">開業年数:</td><td style="color: #333;">${getYearsOpenName(data.yearsOpen)}</td></tr>
+      </table>
+    </div>
+
+    <!-- 入力データサマリー -->
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: #0D3B66; font-size: 14px; margin: 0 0 12px 0;">📊 入力データサマリー</h3>
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <tr style="background: #f8f9fa;">
+          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>新患数</strong><br>${data.newPatient || '--'}人/月</td>
+          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>月間収入</strong><br>${data.totalRevenue || '--'}万円</td>
+          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>自費率</strong><br>${data.selfPayRate ? Math.floor(data.selfPayRate) : '--'}%</td>
+        </tr>
+        <tr style="background: #f8f9fa;">
+          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>キャンセル率</strong><br>${data.cancel ? Math.floor(data.cancel) : '--'}%</td>
+          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;" colspan="2"><strong>リコール率</strong><br>${data.recall ? Math.floor(data.recall) : '--'}%</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 類似医院との比較 -->
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: #0D3B66; font-size: 14px; margin: 0 0 12px 0;">📈 類似医院との比較</h3>
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+        <tr style="background: #667eea; color: white;">
+          <th style="padding: 10px; text-align: center;">新患獲得力</th>
+          <th style="padding: 10px; text-align: center;">自費転換力</th>
+          <th style="padding: 10px; text-align: center;">患者定着率</th>
+        </tr>
+        <tr style="background: #f8f9fa;">
+          <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: center;">
+            <strong style="font-size: 16px; color: #667eea;">上位 ${formatPercentile(comparison.newPatientPower.percentile)}%</strong><br>
+            <span style="font-size: 11px; color: #666;">${getStatusLabel(comparison.newPatientPower.status)}</span>
+          </td>
+          <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: center;">
+            <strong style="font-size: 16px; color: #667eea;">上位 ${formatPercentile(comparison.selfPayPower.percentile)}%</strong><br>
+            <span style="font-size: 11px; color: #666;">${getStatusLabel(comparison.selfPayPower.status)}</span>
+          </td>
+          <td style="padding: 12px; border: 1px solid #e0e0e0; text-align: center;">
+            <strong style="font-size: 16px; color: #667eea;">上位 ${formatPercentile(comparison.patientRetention.percentile)}%</strong><br>
+            <span style="font-size: 11px; color: #666;">${getStatusLabel(comparison.patientRetention.status)}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 最優先課題 -->
+    <div style="background: linear-gradient(135deg, #f8f5ff 0%, #fff 100%); border: 2px solid #764ba2; border-radius: 8px; padding: 16px; margin-bottom: 20px; text-align: center;">
+      <p style="color: #764ba2; font-size: 12px; margin: 0 0 4px 0;">★ あなたの最優先課題</p>
+      <p style="color: #1a1a2e; font-size: 18px; font-weight: bold; margin: 0;">${getPriorityName(data.priority)}</p>
+    </div>
+
+    <!-- AIからの提案 -->
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: #0D3B66; font-size: 14px; margin: 0 0 12px 0;">💡 AIからの提案</h3>
+      ${recommendationsHtml}
+    </div>
+
+    <!-- フッター -->
+    <div style="border-top: 1px solid #e0e0e0; padding-top: 16px; margin-top: 24px; text-align: center;">
+      <p style="color: #0D3B66; font-weight: bold; margin: 0 0 4px 0;">歯科医院地域一番実践会</p>
+      <p style="color: #888; font-size: 11px; margin: 0;">このメールはAI診断システムから自動送信されています</p>
+    </div>
+  </div>
+</body>
+</html>
 `;
 }
 
