@@ -617,7 +617,7 @@
       <ul class="recommendation-list">
         <? var recs = recommendations; ?>
         <? if (recs && recs.items) { ?>
-          <? for (var i = 0; i < Math.min(recs.items.length, 4); i++) { ?>
+          <? for (var i = 0; i < Math.min(recs.items.length, 3); i++) { ?>
             <? var item = recs.items[i]; ?>
             <? if (typeof item === 'string') { ?>
             <li class="recommendation-item">

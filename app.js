@@ -691,8 +691,8 @@ function displayRecommendations(recommendations, isApiGenerated) {
         `;
     }
 
-    // 標準の推薦を表示
-    html += recommendations.items.map((item, index) => `
+    // 標準の推薦を表示（3件まで）
+    html += recommendations.items.slice(0, 3).map((item, index) => `
         <div class="recommendation-card">
             <div class="recommendation-header">
                 <div class="recommendation-number">${index + 1}</div>

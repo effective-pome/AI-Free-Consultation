@@ -371,7 +371,7 @@ function createStyledPDF(data, fileName) {
 
     const recommendations = formatRecommendations(data);
     if (recommendations && recommendations.items) {
-      for (let i = 0; i < Math.min(recommendations.items.length, 4); i++) {
+      for (let i = 0; i < Math.min(recommendations.items.length, 3); i++) {
         const item = recommendations.items[i];
         const itemTitle = typeof item === 'string' ? item : (item.title || item);
 
