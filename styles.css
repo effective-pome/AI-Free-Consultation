@@ -1460,6 +1460,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .recommendation-card {
@@ -1468,6 +1471,10 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
     transition: all var(--transition-fast);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .recommendation-card:hover {
@@ -1506,6 +1513,11 @@ body {
 
 .recommendation-body {
     padding-left: 40px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .recommendation-description {
@@ -1640,6 +1652,10 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
     animation: slideDown 0.3s ease-out;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 @keyframes slideDown {
@@ -3208,12 +3224,23 @@ input[type="checkbox"] {
     }
 
     /* 結果画面 */
+    .results-screen {
+        padding: var(--space-2) !important;
+        padding-bottom: 120px !important;
+    }
+
     .results-container {
-        padding: var(--space-4);
+        padding: var(--space-2);
+    }
+
+    .results-content {
+        gap: var(--space-4);
     }
 
     .results-section-title {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        margin-bottom: var(--space-4);
+        padding-bottom: var(--space-3);
     }
 
     /* サマリーカード */
@@ -3249,7 +3276,7 @@ input[type="checkbox"] {
 
     /* 推薦カード */
     .recommendation-card {
-        padding: var(--space-4);
+        padding: var(--space-3);
     }
 
     .recommendation-header {
@@ -3260,14 +3287,106 @@ input[type="checkbox"] {
         width: 28px;
         height: 28px;
         font-size: 0.875rem;
+        flex-shrink: 0;
     }
 
     .recommendation-title {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
 
     .recommendation-description {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
+    }
+
+    /* 推薦カード内のボディ - パディングを削除して幅を確保 */
+    .recommendation-body {
+        padding-left: 0 !important;
+    }
+
+    /* 詳細アクションコンテナ - モバイル用に最適化 */
+    .detailed-actions-container,
+    .detailed-actions-container.expanded {
+        padding: var(--space-3) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .detailed-category {
+        margin-bottom: var(--space-3);
+    }
+
+    .detailed-category-title {
+        font-size: 0.8rem !important;
+        padding: var(--space-2) !important;
+    }
+
+    .detailed-actions-list {
+        gap: var(--space-2);
+    }
+
+    .detailed-action-item {
+        padding: var(--space-2) var(--space-3) !important;
+        font-size: 0.75rem !important;
+    }
+
+    /* ステップ表示の調整 */
+    .recommendation-steps {
+        gap: var(--space-2);
+        padding: var(--space-3);
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .steps-header {
+        font-size: 0.8rem;
+        padding: var(--space-2);
+    }
+
+    .recommendation-step {
+        font-size: 0.75rem;
+    }
+
+    .step-number {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
+
+    /* 効果・難易度情報 */
+    .recommendation-meta {
+        flex-direction: column;
+        gap: var(--space-2);
+        align-items: flex-start;
+    }
+
+    .recommendation-effect,
+    .recommendation-info {
+        font-size: 0.7rem;
+    }
+
+    /* 状況別アドバイスカード */
+    .situational-advice-card {
+        padding: var(--space-3) !important;
+    }
+
+    .situational-advice-header {
+        font-size: 0.85rem;
+    }
+
+    .phase-advice,
+    .situational-advice {
+        padding: var(--space-3) !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* 結果セクションのパディング調整 */
+    .results-section {
+        padding: var(--space-3);
+    }
+
+    .ai-recommendations {
+        padding: var(--space-3) !important;
     }
 
     /* アクションボタン */
