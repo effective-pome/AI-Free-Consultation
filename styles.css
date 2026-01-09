@@ -3039,9 +3039,9 @@ input[type="checkbox"] {
     height: 18px;
 }
 
-/* 結果画面のパディング調整 */
+/* 結果画面のパディング調整（追従バナー用） */
 .results-screen {
-    padding-bottom: var(--space-8);
+    padding-bottom: 120px;
 }
 
 /* モバイル対応 */
@@ -3252,7 +3252,7 @@ input[type="checkbox"] {
     /* 結果画面 */
     .results-screen {
         padding: var(--space-2) !important;
-        padding-bottom: var(--space-4) !important;
+        padding-bottom: 140px !important;
     }
 
     .results-container {
