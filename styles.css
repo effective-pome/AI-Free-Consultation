@@ -2870,8 +2870,9 @@ input[type="checkbox"] {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
     padding: var(--space-4) var(--space-6);
 }
 
@@ -2893,18 +2894,17 @@ input[type="checkbox"] {
 }
 
 .sticky-support-badge {
-    background: var(--success-500);
+    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
     color: white;
     font-size: 0.75rem;
     font-weight: 700;
     padding: var(--space-1) var(--space-3);
     border-radius: var(--radius-full);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
 }
 
 .sticky-support-text {
-    color: white;
+    color: var(--gray-700);
     font-size: 0.95rem;
     font-weight: 500;
 }
@@ -2929,9 +2929,9 @@ input[type="checkbox"] {
 .sticky-checkbox-custom {
     width: 20px;
     height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.7);
+    border: 2px solid var(--gray-300);
     border-radius: var(--radius-sm);
-    background: transparent;
+    background: white;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2939,8 +2939,8 @@ input[type="checkbox"] {
 }
 
 .sticky-checkbox-label input[type="checkbox"]:checked + .sticky-checkbox-custom {
-    background: var(--success-500);
-    border-color: var(--success-500);
+    background: var(--primary-500);
+    border-color: var(--primary-500);
 }
 
 .sticky-checkbox-label input[type="checkbox"]:checked + .sticky-checkbox-custom::after {
@@ -2951,7 +2951,7 @@ input[type="checkbox"] {
 }
 
 .sticky-checkbox-text {
-    color: white;
+    color: var(--gray-600);
     font-size: 0.9rem;
     font-weight: 500;
 }
@@ -2961,21 +2961,21 @@ input[type="checkbox"] {
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-3) var(--space-6);
-    background: white;
-    color: var(--primary-600);
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--accent-500) 100%);
+    color: white;
     font-size: 0.95rem;
     font-weight: 600;
     border: none;
     border-radius: var(--radius-full);
     cursor: pointer;
     transition: all var(--transition-base);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md), 0 0 20px rgba(42, 163, 255, 0.2);
 }
 
 .sticky-support-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    background: var(--gray-50);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(42, 163, 255, 0.3);
+    background: linear-gradient(135deg, var(--primary-400) 0%, var(--accent-600) 100%);
 }
 
 .sticky-support-button:disabled {
@@ -3035,7 +3035,8 @@ input[type="checkbox"] {
 
 /* 追従バナー成功状態 */
 .sticky-support-banner.success-state {
-    background: linear-gradient(135deg, var(--success-500), var(--success-600));
+    background: var(--success-50);
+    border-top-color: var(--success-400);
 }
 
 .sticky-success {
@@ -3051,11 +3052,11 @@ input[type="checkbox"] {
 .sticky-success-icon {
     width: 24px;
     height: 24px;
-    stroke: white;
+    stroke: var(--success-500);
 }
 
 .sticky-success-text {
-    color: white;
+    color: var(--success-600);
     font-size: 1rem;
     font-weight: 600;
 }
@@ -3065,19 +3066,20 @@ input[type="checkbox"] {
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-3) var(--space-6);
-    background: white;
-    color: var(--success-600);
+    background: var(--success-500);
+    color: white;
     font-size: 0.95rem;
     font-weight: 600;
     border-radius: var(--radius-full);
     text-decoration: none;
     transition: all var(--transition-base);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .sticky-calendar-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-lg);
+    background: var(--success-600);
 }
 
 .sticky-calendar-button svg {
