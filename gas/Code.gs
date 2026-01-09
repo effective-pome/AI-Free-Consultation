@@ -1067,7 +1067,8 @@ function getPriorityName(code) {
     'newPatient': '新患獲得',
     'selfPay': '自費率向上',
     'cancel': 'キャンセル対策',
-    'staff': 'スタッフ採用・定着',
+    'staffRetention': 'スタッフ定着',
+    'staffRecruitment': 'スタッフ採用',
     'efficiency': '業務効率化'
   };
   return priorities[code] || code || '未選択';
@@ -1126,13 +1127,20 @@ function getDefaultRecommendations(priority) {
         'キャンセル患者フォロー'
       ]
     },
-    'staff': {
-      title: 'スタッフ採用・定着',
+    'staffRetention': {
+      title: 'スタッフ定着',
+      items: [
+        '評価制度・キャリアパスの整備',
+        '教育・研修プログラムの構築',
+        'コミュニケーション改善'
+      ]
+    },
+    'staffRecruitment': {
+      title: 'スタッフ採用',
       items: [
         '採用ブランディング強化',
-        '教育システムの整備',
-        '評価制度の導入',
-        '働きやすい環境づくり'
+        '求人媒体の最適化',
+        '面接・選考プロセス改善'
       ]
     },
     'efficiency': {
