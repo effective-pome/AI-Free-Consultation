@@ -9,6 +9,7 @@ const AppState = {
     currentStep: 1,
     totalSteps: 3,
     formData: {},
+    recommendations: null,
     apiKey: null,
     useApi: false
 };
@@ -348,6 +349,9 @@ async function submitForm() {
     } else {
         recommendations = generateLocalRecommendations();
     }
+
+    // レコメンデーションを保存（サポートリクエスト用）
+    AppState.recommendations = recommendations;
 
     // 結果画面を表示
     document.getElementById('loadingScreen').classList.add('hidden');
@@ -749,6 +753,7 @@ function restartDiagnosis() {
     // 状態をリセット
     AppState.currentStep = 1;
     AppState.formData = {};
+    AppState.recommendations = null;
 
     // 画面を切り替え
     document.getElementById('resultsScreen').classList.add('hidden');
@@ -1069,6 +1074,7 @@ async function submitSupportRequest() {
             userName: AppState.formData.userName,
             userEmail: AppState.formData.userEmail,
             clinicName: AppState.formData.clinicName,
+            recommendations: AppState.recommendations,
             timestamp: new Date().toISOString()
         };
 
