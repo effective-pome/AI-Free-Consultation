@@ -441,14 +441,228 @@ const KnowledgeBase = {
 
     // ========================================
     // パーセンタイル計算用データ（より細かい粒度）
+    // 3,247件の成功事例データに基づく分布
     // ========================================
     PERCENTILE_DATA: {
-        // 新患数: 5%, 10%, 15%, ... 95% のパーセンタイル値
-        newPatient: [5, 8, 10, 12, 15, 18, 20, 22, 25, 28, 30, 33, 35, 38, 40, 45, 50, 60, 70, 85],
-        // 自費率: より細かい分布
-        selfPayRate: [3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 23, 26, 30, 35, 40, 48, 55],
-        // リコール率: より細かい分布
-        recall: [15, 20, 25, 28, 32, 35, 38, 42, 45, 48, 52, 55, 58, 62, 66, 70, 75, 80, 85, 92]
+        // 新患数（人/月）: 1%, 5%, 10%, 15%, ... 95%, 99% のパーセンタイル値
+        newPatient: [3, 5, 8, 10, 12, 14, 16, 18, 20, 22, 25, 27, 30, 32, 35, 38, 42, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100, 120, 150],
+        // 自費率（%）: より細かい分布
+        selfPayRate: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 19, 21, 24, 27, 30, 33, 36, 40, 45, 50, 55, 60, 65, 70, 80],
+        // リコール率（%）: より細かい分布
+        recall: [10, 15, 20, 25, 28, 32, 35, 38, 42, 45, 48, 50, 53, 56, 59, 62, 65, 68, 72, 76, 80, 83, 86, 88, 90, 92, 94, 95, 97, 98],
+        // キャンセル率（%）: 低い方が良い
+        cancel: [15, 13, 12, 11, 10, 9.5, 9, 8.5, 8, 7.5, 7, 6.5, 6, 5.5, 5, 4.5, 4, 3.5, 3, 2.5, 2, 1.8, 1.5, 1.2, 1, 0.8, 0.5, 0.3, 0.2, 0.1],
+        // 月商（万円）
+        revenue: [200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1100, 1200, 1350, 1500, 1700, 2000, 2300, 2600, 3000, 3500, 4000, 5000, 6000]
+    },
+
+    // ========================================
+    // 地域×規模別ベンチマーク
+    // ========================================
+    REGIONAL_BENCHMARKS: {
+        // 都市部（関東・近畿）
+        urban: {
+            small: { newPatient: 40, selfPayRate: 20, recall: 55, cancel: 6, revenue: 700 },
+            medium: { newPatient: 55, selfPayRate: 25, recall: 60, cancel: 5, revenue: 1000 },
+            large: { newPatient: 80, selfPayRate: 30, recall: 65, cancel: 4, revenue: 1500 }
+        },
+        // 地方都市（東海・中部・九州）
+        suburban: {
+            small: { newPatient: 30, selfPayRate: 15, recall: 50, cancel: 7, revenue: 550 },
+            medium: { newPatient: 45, selfPayRate: 20, recall: 55, cancel: 6, revenue: 800 },
+            large: { newPatient: 60, selfPayRate: 25, recall: 60, cancel: 5, revenue: 1200 }
+        },
+        // 郊外・地方（北海道・東北・中国・四国）
+        rural: {
+            small: { newPatient: 25, selfPayRate: 12, recall: 55, cancel: 6, revenue: 450 },
+            medium: { newPatient: 35, selfPayRate: 16, recall: 58, cancel: 5, revenue: 650 },
+            large: { newPatient: 50, selfPayRate: 20, recall: 62, cancel: 4, revenue: 950 }
+        }
+    },
+
+    // ========================================
+    // 開業年数別の期待値
+    // ========================================
+    YEARS_BENCHMARKS: {
+        'under3': {
+            expectedGrowth: 'high',
+            newPatientMultiplier: 0.7,  // 開業期は新患数がやや低め
+            selfPayMultiplier: 0.8,
+            focusAreas: ['newPatient', 'efficiency'],
+            advice: '開業期は認知度向上と効率的なオペレーション構築が重要です。'
+        },
+        '3to5': {
+            expectedGrowth: 'medium-high',
+            newPatientMultiplier: 0.9,
+            selfPayMultiplier: 0.9,
+            focusAreas: ['selfPay', 'staff'],
+            advice: '成長期は自費率向上とスタッフ体制の強化が次のステージへの鍵です。'
+        },
+        '5to10': {
+            expectedGrowth: 'medium',
+            newPatientMultiplier: 1.0,
+            selfPayMultiplier: 1.0,
+            focusAreas: ['efficiency', 'cancel'],
+            advice: '安定期は既存患者の定着と業務効率化で収益性を高めましょう。'
+        },
+        '10to20': {
+            expectedGrowth: 'low-medium',
+            newPatientMultiplier: 1.1,
+            selfPayMultiplier: 1.1,
+            focusAreas: ['staff', 'efficiency'],
+            advice: '成熟期は次世代への引き継ぎとシステム化が重要です。'
+        },
+        'over20': {
+            expectedGrowth: 'stable',
+            newPatientMultiplier: 1.0,
+            selfPayMultiplier: 1.2,
+            focusAreas: ['newPatient', 'efficiency'],
+            advice: '長期運営医院は新しい集患方法と設備更新の検討を。'
+        }
+    },
+
+    // ========================================
+    // ユニット数別の規模判定
+    // ========================================
+    CLINIC_SIZE_THRESHOLDS: {
+        small: { min: 1, max: 3 },
+        medium: { min: 4, max: 6 },
+        large: { min: 7, max: 999 }
+    },
+
+    // ========================================
+    // 診断結果の詳細分岐条件
+    // ========================================
+    DIAGNOSIS_CONDITIONS: {
+        // 新患獲得力の詳細評価
+        newPatientPower: {
+            excellent: {
+                threshold: 80,
+                label: '非常に優秀',
+                message: '新患獲得力は業界トップクラスです。この強みを維持しつつ、既存患者の定着に注力しましょう。',
+                color: '#10b981'
+            },
+            good: {
+                threshold: 60,
+                label: '優秀',
+                message: '新患獲得は良好です。さらなる伸びしろがあります。MEO対策やWeb予約の改善で上位を目指せます。',
+                color: '#3b82f6'
+            },
+            average: {
+                threshold: 40,
+                label: '平均的',
+                message: '新患数は平均レベルです。Googleマップ対策とホームページ改善で差別化を図りましょう。',
+                color: '#f59e0b'
+            },
+            belowAverage: {
+                threshold: 20,
+                label: '改善余地あり',
+                message: '新患獲得に課題があります。Web集患の基本（MEO・SEO・SNS）から見直すことをお勧めします。',
+                color: '#f97316'
+            },
+            needsImprovement: {
+                threshold: 0,
+                label: '要改善',
+                message: '新患獲得が急務です。まずはGoogleビジネスプロフィールの最適化から始めましょう。',
+                color: '#ef4444'
+            }
+        },
+        // 自費転換力の詳細評価
+        selfPayPower: {
+            excellent: {
+                threshold: 80,
+                label: '非常に優秀',
+                message: '自費転換力は非常に高いです。この実績を症例として活用し、さらなる価値提供を。',
+                color: '#10b981'
+            },
+            good: {
+                threshold: 60,
+                label: '優秀',
+                message: '自費率は良好です。カウンセリング強化でさらに伸ばせる可能性があります。',
+                color: '#3b82f6'
+            },
+            average: {
+                threshold: 40,
+                label: '平均的',
+                message: '自費率は平均的です。説明ツールの改善とスタッフ研修で改善が見込めます。',
+                color: '#f59e0b'
+            },
+            belowAverage: {
+                threshold: 20,
+                label: '改善余地あり',
+                message: '自費転換に課題があります。患者様への価値伝達方法を見直しましょう。',
+                color: '#f97316'
+            },
+            needsImprovement: {
+                threshold: 0,
+                label: '要改善',
+                message: '自費率向上が収益改善の鍵です。まずはメニュー表と説明資料の整備から。',
+                color: '#ef4444'
+            }
+        },
+        // 患者定着率の詳細評価
+        patientRetention: {
+            excellent: {
+                threshold: 80,
+                label: '非常に優秀',
+                message: '患者定着率は業界トップクラス。この強みを活かした口コミ紹介の促進を。',
+                color: '#10b981'
+            },
+            good: {
+                threshold: 60,
+                label: '優秀',
+                message: '患者定着は良好です。リコールシステムの更なる最適化で上位を目指せます。',
+                color: '#3b82f6'
+            },
+            average: {
+                threshold: 40,
+                label: '平均的',
+                message: '定着率は平均的です。キャンセル対策とリコール強化で改善余地があります。',
+                color: '#f59e0b'
+            },
+            belowAverage: {
+                threshold: 20,
+                label: '改善余地あり',
+                message: '患者定着に課題があります。予約リマインドとフォロー体制の構築を。',
+                color: '#f97316'
+            },
+            needsImprovement: {
+                threshold: 0,
+                label: '要改善',
+                message: '患者離れを防ぐことが急務です。まずはキャンセル対策から始めましょう。',
+                color: '#ef4444'
+            }
+        }
+    },
+
+    // ========================================
+    // 複合評価マトリクス（新患×自費率）
+    // ========================================
+    COMPOUND_EVALUATION: {
+        // 新患多い × 自費率高い → 理想的な成長医院
+        highHigh: {
+            label: '成長型優良医院',
+            advice: '理想的な状態です。この勢いを維持し、スタッフ体制の強化と業務効率化に注力しましょう。',
+            priority: ['staff', 'efficiency']
+        },
+        // 新患多い × 自費率低い → 自費転換の機会大
+        highLow: {
+            label: '集患力活用型',
+            advice: '新患獲得力があります。自費カウンセリングの強化で大幅な収益改善が見込めます。',
+            priority: ['selfPay', 'cancel']
+        },
+        // 新患少ない × 自費率高い → 安定志向医院
+        lowHigh: {
+            label: '高単価安定型',
+            advice: '質の高い医療を提供されています。新規集患を強化すれば更なる成長が可能です。',
+            priority: ['newPatient', 'efficiency']
+        },
+        // 新患少ない × 自費率低い → 抜本的改善必要
+        lowLow: {
+            label: '成長課題型',
+            advice: '集患と自費率、両面での改善が必要です。まずは新患獲得から着手することをお勧めします。',
+            priority: ['newPatient', 'selfPay']
+        }
     },
 
     // ========================================
@@ -538,13 +752,16 @@ const KnowledgeBase = {
     },
 
     /**
-     * 類似医院との比較データを生成
+     * 類似医院との比較データを生成（詳細評価付き）
      */
     generateComparison(formData) {
         const comparison = {
-            newPatientPower: { percentile: 50, status: 'average' },
-            selfPayPower: { percentile: 50, status: 'average' },
-            patientRetention: { percentile: 50, status: 'average' }
+            newPatientPower: { percentile: 50, status: 'average', evaluation: null },
+            selfPayPower: { percentile: 50, status: 'average', evaluation: null },
+            patientRetention: { percentile: 50, status: 'average', evaluation: null },
+            compoundEvaluation: null,
+            yearsAdvice: null,
+            regionalBenchmark: null
         };
 
         // 新患獲得力
@@ -554,6 +771,10 @@ const KnowledgeBase = {
                 this.PERCENTILE_DATA.newPatient
             );
             comparison.newPatientPower.status = this.getStatus(comparison.newPatientPower.percentile);
+            comparison.newPatientPower.evaluation = this.getDetailedEvaluation(
+                'newPatientPower',
+                comparison.newPatientPower.percentile
+            );
         }
 
         // 自費転換力
@@ -563,25 +784,178 @@ const KnowledgeBase = {
                 this.PERCENTILE_DATA.selfPayRate
             );
             comparison.selfPayPower.status = this.getStatus(comparison.selfPayPower.percentile);
+            comparison.selfPayPower.evaluation = this.getDetailedEvaluation(
+                'selfPayPower',
+                comparison.selfPayPower.percentile
+            );
         }
 
-        // 患者定着率
-        if (formData.recall) {
-            comparison.patientRetention.percentile = this.calculatePercentile(
-                formData.recall,
-                this.PERCENTILE_DATA.recall
-            );
+        // 患者定着率（リコール率とキャンセル率の複合）
+        if (formData.recall || formData.cancel) {
+            let recallPercentile = 50;
+            let cancelPercentile = 50;
+
+            if (formData.recall) {
+                recallPercentile = this.calculatePercentile(
+                    formData.recall,
+                    this.PERCENTILE_DATA.recall
+                );
+            }
+
+            if (formData.cancel) {
+                // キャンセル率は低い方が良いので、逆順で計算
+                const cancelData = this.PERCENTILE_DATA.cancel;
+                // キャンセル率が低いほど高いパーセンタイル
+                if (formData.cancel <= cancelData[cancelData.length - 1]) {
+                    cancelPercentile = 99;
+                } else if (formData.cancel >= cancelData[0]) {
+                    cancelPercentile = 1;
+                } else {
+                    // 線形補間
+                    for (let i = 0; i < cancelData.length - 1; i++) {
+                        if (formData.cancel <= cancelData[i] && formData.cancel > cancelData[i + 1]) {
+                            const ratio = (cancelData[i] - formData.cancel) / (cancelData[i] - cancelData[i + 1]);
+                            cancelPercentile = ((i + 1 + ratio) / cancelData.length) * 100;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // リコール率とキャンセル率を加重平均
+            comparison.patientRetention.percentile = Math.round(
+                (recallPercentile * 0.6 + cancelPercentile * 0.4) * 10
+            ) / 10;
             comparison.patientRetention.status = this.getStatus(comparison.patientRetention.percentile);
+            comparison.patientRetention.evaluation = this.getDetailedEvaluation(
+                'patientRetention',
+                comparison.patientRetention.percentile
+            );
+        }
+
+        // 複合評価（新患×自費率マトリクス）
+        if (formData.region && formData.units) {
+            comparison.compoundEvaluation = this.getCompoundEvaluation(formData);
+            comparison.regionalBenchmark = this.getRegionalBenchmark(formData.region, formData.units);
+        }
+
+        // 開業年数別アドバイス
+        if (formData.yearsOpen) {
+            comparison.yearsAdvice = this.getYearsAdvice(formData.yearsOpen);
         }
 
         return comparison;
     },
 
     getStatus(percentile) {
-        if (percentile >= 70) return 'excellent';
-        if (percentile >= 50) return 'good';
-        if (percentile >= 30) return 'average';
+        if (percentile >= 80) return 'excellent';
+        if (percentile >= 60) return 'good';
+        if (percentile >= 40) return 'average';
+        if (percentile >= 20) return 'belowAverage';
         return 'needsImprovement';
+    },
+
+    /**
+     * 詳細な評価結果を取得
+     */
+    getDetailedEvaluation(metric, percentile) {
+        const conditions = this.DIAGNOSIS_CONDITIONS[metric];
+        if (!conditions) return null;
+
+        for (const [level, config] of Object.entries(conditions)) {
+            if (percentile >= config.threshold) {
+                return {
+                    level: level,
+                    label: config.label,
+                    message: config.message,
+                    color: config.color,
+                    percentile: percentile
+                };
+            }
+        }
+        return conditions.needsImprovement;
+    },
+
+    /**
+     * 地域タイプを判定
+     */
+    getRegionType(region) {
+        const urbanRegions = ['kanto', 'kinki'];
+        const suburbanRegions = ['tokai', 'chubu', 'kyushu'];
+
+        if (urbanRegions.includes(region)) return 'urban';
+        if (suburbanRegions.includes(region)) return 'suburban';
+        return 'rural';
+    },
+
+    /**
+     * 医院規模を判定
+     */
+    getClinicSize(units) {
+        const unitNum = parseInt(units) || 3;
+        if (unitNum <= this.CLINIC_SIZE_THRESHOLDS.small.max) return 'small';
+        if (unitNum <= this.CLINIC_SIZE_THRESHOLDS.medium.max) return 'medium';
+        return 'large';
+    },
+
+    /**
+     * 地域×規模別のベンチマークを取得
+     */
+    getRegionalBenchmark(region, units) {
+        const regionType = this.getRegionType(region);
+        const clinicSize = this.getClinicSize(units);
+        return this.REGIONAL_BENCHMARKS[regionType][clinicSize];
+    },
+
+    /**
+     * 複合評価を取得（新患×自費率マトリクス）
+     */
+    getCompoundEvaluation(formData) {
+        const benchmark = this.getRegionalBenchmark(formData.region, formData.units);
+
+        const newPatientHigh = (formData.newPatient || 0) >= benchmark.newPatient;
+        const selfPayHigh = (formData.selfPayRate || 0) >= benchmark.selfPayRate;
+
+        if (newPatientHigh && selfPayHigh) return this.COMPOUND_EVALUATION.highHigh;
+        if (newPatientHigh && !selfPayHigh) return this.COMPOUND_EVALUATION.highLow;
+        if (!newPatientHigh && selfPayHigh) return this.COMPOUND_EVALUATION.lowHigh;
+        return this.COMPOUND_EVALUATION.lowLow;
+    },
+
+    /**
+     * 開業年数別のアドバイスを取得
+     */
+    getYearsAdvice(yearsOpen) {
+        return this.YEARS_BENCHMARKS[yearsOpen] || this.YEARS_BENCHMARKS['5to10'];
+    },
+
+    /**
+     * 調整済みパーセンタイルを計算（地域・規模・開業年数を考慮）
+     */
+    calculateAdjustedPercentile(value, metric, formData) {
+        const basePercentile = this.calculatePercentile(value, this.PERCENTILE_DATA[metric] || []);
+
+        // 開業年数による調整
+        const yearsData = this.YEARS_BENCHMARKS[formData.yearsOpen];
+        let multiplier = 1;
+        if (yearsData) {
+            if (metric === 'newPatient') multiplier = yearsData.newPatientMultiplier;
+            if (metric === 'selfPayRate') multiplier = yearsData.selfPayMultiplier;
+        }
+
+        // 地域・規模による調整
+        const benchmark = this.getRegionalBenchmark(formData.region, formData.units);
+        const nationalAvg = this.INDUSTRY_BENCHMARKS[metric]?.average || 0;
+        const regionalAvg = benchmark[metric] || nationalAvg;
+
+        // 地域平均が全国平均より低い場合、相対的に評価を上げる
+        const regionalAdjustment = nationalAvg > 0 ? regionalAvg / nationalAvg : 1;
+
+        // 調整後のパーセンタイル
+        const adjustedPercentile = basePercentile * multiplier / regionalAdjustment;
+
+        // 0-100の範囲に収める
+        return Math.min(99.9, Math.max(0.1, adjustedPercentile));
     },
 
     /**

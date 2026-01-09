@@ -156,6 +156,7 @@
                             </label>
                             <input type="email" class="form-input" id="userEmail" placeholder="例：info@example.com" required>
                             <p class="input-hint">診断結果をお送りします</p>
+                            <p class="input-notice">※ご入力いただいたメールアドレス宛に、歯科医院経営に役立つ情報をお届けするメールマガジンを配信させていただきます。</p>
                         </div>
 
                         <div class="form-group">
@@ -500,23 +501,35 @@
                         </div>
                     </div>
 
-                    <!-- CTA Section -->
-                    <div class="results-cta">
-                        <h3 class="cta-title">詳しい改善プランを無料でご説明します</h3>
-                        <p class="cta-description">あなたの医院に最適な相談プランをお選びください</p>
-                        <button class="cta-button primary large" onclick="openConsultationPlans()">
-                            <span>無料相談を予約する</span>
+                    <!-- 無料サポートセクション -->
+                    <div class="results-section free-support-section">
+                        <h3 class="results-section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                            【無料サポート】
+                        </h3>
+                        <p class="free-support-description">
+                            医院の現状について、経営コンサルタントから<br>
+                            <strong>30分のフォローを無料</strong>で受けることができます。
+                        </p>
+                        <div class="free-support-checkbox">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="wantsFreeSupport" checked>
+                                <span class="checkbox-text">希望する</span>
+                            </label>
+                        </div>
+                        <button class="cta-button primary large" id="submitDiagnosisButton" onclick="submitDiagnosis()">
+                            <span>送信する</span>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
                             </svg>
                         </button>
-                        <div class="cta-phone">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                            </svg>
-                            <span>045-440-0322</span>
-                            <span class="phone-hours">（平日 9:00-18:00）</span>
-                        </div>
+                        <p class="free-support-note">
+                            ※送信後、診断結果のPDFをメールでお届けします。<br>
+                            ※無料サポートをご希望の方には、日程調整のURLをお送りします。
+                        </p>
                     </div>
                 </div>
             </div>

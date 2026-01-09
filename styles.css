@@ -874,6 +874,16 @@ body {
     margin-top: var(--space-2);
 }
 
+.input-notice {
+    font-size: 0.7rem;
+    color: var(--gray-400);
+    margin-top: var(--space-2);
+    line-height: 1.5;
+    padding: var(--space-2);
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+}
+
 /* Calculated Display */
 .calculated-display {
     display: grid;
@@ -1263,13 +1273,14 @@ body {
    ======================================== */
 .results-screen {
     min-height: 100vh;
-    background: var(--gray-50);
+    background: #ffffff;
     padding: var(--space-8);
 }
 
 .results-container {
     max-width: 900px;
     margin: 0 auto;
+    background: #ffffff;
 }
 
 .results-header {
@@ -1327,10 +1338,11 @@ body {
 
 /* Results Section */
 .results-section {
-    background: white;
+    background: #ffffff;
     border-radius: var(--radius-xl);
     padding: var(--space-6);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--gray-100);
 }
 
 .results-section-title {
@@ -1608,6 +1620,69 @@ body {
 .phone-hours {
     font-size: 0.875rem;
     color: var(--gray-400);
+}
+
+/* Free Support Section */
+.free-support-section {
+    text-align: center;
+    padding: var(--space-8);
+    background: linear-gradient(135deg, #f8faff 0%, #fff 100%);
+    border: 2px solid var(--primary-100);
+}
+
+.free-support-description {
+    font-size: 1.125rem;
+    color: var(--gray-700);
+    margin-bottom: var(--space-6);
+    line-height: 1.8;
+}
+
+.free-support-description strong {
+    color: var(--primary-600);
+    font-weight: 600;
+}
+
+.free-support-checkbox {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-6);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    font-size: 1.125rem;
+    color: var(--gray-800);
+    padding: var(--space-3) var(--space-6);
+    background: white;
+    border: 2px solid var(--primary-200);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+}
+
+.checkbox-label:hover {
+    border-color: var(--primary-400);
+    background: var(--primary-50);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--primary-500);
+    cursor: pointer;
+}
+
+.checkbox-text {
+    font-weight: 500;
+}
+
+.free-support-note {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin-top: var(--space-4);
+    line-height: 1.6;
 }
 
 /* ========================================
@@ -2466,4 +2541,37 @@ input[type="checkbox"] {
         box-shadow: none;
         border: 1px solid var(--gray-200);
     }
+}
+
+/* ========================================
+   Button States & Spin Animation
+   ======================================== */
+
+/* Spin animation for SVG icons */
+.cta-button svg.spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Success state */
+.cta-button.success {
+    background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
+    cursor: default;
+    pointer-events: none;
+}
+
+.cta-button.success:hover {
+    transform: none;
+}
+
+/* Error state */
+.cta-button.error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* Disabled state (loading) */
+.cta-button:disabled {
+    opacity: 0.8;
+    cursor: wait;
 }

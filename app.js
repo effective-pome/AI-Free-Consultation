@@ -1049,6 +1049,97 @@ async function sendApplicationEmail(formData) {
 }
 
 // ========================================
+// 無料サポート送信
+// ========================================
+async function submitDiagnosis() {
+    const submitButton = document.getElementById('submitDiagnosisButton');
+    const wantsFreeSupport = document.getElementById('wantsFreeSupport')?.checked || false;
+
+    // ボタンを無効化
+    submitButton.disabled = true;
+    submitButton.innerHTML = `
+        <span>送信中...</span>
+        <svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25"/>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+        </svg>
+    `;
+
+    // 送信データを作成
+    const payload = {
+        ...AppState.formData,
+        wantsFreeSupport: wantsFreeSupport,
+        timestamp: new Date().toISOString()
+    };
+
+    // 最後に生成されたrecommendationsを取得（ローカルストレージから）
+    const savedResults = localStorage.getItem('diagnosisResults');
+    if (savedResults) {
+        try {
+            const results = JSON.parse(savedResults);
+            if (results.length > 0) {
+                const latestResult = results[results.length - 1];
+                payload.recommendations = latestResult.formData?.recommendations || {};
+            }
+        } catch (e) {
+            console.error('Failed to parse saved results:', e);
+        }
+    }
+
+    try {
+        // GASにデータを送信
+        if (GAS_WEBAPP_URL && GAS_WEBAPP_URL !== 'YOUR_GAS_WEBAPP_URL_HERE') {
+            await fetch(GAS_WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        // 成功メッセージを表示
+        submitButton.innerHTML = `
+            <span>送信完了！</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        `;
+        submitButton.classList.add('success');
+
+        // 無料サポート希望時のメッセージ
+        const noteElement = document.querySelector('.free-support-note');
+        if (wantsFreeSupport && noteElement) {
+            noteElement.innerHTML = `
+                <strong style="color: var(--success-500);">✓ 送信が完了しました！</strong><br>
+                診断結果のPDFをメールでお届けします。<br>
+                <strong>日程調整のURLもお送りしましたので、ご確認ください。</strong>
+            `;
+        } else if (noteElement) {
+            noteElement.innerHTML = `
+                <strong style="color: var(--success-500);">✓ 送信が完了しました！</strong><br>
+                診断結果のPDFをメールでお届けします。
+            `;
+        }
+
+        console.log('診断結果送信完了:', payload);
+
+    } catch (error) {
+        console.error('送信エラー:', error);
+
+        // エラー時のメッセージ
+        submitButton.innerHTML = `
+            <span>送信に失敗しました</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        `;
+        submitButton.classList.add('error');
+        submitButton.disabled = false;
+    }
+}
+
+// ========================================
 // 診断結果メール送信
 // ========================================
 async function sendDiagnosisResultEmail(recommendations) {

@@ -25,6 +25,9 @@ const CONFIG = {
   // データを保存するシート名
   SHEET_NAME: '診断データ一覧',
 
+  // 設定シート名（日程調整URLなどを管理）
+  SETTINGS_SHEET_NAME: '設定',
+
   // 送信元メールアドレス（Gmailエイリアスまたはグループアドレス）
   // ※ GASはデフォルトで実行者のGmailから送信されます
   // ※ 別のアドレスから送信する場合はGmailエイリアスを設定してください
@@ -33,8 +36,17 @@ const CONFIG = {
   // 管理者通知用メールアドレス（新規診断時に通知）
   ADMIN_EMAIL: 'admin@example.com',
 
+  // CC送信先メールアドレス（入力情報を共有する2名）
+  CC_EMAILS: [
+    'staff1@example.com',
+    'staff2@example.com'
+  ],
+
   // PDFファイル保存先フォルダID（Google Drive）
-  PDF_FOLDER_ID: 'YOUR_FOLDER_ID_HERE'
+  PDF_FOLDER_ID: 'YOUR_FOLDER_ID_HERE',
+
+  // デフォルトの日程調整URL（設定シートで上書き可能）
+  DEFAULT_SCHEDULING_URL: 'https://calendar.google.com/calendar/appointments/schedules/YOUR_SCHEDULE_ID'
 };
 
 // ========================================
@@ -572,8 +584,12 @@ function sendEmailToUser(data, pdfBlob) {
   template.data = data;
   template.recommendations = formatRecommendationsForEmail(data);
 
+  // 無料サポート希望時は日程調整URLを取得
+  const schedulingUrl = data.wantsFreeSupport ? getSchedulingUrl() : null;
+  template.schedulingUrl = schedulingUrl;
+
   const htmlBody = template.evaluate().getContent();
-  const plainBody = createPlainTextEmail(data);
+  const plainBody = createPlainTextEmail(data, schedulingUrl);
 
   // メール送信オプション
   const options = {
@@ -587,8 +603,142 @@ function sendEmailToUser(data, pdfBlob) {
 
   // メール送信
   GmailApp.sendEmail(data.userEmail, subject, plainBody, options);
-
   console.log('メール送信完了: ' + data.userEmail);
+
+  // CCメールアドレスにも送信（入力情報の共有）
+  sendCCNotification(data, pdfBlob);
+}
+
+/**
+ * CC送信先にデータを共有
+ */
+function sendCCNotification(data, pdfBlob) {
+  const ccEmails = getSettingValue('CC_EMAILS') || CONFIG.CC_EMAILS;
+
+  if (!ccEmails || ccEmails.length === 0) {
+    console.log('CC送信先が未設定のためスキップ');
+    return;
+  }
+
+  const subject = `【診断データ共有】${data.clinicName || '新規'} - ${data.userName || '未入力'}`;
+
+  const body = `
+新しいAI診断データが送信されました。
+
+━━━━━━━━━━━━━━━━━━━━━━━
+■ 基本情報
+━━━━━━━━━━━━━━━━━━━━━━━
+お名前: ${data.userName || '未入力'}
+メールアドレス: ${data.userEmail || '未入力'}
+医院名: ${data.clinicName || '未入力'}
+地域: ${getRegionName(data.region)}
+開業年数: ${getYearsOpenName(data.yearsOpen)}
+ユニット数: ${data.units || '-'}台
+
+━━━━━━━━━━━━━━━━━━━━━━━
+■ 診断データ
+━━━━━━━━━━━━━━━━━━━━━━━
+新患数/月: ${data.newPatient || '-'}人
+月商: ${data.totalRevenue || '-'}万円
+自費率: ${data.selfPayRate || '-'}%
+キャンセル率: ${data.cancel || '-'}%
+リコール率: ${data.recall || '-'}%
+
+最優先課題: ${getPriorityName(data.priority)}
+無料サポート希望: ${data.wantsFreeSupport ? 'あり' : 'なし'}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+■ その他のお悩み
+━━━━━━━━━━━━━━━━━━━━━━━
+${data.otherConcerns || 'なし'}
+
+━━━━━━━━━━━━━━━━━━━━━━━
+※このメールはAI診断システムから自動送信されています。
+`;
+
+  const options = {
+    name: CONFIG.SENDER_NAME,
+    attachments: [pdfBlob]
+  };
+
+  // 各CC宛先に送信
+  const emailList = Array.isArray(ccEmails) ? ccEmails : ccEmails.split(',').map(e => e.trim());
+  emailList.forEach(email => {
+    if (email) {
+      try {
+        GmailApp.sendEmail(email, subject, body, options);
+        console.log('CC送信完了: ' + email);
+      } catch (e) {
+        console.error('CC送信エラー (' + email + '): ' + e.message);
+      }
+    }
+  });
+}
+
+/**
+ * 設定シートから日程調整URLを取得
+ */
+function getSchedulingUrl() {
+  return getSettingValue('SCHEDULING_URL') || CONFIG.DEFAULT_SCHEDULING_URL;
+}
+
+/**
+ * 設定シートから値を取得
+ */
+function getSettingValue(key) {
+  try {
+    const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+    const settingsSheet = ss.getSheetByName(CONFIG.SETTINGS_SHEET_NAME);
+
+    if (!settingsSheet) {
+      console.log('設定シートが見つかりません');
+      return null;
+    }
+
+    const data = settingsSheet.getDataRange().getValues();
+    for (let i = 0; i < data.length; i++) {
+      if (data[i][0] === key) {
+        return data[i][1];
+      }
+    }
+    return null;
+  } catch (e) {
+    console.error('設定取得エラー: ' + e.message);
+    return null;
+  }
+}
+
+/**
+ * 設定シートを初期化（ヘルパー関数）
+ */
+function initializeSettingsSheet() {
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(CONFIG.SETTINGS_SHEET_NAME);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(CONFIG.SETTINGS_SHEET_NAME);
+  }
+
+  // 設定項目を追加
+  const settings = [
+    ['設定項目', '値', '説明'],
+    ['SCHEDULING_URL', CONFIG.DEFAULT_SCHEDULING_URL, '日程調整URL（Googleカレンダー予約ページなど）'],
+    ['CC_EMAILS', CONFIG.CC_EMAILS.join(','), '診断データをCCで送信するメールアドレス（カンマ区切り）']
+  ];
+
+  sheet.getRange(1, 1, settings.length, 3).setValues(settings);
+
+  // ヘッダースタイル
+  const headerRange = sheet.getRange(1, 1, 1, 3);
+  headerRange.setBackground('#0D3B66');
+  headerRange.setFontColor('#FFFFFF');
+  headerRange.setFontWeight('bold');
+
+  sheet.setColumnWidth(1, 150);
+  sheet.setColumnWidth(2, 400);
+  sheet.setColumnWidth(3, 300);
+
+  console.log('設定シートを初期化しました');
 }
 
 /**
@@ -643,7 +793,26 @@ https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/edit
 /**
  * プレーンテキストメール本文を作成
  */
-function createPlainTextEmail(data) {
+function createPlainTextEmail(data, schedulingUrl) {
+  let supportSection = '';
+
+  if (data.wantsFreeSupport && schedulingUrl) {
+    supportSection = `
+━━━━━━━━━━━━━━━━━━━━━━━
+■ 無料サポートのご予約
+━━━━━━━━━━━━━━━━━━━━━━━
+無料サポートをご希望いただきありがとうございます。
+下記のURLから日程をご予約ください。
+
+▼ 日程予約はこちら
+${schedulingUrl}
+
+経営コンサルタントが30分間、医院の現状について
+フォローさせていただきます。
+
+`;
+  }
+
   return `
 ${data.userName || 'お客'}様
 
@@ -660,13 +829,7 @@ ${data.userName || 'お客'}様
 最優先課題: ${getPriorityName(data.priority)}
 
 詳細なアドバイスは添付のPDFをご覧ください。
-
-━━━━━━━━━━━━━━━━━━━━━━━
-■ 次のステップ
-━━━━━━━━━━━━━━━━━━━━━━━
-無料相談のご予約を承っております。
-診断結果について詳しくご説明させていただきます。
-
+${supportSection}
 ━━━━━━━━━━━━━━━━━━━━━━━
 歯科医院地域一番実践会
 ━━━━━━━━━━━━━━━━━━━━━━━
