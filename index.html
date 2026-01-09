@@ -13,6 +13,19 @@
     <div class="app-container">
         <!-- Landing Page -->
         <section id="landing" class="landing-page">
+            <!-- Logo Header -->
+            <div class="logo-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 20C12 15.5 15.5 12 20 12C24.5 12 28 15.5 28 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="20" cy="24" r="4" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text">歯科医院地域一番実践会</span>
+                </div>
+            </div>
             <div class="landing-content">
                 <!-- Main Title Section -->
                 <div class="main-title-section">
@@ -232,7 +245,7 @@
                         </div>
                     </div>
 
-                    <!-- Step 2: Current Numbers -->
+                    <!-- Step 2: Current Numbers & Metrics (Combined) -->
                     <div class="step hidden" id="step2">
                         <div class="step-header">
                             <h2 class="step-title">現状の数値</h2>
@@ -305,24 +318,6 @@
                             </div>
                         </div>
 
-                        <div class="step-actions">
-                            <button class="skip-link" onclick="nextStep()">わからない項目はスキップ →</button>
-                            <button class="cta-button primary" onclick="nextStep()">
-                                次へ
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Metrics -->
-                    <div class="step hidden" id="step3">
-                        <div class="step-header">
-                            <h2 class="step-title">各種指標</h2>
-                            <p class="step-description">わかる範囲で入力してください</p>
-                        </div>
-
                         <div class="form-group">
                             <label class="form-label">キャンセル率</label>
                             <div class="button-group" data-field="cancel">
@@ -374,8 +369,8 @@
                         </div>
                     </div>
 
-                    <!-- Step 4: Priority & Concerns -->
-                    <div class="step hidden" id="step4">
+                    <!-- Step 3: Priority & Concerns -->
+                    <div class="step hidden" id="step3">
                         <div class="step-header">
                             <h2 class="step-title">課題選択・その他お悩み</h2>
                             <p class="step-description">最も解決したい課題を選んでください</p>
@@ -521,24 +516,28 @@
                         </div>
                     </div>
 
-                    <!-- Free Support Section -->
-                    <div class="results-cta free-support-section">
-                        <div class="free-support-badge">無料サポート</div>
-                        <h3 class="cta-title">医院の現状について、経営コンサルタントから<br>30分のフォローを無料で受けることができます。</h3>
-                        <div class="support-checkbox-wrapper">
-                            <label class="support-checkbox-label">
-                                <input type="checkbox" id="supportRequestCheckbox" checked>
-                                <span class="checkbox-custom"></span>
-                                <span class="checkbox-text">希望する</span>
-                            </label>
-                        </div>
-                        <button class="cta-button primary large" onclick="submitSupportRequest()" id="supportRequestButton">
+                </div>
+            </div>
+
+            <!-- Sticky Bottom Banner for Free Support -->
+            <div class="sticky-support-banner" id="stickySupportBanner">
+                <div class="sticky-support-content">
+                    <div class="sticky-support-left">
+                        <span class="sticky-support-badge">無料サポート</span>
+                        <span class="sticky-support-text">経営コンサルタントから30分のフォローを無料で受けられます</span>
+                    </div>
+                    <div class="sticky-support-right">
+                        <label class="sticky-checkbox-label">
+                            <input type="checkbox" id="supportRequestCheckbox" checked>
+                            <span class="sticky-checkbox-custom"></span>
+                            <span class="sticky-checkbox-text">希望する</span>
+                        </label>
+                        <button class="sticky-support-button" onclick="submitSupportRequest()" id="supportRequestButton">
                             <span>送信する</span>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
                             </svg>
                         </button>
-                        <p class="support-note">※ 送信後、日程調整のご案内をメールでお送りします</p>
                     </div>
                 </div>
             </div>

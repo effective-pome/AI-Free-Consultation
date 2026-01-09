@@ -7,7 +7,7 @@
 // ========================================
 const AppState = {
     currentStep: 1,
-    totalSteps: 4,
+    totalSteps: 3,
     formData: {},
     apiKey: null,
     useApi: false
@@ -177,9 +177,18 @@ function nextStep() {
         // データ保存
         saveFormData();
 
-        // スクロールトップ
-        document.querySelector('.form-container').scrollTo(0, 0);
+        // 自動スクロール（ページトップへ）
+        scrollToTop();
     }
+}
+
+// 自動スクロール関数
+function scrollToTop() {
+    const formContainer = document.querySelector('.form-container');
+    if (formContainer) {
+        formContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goBack() {
@@ -200,8 +209,8 @@ function updateProgress() {
     document.getElementById('progressFill').style.width = `${progress}%`;
     document.getElementById('progressText').textContent = `STEP ${AppState.currentStep}/${AppState.totalSteps}`;
 
-    // 残り時間の更新
-    const timePerStep = [15, 30, 30, 15];
+    // 残り時間の更新（3ステップ用）
+    const timePerStep = [20, 40, 30];
     let remainingTime = 0;
     for (let i = AppState.currentStep - 1; i < AppState.totalSteps; i++) {
         remainingTime += timePerStep[i];
@@ -530,7 +539,6 @@ function displayResults(results) {
 function displaySummary(summary) {
     const container = document.getElementById('resultsSummary');
     const items = [
-        { label: 'お名前', value: summary.userName || '--' },
         { label: '新患数', value: summary.newPatient ? `${summary.newPatient}人/月` : '--' },
         { label: '月間医業収入', value: summary.totalRevenue ? `${summary.totalRevenue}万円` : '--', highlight: true },
         { label: '自費率', value: summary.selfPayRate ? `${Math.floor(summary.selfPayRate)}%` : '--', highlight: true },
@@ -679,16 +687,9 @@ function displayRecommendations(recommendations, isApiGenerated) {
                     <span class="recommendation-info">難易度: ${item.difficulty} | ${item.period}</span>
                 </div>
 
-                <!-- 詳しくボタン -->
+                <!-- 詳細アクション（常に表示） -->
                 ${item.detailedActions ? `
-                    <button class="detail-toggle-btn" onclick="toggleDetails(this)" aria-expanded="false">
-                        <span class="detail-toggle-text">詳しく見る</span>
-                        <svg class="detail-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </button>
-
-                    <div class="detailed-actions-container" style="display: none;">
+                    <div class="detailed-actions-container expanded">
                         ${item.detailedActions.map(category => `
                             <div class="detailed-category">
                                 <h4 class="detailed-category-title">${category.category}</h4>
@@ -1080,21 +1081,20 @@ async function submitSupportRequest() {
             });
         }
 
-        // 成功メッセージを表示
-        const supportSection = document.querySelector('.free-support-section');
-        if (supportSection) {
-            supportSection.innerHTML = `
-                <div class="support-success">
-                    <div class="success-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        // 追従バナーを成功メッセージに更新
+        const stickyBanner = document.getElementById('stickySupportBanner');
+        if (stickyBanner) {
+            stickyBanner.innerHTML = `
+                <div class="sticky-support-content sticky-success">
+                    <div class="sticky-success-left">
+                        <svg class="sticky-success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                             <polyline points="22 4 12 14.01 9 11.01"/>
                         </svg>
+                        <span class="sticky-success-text">送信完了！日程調整のご案内をメールでお送りしました。</span>
                     </div>
-                    <h3 class="success-title">送信完了</h3>
-                    <p class="success-message">無料サポートのご希望を承りました。<br>日程調整のご案内をメールでお送りしました。</p>
                     ${CALENDAR_SCHEDULING_URL ? `
-                        <a href="${CALENDAR_SCHEDULING_URL}" target="_blank" class="calendar-link-button">
+                        <a href="${CALENDAR_SCHEDULING_URL}" target="_blank" class="sticky-calendar-button">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                                 <line x1="16" y1="2" x2="16" y2="6"/>
@@ -1104,9 +1104,9 @@ async function submitSupportRequest() {
                             <span>日程を選択する</span>
                         </a>
                     ` : ''}
-                    <p class="support-contact">ご不明点は 045-440-0322 までお電話ください</p>
                 </div>
             `;
+            stickyBanner.classList.add('success-state');
         }
 
         console.log('サポートリクエスト送信完了');

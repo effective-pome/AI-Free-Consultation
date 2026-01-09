@@ -2821,6 +2821,276 @@ input[type="checkbox"] {
     color: var(--gray-800) !important;
 }
 
+/* ========================================
+   ロゴヘッダー
+   ======================================== */
+.logo-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: var(--space-3) var(--space-6);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    color: var(--primary-600);
+}
+
+.logo-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.logo-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* ランディングページのパディング調整 */
+.landing-page {
+    padding-top: 60px !important;
+}
+
+/* ========================================
+   追従バナー（無料サポート）
+   ======================================== */
+.sticky-support-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    padding: var(--space-4) var(--space-6);
+}
+
+.sticky-support-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.sticky-support-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.sticky-support-badge {
+    background: var(--success-500);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sticky-support-text {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.sticky-support-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.sticky-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.sticky-checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.sticky-checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.sticky-checkbox-label input[type="checkbox"]:checked + .sticky-checkbox-custom {
+    background: var(--success-500);
+    border-color: var(--success-500);
+}
+
+.sticky-checkbox-label input[type="checkbox"]:checked + .sticky-checkbox-custom::after {
+    content: '✓';
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.sticky-checkbox-text {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.sticky-support-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    background: white;
+    color: var(--primary-600);
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-support-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--gray-50);
+}
+
+.sticky-support-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.sticky-support-button svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* 結果画面のパディング調整（追従バナー用） */
+.results-screen {
+    padding-bottom: 100px !important;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+    .sticky-support-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .sticky-support-left {
+        justify-content: center;
+    }
+
+    .sticky-support-right {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sticky-support-text {
+        font-size: 0.85rem;
+    }
+
+    .logo-header {
+        padding: var(--space-2) var(--space-4);
+    }
+
+    .logo-text {
+        font-size: 0.875rem;
+    }
+
+    .logo-icon {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* 詳細アクションコンテナ（常に展開） */
+.detailed-actions-container.expanded {
+    display: block !important;
+    margin-top: var(--space-4);
+}
+
+/* 追従バナー成功状態 */
+.sticky-support-banner.success-state {
+    background: linear-gradient(135deg, var(--success-500), var(--success-600));
+}
+
+.sticky-success {
+    justify-content: center;
+}
+
+.sticky-success-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.sticky-success-icon {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+}
+
+.sticky-success-text {
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.sticky-calendar-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    background: white;
+    color: var(--success-600);
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-calendar-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sticky-calendar-button svg {
+    width: 18px;
+    height: 18px;
+}
+
 /* Print styles */
 @media print {
     .settings-button,
