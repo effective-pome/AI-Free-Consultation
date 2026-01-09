@@ -13,16 +13,12 @@
     <div class="app-container">
         <!-- Landing Page -->
         <section id="landing" class="landing-page">
-            <!-- Logo Header -->
-            <div class="logo-header">
-                <div class="logo-container">
-                    <img src="assets/logo.png" alt="歯科医院地域一番実践会" class="logo-image">
-                </div>
-            </div>
             <div class="landing-content">
                 <!-- Main Title Section -->
                 <div class="main-title-section">
-                    <p class="tagline">歯科医院地域一番実践会</p>
+                    <div class="tagline-logo">
+                        <img src="assets/logo.png" alt="歯科医院地域一番実践会" class="tagline-logo-image">
+                    </div>
                     <h1 class="main-title">
                         <span class="title-ai">AI</span>
                         <span class="title-text">無料診断</span>
@@ -462,17 +458,11 @@
         <section id="resultsScreen" class="results-screen hidden">
             <div class="results-container">
                 <div class="results-header">
-                    <div class="results-logo">
+                    <span class="results-title">AI診断結果</span>
+                    <div class="results-logo-center">
                         <img src="assets/logo.png" alt="歯科医院地域一番実践会" class="logo-image small">
-                        <span>AI診断結果</span>
                     </div>
-                    <button class="restart-button" onclick="restartDiagnosis()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 4v6h6M23 20v-6h-6"/>
-                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
-                        </svg>
-                        最初からやり直す
-                    </button>
+                    <div class="results-header-spacer"></div>
                 </div>
 
                 <div class="results-content">
@@ -507,29 +497,6 @@
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-            <!-- Sticky Bottom Banner for Free Support -->
-            <div class="sticky-support-banner" id="stickySupportBanner">
-                <div class="sticky-support-content">
-                    <div class="sticky-support-left">
-                        <span class="sticky-support-badge">無料サポート</span>
-                        <span class="sticky-support-text">経営コンサルタントから30分のフォローを無料で受けられます</span>
-                    </div>
-                    <div class="sticky-support-right">
-                        <label class="sticky-checkbox-label">
-                            <input type="checkbox" id="supportRequestCheckbox" checked>
-                            <span class="sticky-checkbox-custom"></span>
-                            <span class="sticky-checkbox-text">希望する</span>
-                        </label>
-                        <button class="sticky-support-button" onclick="submitSupportRequest()" id="supportRequestButton">
-                            <span>送信する</span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                            </svg>
-                        </button>
-                    </div>
                 </div>
             </div>
         </section>
@@ -774,13 +741,6 @@
             </div>
         </div>
 
-        <!-- Settings Button -->
-        <button class="settings-button" onclick="openApiSettings()" title="API設定">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-        </button>
     </div>
 
     <script src="knowledge-base.js"></script>

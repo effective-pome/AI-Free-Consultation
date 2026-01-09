@@ -117,11 +117,12 @@ body {
    Landing Page - Antigravity Inspired
    ======================================== */
 .landing-page {
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-8);
+    padding: var(--space-4);
     background: var(--gray-950);
     position: relative;
     overflow: hidden;
@@ -224,6 +225,20 @@ body {
     margin-bottom: var(--space-4);
     letter-spacing: 0.2em;
     text-transform: uppercase;
+}
+
+/* ロゴ画像をtaglineとして表示 */
+.tagline-logo {
+    margin-bottom: var(--space-4);
+    display: flex;
+    justify-content: center;
+}
+
+.tagline-logo-image {
+    height: 32px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
 }
 
 .main-title {
@@ -1260,13 +1275,34 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--space-8);
-    padding-bottom: var(--space-6);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
     border-bottom: 1px solid var(--gray-200);
-    flex-wrap: wrap;
-    gap: var(--space-3);
 }
 
+.results-title {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    white-space: nowrap;
+}
+
+.results-logo-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.results-logo-center .logo-image.small {
+    height: 24px;
+}
+
+.results-header-spacer {
+    width: 80px; /* タイトルとのバランス用 */
+}
+
+/* 旧スタイル（互換性用） */
 .results-logo {
     display: flex;
     align-items: center;
@@ -2436,6 +2472,14 @@ input[type="checkbox"] {
         font-size: 0.65rem;
     }
 
+    .tagline-logo {
+        margin-bottom: var(--space-3);
+    }
+
+    .tagline-logo-image {
+        height: 24px;
+    }
+
     .title-ai {
         font-size: 2.75rem;
     }
@@ -2867,13 +2911,8 @@ input[type="checkbox"] {
     height: 28px;
 }
 
-/* ランディングページのパディング調整（ヘッダーなし） */
-.landing-page {
-    padding-top: var(--space-8) !important;
-}
-
 /* ========================================
-   追従バナー（無料サポート）
+   追従バナー（無料サポート）- 削除済み
    ======================================== */
 .sticky-support-banner {
     position: fixed;
@@ -3000,9 +3039,9 @@ input[type="checkbox"] {
     height: 18px;
 }
 
-/* 結果画面のパディング調整（追従バナー用） */
+/* 結果画面のパディング調整 */
 .results-screen {
-    padding-bottom: 100px !important;
+    padding-bottom: var(--space-8);
 }
 
 /* モバイル対応 */
@@ -3179,25 +3218,17 @@ input[type="checkbox"] {
         margin-bottom: var(--space-5);
     }
 
-    /* ボタングループを横スクロール可能に */
+    /* ボタングループ - 折り返し表示（横スクロールなし） */
     .button-group {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        padding-bottom: var(--space-2);
-        margin: 0 calc(-1 * var(--space-4));
-        padding-left: var(--space-4);
-        padding-right: var(--space-4);
-    }
-
-    .button-group::-webkit-scrollbar {
-        display: none;
+        flex-wrap: wrap;
+        gap: var(--space-2);
     }
 
     .option-button {
-        flex-shrink: 0;
+        flex-shrink: 1;
         white-space: nowrap;
+        padding: var(--space-2) var(--space-3);
+        font-size: 0.8rem;
     }
 
     /* 優先課題グリッドを2列に */
@@ -3221,39 +3252,33 @@ input[type="checkbox"] {
     /* 結果画面 */
     .results-screen {
         padding: var(--space-2) !important;
-        padding-bottom: 120px !important;
+        padding-bottom: var(--space-4) !important;
     }
 
     .results-container {
         padding: var(--space-2);
     }
 
-    /* 結果ヘッダー - モバイル対応 */
+    /* 結果ヘッダー - モバイル対応（左：タイトル、中央：ロゴ） */
     .results-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-3);
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
         margin-bottom: var(--space-4);
         padding-bottom: var(--space-3);
     }
 
-    .results-logo {
-        flex-direction: row;
-        gap: var(--space-2);
-        font-size: 1rem;
+    .results-title {
+        font-size: 0.9rem;
     }
 
-    .results-logo span {
-        white-space: nowrap;
+    .results-logo-center .logo-image.small {
+        height: 20px;
     }
 
-    .results-logo .logo-image.small {
-        height: 24px;
-    }
-
-    .restart-button {
-        padding: var(--space-2) var(--space-3);
-        font-size: 0.8rem;
+    .results-header-spacer {
+        width: 60px;
     }
 
     .results-content {
@@ -3522,30 +3547,6 @@ input[type="checkbox"] {
 
     .plan-title {
         font-size: 1.125rem;
-    }
-}
-
-/* スクロールヒント（ボタングループ用） */
-.button-group-container {
-    position: relative;
-}
-
-.button-group-container::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 40px;
-    background: linear-gradient(to left, var(--gray-50), transparent);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity var(--transition-base);
-}
-
-@media (max-width: 480px) {
-    .button-group-container::after {
-        opacity: 1;
     }
 }
 
