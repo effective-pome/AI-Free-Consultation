@@ -824,17 +824,16 @@ ${schedulingUrl}
 診断結果をお送りいたします。
 
 ━━━━━━━━━━━━━━━━━━━━━━━
-■ 基本情報
+■ 医院情報・現状データ
 ━━━━━━━━━━━━━━━━━━━━━━━
+【基本情報】
 医院名: ${data.clinicName || '未入力'}
 診断日: ${new Date().toLocaleDateString('ja-JP')}
 地域: ${getRegionName(data.region)}
 開業年数: ${getYearsOpenName(data.yearsOpen)}
 ユニット数: ${data.units || '-'}台
 
-━━━━━━━━━━━━━━━━━━━━━━━
-■ 入力データサマリー
-━━━━━━━━━━━━━━━━━━━━━━━
+【現状の数値・指標】
 新患数: ${data.newPatient || '--'}人/月
 月間医業収入: ${data.totalRevenue || '--'}万円
 自費率: ${data.selfPayRate ? Math.floor(data.selfPayRate) : '--'}%
@@ -935,29 +934,31 @@ function createDiagnosisEmailHtml(data, schedulingUrl) {
       この度は「歯科医院AI診断」をご利用いただき、誠にありがとうございます。
     </p>
 
-    <!-- 基本情報 -->
+    <!-- 医院情報・現状データ（統合セクション） -->
     <div style="background: #f0f7ff; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
-      <h3 style="color: #0D3B66; font-size: 14px; margin: 0 0 12px 0; border-bottom: 1px solid #d8f1ff; padding-bottom: 8px;">📋 基本情報</h3>
-      <table style="width: 100%; font-size: 13px;">
-        <tr><td style="color: #666; padding: 4px 0;">医院名:</td><td style="color: #333; font-weight: 500;">${data.clinicName || '未入力'}</td></tr>
+      <h3 style="color: #0D3B66; font-size: 14px; margin: 0 0 16px 0; border-bottom: 2px solid #0D3B66; padding-bottom: 8px;">📋 医院情報・現状データ</h3>
+
+      <!-- 基本情報 -->
+      <p style="color: #0D3B66; font-size: 12px; font-weight: bold; margin: 0 0 8px 0;">【基本情報】</p>
+      <table style="width: 100%; font-size: 13px; margin-bottom: 16px;">
+        <tr><td style="color: #666; padding: 4px 0; width: 30%;">医院名:</td><td style="color: #333; font-weight: 500;">${data.clinicName || '未入力'}</td></tr>
         <tr><td style="color: #666; padding: 4px 0;">診断日:</td><td style="color: #333;">${new Date().toLocaleDateString('ja-JP')}</td></tr>
         <tr><td style="color: #666; padding: 4px 0;">地域:</td><td style="color: #333;">${getRegionName(data.region)}</td></tr>
         <tr><td style="color: #666; padding: 4px 0;">開業年数:</td><td style="color: #333;">${getYearsOpenName(data.yearsOpen)}</td></tr>
+        <tr><td style="color: #666; padding: 4px 0;">ユニット数:</td><td style="color: #333;">${data.units || '-'}台</td></tr>
       </table>
-    </div>
 
-    <!-- 入力データサマリー -->
-    <div style="margin-bottom: 20px;">
-      <h3 style="color: #0D3B66; font-size: 14px; margin: 0 0 12px 0;">📊 入力データサマリー</h3>
+      <!-- 現状の数値・指標 -->
+      <p style="color: #0D3B66; font-size: 12px; font-weight: bold; margin: 0 0 8px 0;">【現状の数値・指標】</p>
       <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-        <tr style="background: #f8f9fa;">
-          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>新患数</strong><br>${data.newPatient || '--'}人/月</td>
-          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>月間収入</strong><br>${data.totalRevenue || '--'}万円</td>
-          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>自費率</strong><br>${data.selfPayRate ? Math.floor(data.selfPayRate) : '--'}%</td>
+        <tr style="background: rgba(255,255,255,0.7);">
+          <td style="padding: 10px; border: 1px solid #d8f1ff; text-align: center;"><strong>新患数</strong><br>${data.newPatient || '--'}人/月</td>
+          <td style="padding: 10px; border: 1px solid #d8f1ff; text-align: center;"><strong>月間収入</strong><br>${data.totalRevenue || '--'}万円</td>
+          <td style="padding: 10px; border: 1px solid #d8f1ff; text-align: center;"><strong>自費率</strong><br>${data.selfPayRate ? Math.floor(data.selfPayRate) : '--'}%</td>
         </tr>
-        <tr style="background: #f8f9fa;">
-          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;"><strong>キャンセル率</strong><br>${data.cancel ? Math.floor(data.cancel) : '--'}%</td>
-          <td style="padding: 10px; border: 1px solid #e0e0e0; text-align: center;" colspan="2"><strong>リコール率</strong><br>${data.recall ? Math.floor(data.recall) : '--'}%</td>
+        <tr style="background: rgba(255,255,255,0.7);">
+          <td style="padding: 10px; border: 1px solid #d8f1ff; text-align: center;"><strong>キャンセル率</strong><br>${data.cancel ? Math.floor(data.cancel) : '--'}%</td>
+          <td style="padding: 10px; border: 1px solid #d8f1ff; text-align: center;" colspan="2"><strong>リコール率</strong><br>${data.recall ? Math.floor(data.recall) : '--'}%</td>
         </tr>
       </table>
     </div>
