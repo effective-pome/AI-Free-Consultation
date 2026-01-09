@@ -674,9 +674,24 @@ function displayRecommendations(recommendations, isApiGenerated) {
         return;
     }
 
-    // AIによる分析がある場合は先に表示
     let html = '';
 
+    // レベル説明を表示（数値に基づく状況分析）
+    if (recommendations.levelDescription) {
+        html += `
+            <div class="recommendation-card" style="border-left: 4px solid var(--primary-500); background: linear-gradient(135deg, var(--primary-50) 0%, white 100%);">
+                <div class="recommendation-header">
+                    <div class="recommendation-number" style="background: var(--primary-500);">📊</div>
+                    <div class="recommendation-title">現状分析</div>
+                </div>
+                <div class="recommendation-body">
+                    <p class="recommendation-description" style="font-size: 1rem; line-height: 1.7;">${recommendations.levelDescription}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // AIによる分析がある場合は先に表示
     if (recommendations.aiAnalysis) {
         html += `
             <div class="recommendation-card" style="border-left: 4px solid var(--success-500);">
@@ -702,7 +717,7 @@ function displayRecommendations(recommendations, isApiGenerated) {
                 <p class="recommendation-description">${item.description}</p>
                 ${item.additionalNote ? `<p class="recommendation-description" style="color: var(--accent-500);"><strong>※ ${item.additionalNote}</strong></p>` : ''}
                 <div class="recommendation-steps">
-                    ${item.steps.map(step => `
+                    ${(item.steps || []).map(step => `
                         <div class="recommendation-step">
                             <svg class="recommendation-step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="20 6 9 17 4 12"/>
@@ -711,13 +726,38 @@ function displayRecommendations(recommendations, isApiGenerated) {
                         </div>
                     `).join('')}
                 </div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
-                    <span class="recommendation-effect">${item.effect}</span>
-                    <span style="font-size: 0.75rem; color: var(--gray-400);">難易度: ${item.difficulty} | ${item.period}</span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
+                    <span class="recommendation-effect">${item.effect || ''}</span>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 8px; font-size: 0.75rem; color: var(--gray-500);">
+                    ${item.difficulty ? `<span>難易度: ${item.difficulty}</span>` : ''}
+                    ${item.period ? `<span>期間: ${item.period}</span>` : ''}
+                    ${item.cost ? `<span>費用: ${item.cost}</span>` : ''}
                 </div>
             </div>
         </div>
     `).join('');
+
+    // 成功事例を表示
+    if (recommendations.successCases && recommendations.successCases.length > 0) {
+        html += `
+            <div class="recommendation-card" style="border-left: 4px solid var(--warning-500); background: linear-gradient(135deg, #fffbeb 0%, white 100%);">
+                <div class="recommendation-header">
+                    <div class="recommendation-number" style="background: var(--warning-500);">★</div>
+                    <div class="recommendation-title">実績事例</div>
+                </div>
+                <div class="recommendation-body">
+                    ${recommendations.successCases.map(caseItem => `
+                        <div style="margin-bottom: 12px; padding: 12px; background: white; border-radius: 8px; border: 1px solid var(--gray-200);">
+                            <p style="margin: 0 0 8px 0; font-weight: 600; color: var(--gray-800);">${caseItem.action}</p>
+                            <p style="margin: 0; color: var(--success-600); font-size: 0.9rem;">${caseItem.result}</p>
+                            <p style="margin: 4px 0 0 0; color: var(--gray-500); font-size: 0.75rem;">効果発現: ${caseItem.period}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
 
     container.innerHTML = html;
 }
