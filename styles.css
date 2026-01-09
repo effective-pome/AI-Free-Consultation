@@ -1550,6 +1550,197 @@ body {
     border-radius: var(--radius-full);
 }
 
+/* Recommendation Steps Header */
+.steps-header {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary-400);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Step Number */
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: rgba(42, 163, 255, 0.2);
+    color: var(--primary-400);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    border: 1px solid rgba(42, 163, 255, 0.3);
+}
+
+/* Recommendation Meta */
+.recommendation-meta {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: var(--space-4);
+}
+
+.recommendation-info {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+}
+
+/* Detail Toggle Button */
+.detail-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--primary-400);
+    background: rgba(42, 163, 255, 0.1);
+    border: 1px solid rgba(42, 163, 255, 0.3);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.detail-toggle-btn:hover {
+    background: rgba(42, 163, 255, 0.2);
+    border-color: rgba(42, 163, 255, 0.5);
+}
+
+.detail-toggle-btn.expanded {
+    background: rgba(42, 163, 255, 0.15);
+    border-color: rgba(42, 163, 255, 0.4);
+}
+
+.detail-toggle-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--transition-base);
+}
+
+.detail-toggle-btn.expanded .detail-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Detailed Actions Container */
+.detailed-actions-container {
+    margin-top: var(--space-4);
+    padding: var(--space-5);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Detailed Category */
+.detailed-category {
+    margin-bottom: var(--space-5);
+}
+
+.detailed-category:last-child {
+    margin-bottom: 0;
+}
+
+.detailed-category-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--primary-400);
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid rgba(42, 163, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.detailed-category-title::before {
+    content: '';
+    width: 4px;
+    height: 16px;
+    background: linear-gradient(180deg, var(--primary-400), var(--accent-500));
+    border-radius: 2px;
+}
+
+/* Detailed Actions List */
+.detailed-actions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.detailed-action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: 0.8rem;
+    color: var(--gray-300);
+    line-height: 1.6;
+    padding: var(--space-3);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.detailed-action-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.detailed-action-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--success-400);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Today/Tomorrow/This Week Highlight */
+.detailed-action-item span {
+    flex: 1;
+}
+
+/* Highlight "今日" "明日" "今週中" */
+.detailed-category:last-child .detailed-action-item {
+    background: rgba(16, 185, 129, 0.08);
+    border-left: 3px solid var(--success-500);
+}
+
+.detailed-category:last-child .detailed-action-item:hover {
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.detailed-category:last-child .detailed-category-title {
+    color: var(--success-400);
+    border-bottom-color: rgba(16, 185, 129, 0.3);
+}
+
+.detailed-category:last-child .detailed-category-title::before {
+    background: linear-gradient(180deg, var(--success-400), var(--success-600));
+}
+
 /* Results CTA */
 .results-cta {
     text-align: center;
@@ -2293,6 +2484,607 @@ input[type="checkbox"] {
     .recommendation-body {
         padding-left: 0;
     }
+}
+
+/* Newsletter Notice */
+.newsletter-notice {
+    font-size: 0.7rem !important;
+    color: var(--gray-400) !important;
+    margin-top: var(--space-2);
+    line-height: 1.5;
+}
+
+/* ========================================
+   Free Support Section
+   ======================================== */
+.free-support-section {
+    background: linear-gradient(135deg, var(--primary-50) 0%, white 100%) !important;
+    border: 2px solid var(--primary-200) !important;
+}
+
+.free-support-badge {
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-4);
+}
+
+.free-support-section .cta-title {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+}
+
+.support-checkbox-wrapper {
+    margin-bottom: var(--space-6);
+}
+
+.support-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.support-checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--primary-500);
+    border-radius: var(--radius-sm);
+    position: relative;
+    transition: all var(--transition-fast);
+}
+
+.support-checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+    background: var(--primary-500);
+}
+
+.support-checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-text {
+    color: var(--gray-800);
+}
+
+.support-note {
+    margin-top: var(--space-4);
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+/* ========================================
+   Improved Results Screen - White Background
+   ======================================== */
+.ai-recommendations {
+    background: white !important;
+    color: var(--gray-800) !important;
+}
+
+.ai-recommendations::before {
+    display: none;
+}
+
+.ai-recommendations .results-section-title {
+    color: var(--gray-800) !important;
+    border-bottom-color: var(--gray-200) !important;
+}
+
+.ai-recommendations .recommendation-card {
+    background: var(--gray-50) !important;
+    border: 1px solid var(--gray-200) !important;
+}
+
+.ai-recommendations .recommendation-card:hover {
+    background: var(--gray-100) !important;
+    border-color: var(--gray-300) !important;
+}
+
+.ai-recommendations .recommendation-title {
+    color: var(--gray-900) !important;
+}
+
+.ai-recommendations .recommendation-description {
+    color: var(--gray-600) !important;
+}
+
+.ai-recommendations .steps-header {
+    color: var(--primary-600) !important;
+    border-bottom-color: var(--gray-200) !important;
+}
+
+.ai-recommendations .step-number {
+    background: var(--primary-100) !important;
+    color: var(--primary-700) !important;
+    border-color: var(--primary-300) !important;
+}
+
+.ai-recommendations .recommendation-step {
+    color: var(--gray-700) !important;
+}
+
+.ai-recommendations .recommendation-info {
+    color: var(--gray-500) !important;
+}
+
+.ai-recommendations .detail-toggle-btn {
+    color: var(--primary-600) !important;
+    background: var(--primary-50) !important;
+    border-color: var(--primary-200) !important;
+}
+
+.ai-recommendations .detail-toggle-btn:hover {
+    background: var(--primary-100) !important;
+    border-color: var(--primary-300) !important;
+}
+
+.ai-recommendations .detailed-actions-container {
+    background: white !important;
+    border: 1px solid var(--gray-200) !important;
+}
+
+.ai-recommendations .detailed-category-title {
+    color: var(--primary-700) !important;
+    border-bottom-color: var(--primary-100) !important;
+}
+
+.ai-recommendations .detailed-action-item {
+    background: var(--gray-50) !important;
+    color: var(--gray-700) !important;
+}
+
+.ai-recommendations .detailed-action-item:hover {
+    background: var(--gray-100) !important;
+}
+
+.ai-recommendations .detailed-category:last-child .detailed-action-item {
+    background: var(--success-50) !important;
+    border-left: 3px solid var(--success-500);
+}
+
+.ai-recommendations .detailed-category:last-child .detailed-action-item:hover {
+    background: var(--success-100) !important;
+}
+
+.ai-recommendations .detailed-category:last-child .detailed-category-title {
+    color: var(--success-700) !important;
+    border-bottom-color: var(--success-200) !important;
+}
+
+/* ========================================
+   無料サポート送信成功メッセージ
+   ======================================== */
+.support-success {
+    text-align: center;
+    padding: var(--space-8) var(--space-6);
+}
+
+.support-success .success-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--success-400), var(--success-500));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-6);
+    animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.support-success .success-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+    stroke-width: 3;
+}
+
+.support-success .success-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--success-600);
+    margin-bottom: var(--space-4);
+}
+
+.support-success .success-message {
+    font-size: 1rem;
+    color: var(--gray-600);
+    margin-bottom: var(--space-6);
+    line-height: 1.7;
+}
+
+.calendar-link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-8);
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    box-shadow: 0 4px 15px rgba(42, 163, 255, 0.3);
+}
+
+.calendar-link-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(42, 163, 255, 0.4);
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.calendar-link-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+.support-success .support-contact {
+    margin-top: var(--space-6);
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+/* ========================================
+   状況別アドバイスカード
+   ======================================== */
+.situational-advice-card {
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
+    border: 1px solid var(--primary-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-md);
+}
+
+.situational-advice-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    color: var(--primary-700);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.situational-advice-header svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--primary-500);
+}
+
+.situational-advice-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.phase-advice {
+    background: white;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-500);
+    font-size: 0.95rem;
+    color: var(--gray-700);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.situational-advice {
+    background: white;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-500);
+    font-size: 0.95rem;
+    color: var(--gray-700);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* 白背景バージョン用 */
+.ai-recommendations .situational-advice-card {
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%) !important;
+    border-color: var(--primary-300) !important;
+}
+
+.ai-recommendations .situational-advice-header {
+    color: var(--primary-800) !important;
+}
+
+.ai-recommendations .phase-advice,
+.ai-recommendations .situational-advice {
+    background: white !important;
+    color: var(--gray-800) !important;
+}
+
+/* ========================================
+   ロゴヘッダー
+   ======================================== */
+.logo-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: var(--space-3) var(--space-6);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-image {
+    height: 40px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.logo-image.small {
+    height: 28px;
+}
+
+/* ランディングページのパディング調整 */
+.landing-page {
+    padding-top: 60px !important;
+}
+
+/* ========================================
+   追従バナー（無料サポート）
+   ======================================== */
+.sticky-support-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    padding: var(--space-4) var(--space-6);
+}
+
+.sticky-support-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.sticky-support-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.sticky-support-badge {
+    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    letter-spacing: 0.02em;
+}
+
+.sticky-support-text {
+    color: var(--gray-700);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.sticky-support-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.sticky-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+}
+
+.sticky-checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.sticky-checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+}
+
+.sticky-checkbox-label input[type="checkbox"]:checked + .sticky-checkbox-custom {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+.sticky-checkbox-label input[type="checkbox"]:checked + .sticky-checkbox-custom::after {
+    content: '✓';
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.sticky-checkbox-text {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.sticky-support-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--accent-500) 100%);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md), 0 0 20px rgba(42, 163, 255, 0.2);
+}
+
+.sticky-support-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(42, 163, 255, 0.3);
+    background: linear-gradient(135deg, var(--primary-400) 0%, var(--accent-600) 100%);
+}
+
+.sticky-support-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.sticky-support-button svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* 結果画面のパディング調整（追従バナー用） */
+.results-screen {
+    padding-bottom: 100px !important;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+    .sticky-support-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .sticky-support-left {
+        justify-content: center;
+    }
+
+    .sticky-support-right {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sticky-support-text {
+        font-size: 0.85rem;
+    }
+
+    .logo-header {
+        padding: var(--space-2) var(--space-4);
+    }
+
+    .logo-image {
+        height: 32px;
+    }
+
+    .logo-image.small {
+        height: 24px;
+    }
+}
+
+/* 詳細アクションコンテナ（常に展開） */
+.detailed-actions-container.expanded {
+    display: block !important;
+    margin-top: var(--space-4);
+}
+
+/* 追従バナー成功状態 */
+.sticky-support-banner.success-state {
+    background: var(--success-50);
+    border-top-color: var(--success-400);
+}
+
+.sticky-success {
+    justify-content: center;
+}
+
+.sticky-success-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.sticky-success-icon {
+    width: 24px;
+    height: 24px;
+    stroke: var(--success-500);
+}
+
+.sticky-success-text {
+    color: var(--success-600);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.sticky-calendar-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    background: var(--success-500);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-md);
+}
+
+.sticky-calendar-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: var(--success-600);
+}
+
+.sticky-calendar-button svg {
+    width: 18px;
+    height: 18px;
 }
 
 /* Print styles */

@@ -7,7 +7,7 @@
 // ========================================
 const AppState = {
     currentStep: 1,
-    totalSteps: 4,
+    totalSteps: 3,
     formData: {},
     apiKey: null,
     useApi: false
@@ -17,7 +17,36 @@ const AppState = {
 // GAS連携設定
 // ========================================
 // Google Apps ScriptのウェブアプリURL（デプロイ後に設定してください）
-const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwZZVAm0UjDw_bZD4-OpjOG89ScUzCi2yh-q2XxTHH7vRqYT9gJm_1Qi_-zHsXBSmnH6A/exec';
+const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxh3ZdfkD8-6p6BNZjzKdAYBUNYqHvOE2q-JPyAeZRO1a0PLI2gkHSbIBpKgztDDqShCg/exec';
+
+// ========================================
+// メール送信設定
+// ========================================
+// 診断結果をBCCで送信する追加の宛先（スプレッドシートで設定可能）
+// スプレッドシートの「設定」シートから読み込まれます
+let EMAIL_BCC_RECIPIENTS = [];
+
+// Googleカレンダー日程調整URL（スプレッドシートで設定可能）
+let CALENDAR_SCHEDULING_URL = '';
+
+// 設定をスプレッドシートから読み込む
+async function loadSettingsFromSpreadsheet() {
+    try {
+        const response = await fetch(GAS_WEBAPP_URL + '?action=getSettings');
+        if (response.ok) {
+            const settings = await response.json();
+            if (settings.bccRecipients) {
+                EMAIL_BCC_RECIPIENTS = settings.bccRecipients;
+            }
+            if (settings.schedulingUrl) {
+                CALENDAR_SCHEDULING_URL = settings.schedulingUrl;
+            }
+            console.log('設定を読み込みました:', settings);
+        }
+    } catch (error) {
+        console.log('設定の読み込みをスキップ:', error.message);
+    }
+}
 
 // ========================================
 // 初期化
@@ -40,6 +69,9 @@ function initializeApp() {
 
     // API設定の読み込み
     loadApiSettings();
+
+    // スプレッドシートから設定を読み込み
+    loadSettingsFromSpreadsheet();
 
     // フォームデータの復元（保存されている場合）
     restoreFormData();
@@ -145,9 +177,18 @@ function nextStep() {
         // データ保存
         saveFormData();
 
-        // スクロールトップ
-        document.querySelector('.form-container').scrollTo(0, 0);
+        // 自動スクロール（ページトップへ）
+        scrollToTop();
     }
+}
+
+// 自動スクロール関数
+function scrollToTop() {
+    const formContainer = document.querySelector('.form-container');
+    if (formContainer) {
+        formContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goBack() {
@@ -168,8 +209,8 @@ function updateProgress() {
     document.getElementById('progressFill').style.width = `${progress}%`;
     document.getElementById('progressText').textContent = `STEP ${AppState.currentStep}/${AppState.totalSteps}`;
 
-    // 残り時間の更新
-    const timePerStep = [15, 30, 30, 15];
+    // 残り時間の更新（3ステップ用）
+    const timePerStep = [20, 40, 30];
     let remainingTime = 0;
     for (let i = AppState.currentStep - 1; i < AppState.totalSteps; i++) {
         remainingTime += timePerStep[i];
@@ -498,7 +539,6 @@ function displayResults(results) {
 function displaySummary(summary) {
     const container = document.getElementById('resultsSummary');
     const items = [
-        { label: 'お名前', value: summary.userName || '--' },
         { label: '新患数', value: summary.newPatient ? `${summary.newPatient}人/月` : '--' },
         { label: '月間医業収入', value: summary.totalRevenue ? `${summary.totalRevenue}万円` : '--', highlight: true },
         { label: '自費率', value: summary.selfPayRate ? `${Math.floor(summary.selfPayRate)}%` : '--', highlight: true },
@@ -585,6 +625,26 @@ function displayRecommendations(recommendations, isApiGenerated) {
     // AIによる分析がある場合は先に表示
     let html = '';
 
+    // 状況別アドバイス（分岐条件からの追加情報）
+    if (recommendations.phaseAdvice || recommendations.situationalAdvice) {
+        html += `
+            <div class="situational-advice-card">
+                <div class="situational-advice-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+                    <span>貴院の状況に基づくアドバイス</span>
+                </div>
+                <div class="situational-advice-content">
+                    ${recommendations.phaseAdvice ? `<p class="phase-advice">${recommendations.phaseAdvice}</p>` : ''}
+                    ${recommendations.situationalAdvice ? `<p class="situational-advice">${recommendations.situationalAdvice}</p>` : ''}
+                </div>
+            </div>
+        `;
+    }
+
     if (recommendations.aiAnalysis) {
         html += `
             <div class="recommendation-card" style="border-left: 4px solid var(--success-500);">
@@ -599,7 +659,7 @@ function displayRecommendations(recommendations, isApiGenerated) {
         `;
     }
 
-    // 標準の推薦を表示
+    // 標準の推薦を表示（3つの解決策）
     html += recommendations.items.map((item, index) => `
         <div class="recommendation-card">
             <div class="recommendation-header">
@@ -609,25 +669,69 @@ function displayRecommendations(recommendations, isApiGenerated) {
             <div class="recommendation-body">
                 <p class="recommendation-description">${item.description}</p>
                 ${item.additionalNote ? `<p class="recommendation-description" style="color: var(--accent-500);"><strong>※ ${item.additionalNote}</strong></p>` : ''}
+
+                <!-- まずやるべき3ステップ -->
                 <div class="recommendation-steps">
-                    ${item.steps.map(step => `
+                    <div class="steps-header">まずやるべき3ステップ</div>
+                    ${item.steps.map((step, stepIndex) => `
                         <div class="recommendation-step">
-                            <svg class="recommendation-step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
+                            <div class="step-number">${stepIndex + 1}</div>
                             <span>${step}</span>
                         </div>
                     `).join('')}
                 </div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+
+                <!-- 効果・難易度情報 -->
+                <div class="recommendation-meta">
                     <span class="recommendation-effect">${item.effect}</span>
-                    <span style="font-size: 0.75rem; color: var(--gray-400);">難易度: ${item.difficulty} | ${item.period}</span>
+                    <span class="recommendation-info">難易度: ${item.difficulty} | ${item.period}</span>
                 </div>
+
+                <!-- 詳細アクション（常に表示） -->
+                ${item.detailedActions ? `
+                    <div class="detailed-actions-container expanded">
+                        ${item.detailedActions.map(category => `
+                            <div class="detailed-category">
+                                <h4 class="detailed-category-title">${category.category}</h4>
+                                <ul class="detailed-actions-list">
+                                    ${category.actions.map(action => `
+                                        <li class="detailed-action-item">
+                                            <svg class="detailed-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="9 11 12 14 22 4"/>
+                                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                            </svg>
+                                            <span>${action}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
             </div>
         </div>
     `).join('');
 
     container.innerHTML = html;
+}
+
+// 詳しく表示のトグル関数
+function toggleDetails(button) {
+    const container = button.nextElementSibling;
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    const textSpan = button.querySelector('.detail-toggle-text');
+
+    if (isExpanded) {
+        container.style.display = 'none';
+        button.setAttribute('aria-expanded', 'false');
+        button.classList.remove('expanded');
+        textSpan.textContent = '詳しく見る';
+    } else {
+        container.style.display = 'block';
+        button.setAttribute('aria-expanded', 'true');
+        button.classList.add('expanded');
+        textSpan.textContent = '閉じる';
+    }
 }
 
 function formatAIResponse(text) {
@@ -942,6 +1046,80 @@ async function sendApplicationEmail(formData) {
 }
 
 // ========================================
+// 無料サポートリクエスト送信
+// ========================================
+async function submitSupportRequest() {
+    const checkbox = document.getElementById('supportRequestCheckbox');
+    const button = document.getElementById('supportRequestButton');
+
+    // チェックボックスが選択されていない場合
+    if (!checkbox || !checkbox.checked) {
+        alert('無料サポートを希望する場合はチェックを入れてください。');
+        return;
+    }
+
+    // ボタンを無効化してローディング表示
+    button.disabled = true;
+    button.innerHTML = '<span>送信中...</span>';
+
+    try {
+        // GASにサポートリクエストを送信
+        const payload = {
+            action: 'supportRequest',
+            userName: AppState.formData.userName,
+            userEmail: AppState.formData.userEmail,
+            clinicName: AppState.formData.clinicName,
+            timestamp: new Date().toISOString()
+        };
+
+        if (GAS_WEBAPP_URL && GAS_WEBAPP_URL !== 'YOUR_GAS_WEBAPP_URL_HERE') {
+            await fetch(GAS_WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        // 追従バナーを成功メッセージに更新
+        const stickyBanner = document.getElementById('stickySupportBanner');
+        if (stickyBanner) {
+            stickyBanner.innerHTML = `
+                <div class="sticky-support-content sticky-success">
+                    <div class="sticky-success-left">
+                        <svg class="sticky-success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <span class="sticky-success-text">送信完了！日程調整のご案内をメールでお送りしました。</span>
+                    </div>
+                    ${CALENDAR_SCHEDULING_URL ? `
+                        <a href="${CALENDAR_SCHEDULING_URL}" target="_blank" class="sticky-calendar-button">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            <span>日程を選択する</span>
+                        </a>
+                    ` : ''}
+                </div>
+            `;
+            stickyBanner.classList.add('success-state');
+        }
+
+        console.log('サポートリクエスト送信完了');
+
+    } catch (error) {
+        console.error('サポートリクエスト送信エラー:', error);
+        button.disabled = false;
+        button.innerHTML = '<span>送信する</span>';
+        alert('送信中にエラーが発生しました。もう一度お試しください。');
+    }
+}
+
+// ========================================
 // 診断結果メール送信
 // ========================================
 async function sendDiagnosisResultEmail(recommendations) {
@@ -953,7 +1131,8 @@ async function sendDiagnosisResultEmail(recommendations) {
         newPatient: '新患を増やしたい',
         selfPay: '自費率を上げたい',
         cancel: 'キャンセルを減らしたい',
-        staff: 'スタッフの定着・採用',
+        staffRetention: 'スタッフの定着',
+        staffRecruitment: 'スタッフの採用',
         efficiency: '業務を効率化したい'
     };
 
