@@ -88,11 +88,11 @@ function getSettings() {
     }
   }
 
-  // CC宛先をカンマ区切りで配列に変換
-  if (settings.ccRecipients) {
-    settings.ccRecipients = settings.ccRecipients.split(',').map(email => email.trim()).filter(email => email);
+  // BCC宛先をカンマ区切りで配列に変換
+  if (settings.bccRecipients) {
+    settings.bccRecipients = settings.bccRecipients.split(',').map(email => email.trim()).filter(email => email);
   } else {
-    settings.ccRecipients = [];
+    settings.bccRecipients = [];
   }
 
   return createJsonResponse(settings);
@@ -230,13 +230,13 @@ TEL: 045-440-0322
   // 送信先リスト
   const recipients = [data.userEmail];
 
-  // CC送信
-  const ccList = settings.ccRecipients || [];
+  // BCC送信
+  const bccList = settings.bccRecipients || [];
 
   try {
     MailApp.sendEmail({
       to: recipients.join(','),
-      cc: ccList.join(','),
+      bcc: bccList.join(','),
       subject: subject,
       body: body,
       name: CONFIG.EMAIL.FROM_NAME
@@ -283,13 +283,13 @@ TEL: 045-440-0322
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
 
-  // CC送信
-  const ccList = settings.ccRecipients || [];
+  // BCC送信
+  const bccList = settings.bccRecipients || [];
 
   try {
     MailApp.sendEmail({
       to: data.userEmail,
-      cc: ccList.join(','),
+      bcc: bccList.join(','),
       subject: subject,
       body: body,
       name: CONFIG.EMAIL.FROM_NAME
@@ -323,11 +323,11 @@ function sendAdminNotification(data) {
 
   // 管理者と追加の通知先にメール送信
   const adminRecipients = [CONFIG.EMAIL.ADMIN_EMAIL];
-  const ccList = settings.ccRecipients || [];
+  const bccList = settings.bccRecipients || [];
 
   try {
     MailApp.sendEmail({
-      to: adminRecipients.concat(ccList).join(','),
+      to: adminRecipients.concat(bccList).join(','),
       subject: subject,
       body: body,
       name: CONFIG.EMAIL.FROM_NAME
@@ -353,7 +353,7 @@ function getSettingsObject() {
   const settingsSheet = ss.getSheetByName(CONFIG.SHEETS.SETTINGS);
 
   if (!settingsSheet) {
-    return { ccRecipients: [], schedulingUrl: '' };
+    return { bccRecipients: [], schedulingUrl: '' };
   }
 
   const data = settingsSheet.getDataRange().getValues();
@@ -367,11 +367,11 @@ function getSettingsObject() {
     }
   }
 
-  // CC宛先を配列に変換
-  if (settings.ccRecipients) {
-    settings.ccRecipients = settings.ccRecipients.split(',').map(email => email.trim()).filter(email => email);
+  // BCC宛先を配列に変換
+  if (settings.bccRecipients) {
+    settings.bccRecipients = settings.bccRecipients.split(',').map(email => email.trim()).filter(email => email);
   } else {
-    settings.ccRecipients = [];
+    settings.bccRecipients = [];
   }
 
   return settings;
@@ -406,7 +406,7 @@ function initializeSettingsSheet() {
   // ヘッダーと初期データを設定
   sheet.clear();
   sheet.appendRow(['設定名', '設定値', '説明']);
-  sheet.appendRow(['ccRecipients', '', 'CC送信先（カンマ区切りで複数指定可）']);
+  sheet.appendRow(['bccRecipients', '', 'BCC送信先（カンマ区切りで複数指定可）']);
   sheet.appendRow(['schedulingUrl', '', 'Googleカレンダー日程調整URL']);
   sheet.appendRow(['adminEmail', '', '管理者メールアドレス']);
 

@@ -22,9 +22,9 @@ const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxh3ZdfkD8-6p6BN
 // ========================================
 // メール送信設定
 // ========================================
-// 診断結果をCCで送信する追加の宛先（スプレッドシートで設定可能）
+// 診断結果をBCCで送信する追加の宛先（スプレッドシートで設定可能）
 // スプレッドシートの「設定」シートから読み込まれます
-let EMAIL_CC_RECIPIENTS = [];
+let EMAIL_BCC_RECIPIENTS = [];
 
 // Googleカレンダー日程調整URL（スプレッドシートで設定可能）
 let CALENDAR_SCHEDULING_URL = '';
@@ -35,8 +35,8 @@ async function loadSettingsFromSpreadsheet() {
         const response = await fetch(GAS_WEBAPP_URL + '?action=getSettings');
         if (response.ok) {
             const settings = await response.json();
-            if (settings.ccRecipients) {
-                EMAIL_CC_RECIPIENTS = settings.ccRecipients;
+            if (settings.bccRecipients) {
+                EMAIL_BCC_RECIPIENTS = settings.bccRecipients;
             }
             if (settings.schedulingUrl) {
                 CALENDAR_SCHEDULING_URL = settings.schedulingUrl;

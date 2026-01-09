@@ -128,7 +128,7 @@ const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycb.../exec';
 
 | A列（設定名） | B列（設定値） | 説明 |
 |--------------|--------------|------|
-| ccRecipients | email1@example.com,email2@example.com | CC送信先（カンマ区切り） |
+| bccRecipients | email1@example.com,email2@example.com | BCC送信先（カンマ区切り） |
 | schedulingUrl | https://calendar.google.com/... | Googleカレンダー日程調整URL |
 | adminEmail | admin@example.com | 管理者メール |
 
@@ -151,7 +151,7 @@ const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycb.../exec';
 - [ ] `initializeSettingsSheet` を実行
 - [ ] GASをデプロイ
 - [ ] WebアプリURLを `app.js` に設定
-- [ ] 設定シートに `ccRecipients` と `schedulingUrl` を入力
+- [ ] 設定シートに `bccRecipients` と `schedulingUrl` を入力
 
 ### テスト方法
 
@@ -210,5 +210,5 @@ AI-Free-Consultation/
 | GAS WebアプリURL | app.js | `GAS_WEBAPP_URL` |
 | スプレッドシートID | gas-code.js (GAS内) | `SPREADSHEET_ID` |
 | 管理者メール | gas-code.js (GAS内) | `ADMIN_EMAIL` |
-| CC送信先 | スプレッドシート（設定シート） | `ccRecipients` |
+| BCC送信先 | スプレッドシート（設定シート） | `bccRecipients` |
 | 日程調整URL | スプレッドシート（設定シート） | `schedulingUrl` |
