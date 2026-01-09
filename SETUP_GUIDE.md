@@ -1,15 +1,43 @@
 # AI診断システム セットアップガイド
 
 ## 目次
-1. [Googleスプレッドシートの作成](#1-googleスプレッドシートの作成)
-2. [Google Apps Scriptの設定](#2-google-apps-scriptの設定)
-3. [app.jsの設定](#3-appjsの設定)
-4. [スプレッドシートの設定シート](#4-スプレッドシートの設定シート)
-5. [動作確認](#5-動作確認)
+1. [ロゴの設定](#1-ロゴの設定)
+2. [Googleスプレッドシートの作成](#2-googleスプレッドシートの作成)
+3. [Google Apps Scriptの設定](#3-google-apps-scriptの設定)
+4. [app.jsの設定](#4-appjsの設定)
+5. [スプレッドシートの設定シート](#5-スプレッドシートの設定シート)
+6. [動作確認](#6-動作確認)
 
 ---
 
-## 1. Googleスプレッドシートの作成
+## 1. ロゴの設定
+
+### 手順
+
+1. ロゴ画像を用意（推奨形式: PNG、透過背景）
+2. 推奨サイズ: 高さ40px〜80px程度（横幅は自動調整されます）
+3. ファイル名を `logo.png` に変更
+4. `assets` フォルダに配置
+
+```
+AI-Free-Consultation/
+├── assets/
+│   └── logo.png    ← ここに配置
+├── index.html
+├── app.js
+└── ...
+```
+
+### 注意点
+
+- ロゴは透過PNG推奨（背景が白のヘッダーに表示されます）
+- 横長のロゴが適しています
+- ファイル名は必ず `logo.png` にしてください
+- 別のファイル名を使用する場合は `index.html` の `src="assets/logo.png"` を変更
+
+---
+
+## 2. Googleスプレッドシートの作成
 
 ### 手順
 
@@ -26,7 +54,7 @@ https://docs.google.com/spreadsheets/d/【ここがスプレッドシートID】
 
 ---
 
-## 2. Google Apps Scriptの設定
+## 3. Google Apps Scriptの設定
 
 ### 手順
 
@@ -80,7 +108,7 @@ https://script.google.com/macros/s/AKfycb.../exec
 
 ---
 
-## 3. app.jsの設定
+## 4. app.jsの設定
 
 `app.js` の20行目付近を編集:
 
@@ -94,7 +122,7 @@ const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycb.../exec';
 
 ---
 
-## 4. スプレッドシートの設定シート
+## 5. スプレッドシートの設定シート
 
 スプレッドシートの「設定」シートを開き、B列に値を入力:
 
@@ -114,10 +142,11 @@ const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycb.../exec';
 
 ---
 
-## 5. 動作確認
+## 6. 動作確認
 
 ### チェックリスト
 
+- [ ] ロゴ画像を `assets/logo.png` に配置
 - [ ] スプレッドシートIDをGASコードに設定
 - [ ] `initializeSettingsSheet` を実行
 - [ ] GASをデプロイ
@@ -161,6 +190,8 @@ const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycb.../exec';
 
 ```
 AI-Free-Consultation/
+├── assets/
+│   └── logo.png        # ロゴ画像（要配置）
 ├── index.html          # メインHTML
 ├── app.js              # メインJS（GAS_WEBAPP_URLを設定）
 ├── styles.css          # スタイルシート
@@ -173,10 +204,11 @@ AI-Free-Consultation/
 
 ## 設定値一覧
 
-| 項目 | ファイル | 行 | 設定内容 |
-|-----|---------|----|---------|
-| GAS WebアプリURL | app.js | 20行目 | `GAS_WEBAPP_URL` |
-| スプレッドシートID | gas-code.js (GAS内) | 10行目 | `SPREADSHEET_ID` |
-| 管理者メール | gas-code.js (GAS内) | 22行目 | `ADMIN_EMAIL` |
-| CC送信先 | スプレッドシート | 設定シート | `ccRecipients` |
-| 日程調整URL | スプレッドシート | 設定シート | `schedulingUrl` |
+| 項目 | ファイル | 設定内容 |
+|-----|---------|---------|
+| ロゴ画像 | assets/logo.png | ロゴ画像ファイルを配置 |
+| GAS WebアプリURL | app.js | `GAS_WEBAPP_URL` |
+| スプレッドシートID | gas-code.js (GAS内) | `SPREADSHEET_ID` |
+| 管理者メール | gas-code.js (GAS内) | `ADMIN_EMAIL` |
+| CC送信先 | スプレッドシート（設定シート） | `ccRecipients` |
+| 日程調整URL | スプレッドシート（設定シート） | `schedulingUrl` |
