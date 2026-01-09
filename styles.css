@@ -1456,10 +1456,11 @@ body {
 
 /* Recommendations */
 .ai-recommendations {
-    background: var(--gray-950);
-    color: white;
+    background: #ffffff;
+    color: var(--gray-900);
     position: relative;
     overflow: hidden;
+    border: 1px solid var(--gray-200);
 }
 
 .ai-recommendations::before {
@@ -1470,18 +1471,18 @@ body {
     right: 0;
     bottom: 0;
     background:
-        radial-gradient(ellipse 50% 30% at 0% 0%, rgba(42, 163, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse 40% 25% at 100% 100%, rgba(217, 70, 239, 0.08) 0%, transparent 50%);
+        radial-gradient(ellipse 50% 30% at 0% 0%, rgba(42, 163, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 25% at 100% 100%, rgba(217, 70, 239, 0.03) 0%, transparent 50%);
     pointer-events: none;
 }
 
 .ai-recommendations .results-section-title {
-    color: white;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    color: var(--gray-900);
+    border-bottom-color: var(--gray-200);
 }
 
 .ai-recommendations .ai-icon {
-    color: var(--primary-400);
+    color: var(--primary-500);
 }
 
 .recommendations-list {
@@ -1492,15 +1493,16 @@ body {
 
 .recommendation-card {
     padding: var(--space-5);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
     border-radius: var(--radius-lg);
     transition: all var(--transition-fast);
 }
 
 .recommendation-card:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--gray-100);
+    border-color: var(--primary-200);
+    box-shadow: var(--shadow-md);
 }
 
 .recommendation-header {
@@ -1528,7 +1530,7 @@ body {
 .recommendation-title {
     font-size: 1rem;
     font-weight: 600;
-    color: white;
+    color: var(--gray-900);
     line-height: 1.4;
 }
 
@@ -1538,7 +1540,7 @@ body {
 
 .recommendation-description {
     font-size: 0.875rem;
-    color: var(--gray-300);
+    color: var(--gray-600);
     margin-bottom: var(--space-4);
     line-height: 1.6;
 }
@@ -1555,7 +1557,7 @@ body {
     align-items: flex-start;
     gap: var(--space-2);
     font-size: 0.8rem;
-    color: var(--gray-400);
+    color: var(--gray-500);
 }
 
 .recommendation-step-icon {
