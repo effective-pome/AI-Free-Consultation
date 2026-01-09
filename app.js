@@ -599,7 +599,7 @@ function displayRecommendations(recommendations, isApiGenerated) {
         `;
     }
 
-    // 標準の推薦を表示
+    // 標準の推薦を表示（3つの解決策）
     html += recommendations.items.map((item, index) => `
         <div class="recommendation-card">
             <div class="recommendation-header">
@@ -609,25 +609,76 @@ function displayRecommendations(recommendations, isApiGenerated) {
             <div class="recommendation-body">
                 <p class="recommendation-description">${item.description}</p>
                 ${item.additionalNote ? `<p class="recommendation-description" style="color: var(--accent-500);"><strong>※ ${item.additionalNote}</strong></p>` : ''}
+
+                <!-- まずやるべき3ステップ -->
                 <div class="recommendation-steps">
-                    ${item.steps.map(step => `
+                    <div class="steps-header">まずやるべき3ステップ</div>
+                    ${item.steps.map((step, stepIndex) => `
                         <div class="recommendation-step">
-                            <svg class="recommendation-step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20 6 9 17 4 12"/>
-                            </svg>
+                            <div class="step-number">${stepIndex + 1}</div>
                             <span>${step}</span>
                         </div>
                     `).join('')}
                 </div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+
+                <!-- 効果・難易度情報 -->
+                <div class="recommendation-meta">
                     <span class="recommendation-effect">${item.effect}</span>
-                    <span style="font-size: 0.75rem; color: var(--gray-400);">難易度: ${item.difficulty} | ${item.period}</span>
+                    <span class="recommendation-info">難易度: ${item.difficulty} | ${item.period}</span>
                 </div>
+
+                <!-- 詳しくボタン -->
+                ${item.detailedActions ? `
+                    <button class="detail-toggle-btn" onclick="toggleDetails(this)" aria-expanded="false">
+                        <span class="detail-toggle-text">詳しく見る</span>
+                        <svg class="detail-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+
+                    <div class="detailed-actions-container" style="display: none;">
+                        ${item.detailedActions.map(category => `
+                            <div class="detailed-category">
+                                <h4 class="detailed-category-title">${category.category}</h4>
+                                <ul class="detailed-actions-list">
+                                    ${category.actions.map(action => `
+                                        <li class="detailed-action-item">
+                                            <svg class="detailed-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="9 11 12 14 22 4"/>
+                                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                            </svg>
+                                            <span>${action}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
             </div>
         </div>
     `).join('');
 
     container.innerHTML = html;
+}
+
+// 詳しく表示のトグル関数
+function toggleDetails(button) {
+    const container = button.nextElementSibling;
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    const textSpan = button.querySelector('.detail-toggle-text');
+
+    if (isExpanded) {
+        container.style.display = 'none';
+        button.setAttribute('aria-expanded', 'false');
+        button.classList.remove('expanded');
+        textSpan.textContent = '詳しく見る';
+    } else {
+        container.style.display = 'block';
+        button.setAttribute('aria-expanded', 'true');
+        button.classList.add('expanded');
+        textSpan.textContent = '閉じる';
+    }
 }
 
 function formatAIResponse(text) {
