@@ -1131,7 +1131,8 @@ async function sendDiagnosisResultEmail(recommendations) {
         newPatient: '新患を増やしたい',
         selfPay: '自費率を上げたい',
         cancel: 'キャンセルを減らしたい',
-        staff: 'スタッフの定着・採用',
+        staffRetention: 'スタッフの定着',
+        staffRecruitment: 'スタッフの採用',
         efficiency: '業務を効率化したい'
     };
 
