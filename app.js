@@ -233,9 +233,24 @@ function setupButtonGroups() {
                 button.classList.add('selected');
                 // 値を保存
                 AppState.formData[field] = parseFloat(button.dataset.value);
+                // 次の要素へスクロール
+                scrollToNextElement(group);
             });
         });
     });
+}
+
+// 次の入力要素へスクロール
+function scrollToNextElement(currentElement) {
+    setTimeout(() => {
+        const parent = currentElement.closest('.form-group, .input-section');
+        if (parent) {
+            const nextSibling = parent.nextElementSibling;
+            if (nextSibling) {
+                nextSibling.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }, 150);
 }
 
 function toggleSpecificInput(button) {
@@ -252,29 +267,66 @@ function toggleSpecificInput(button) {
 // 入力フィールドのリスナー
 // ========================================
 function setupInputListeners() {
-    // 基本情報（名前・メールアドレス）
-    document.getElementById('userName')?.addEventListener('input', (e) => {
+    // 基本情報（名前・メールアドレス）- Enterで次へスクロール
+    const userNameInput = document.getElementById('userName');
+    userNameInput?.addEventListener('input', (e) => {
         AppState.formData.userName = e.target.value;
     });
+    userNameInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            scrollToNextElement(userNameInput);
+            document.getElementById('userEmail')?.focus();
+        }
+    });
 
-    document.getElementById('userEmail')?.addEventListener('input', (e) => {
+    const userEmailInput = document.getElementById('userEmail');
+    userEmailInput?.addEventListener('input', (e) => {
         AppState.formData.userEmail = e.target.value;
     });
+    userEmailInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            scrollToNextElement(userEmailInput);
+            document.getElementById('clinicName')?.focus();
+        }
+    });
 
-    document.getElementById('clinicName')?.addEventListener('input', (e) => {
+    const clinicNameInput = document.getElementById('clinicName');
+    clinicNameInput?.addEventListener('input', (e) => {
         AppState.formData.clinicName = e.target.value;
     });
+    clinicNameInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            scrollToNextElement(clinicNameInput);
+            document.getElementById('region')?.focus();
+        }
+    });
 
-    document.getElementById('region')?.addEventListener('change', (e) => {
+    // セレクトボックス - 選択時に次へスクロール
+    const regionSelect = document.getElementById('region');
+    regionSelect?.addEventListener('change', (e) => {
         AppState.formData.region = e.target.value;
+        if (e.target.value) {
+            scrollToNextElement(regionSelect);
+        }
     });
 
-    document.getElementById('yearsOpen')?.addEventListener('change', (e) => {
+    const yearsOpenSelect = document.getElementById('yearsOpen');
+    yearsOpenSelect?.addEventListener('change', (e) => {
         AppState.formData.yearsOpen = e.target.value;
+        if (e.target.value) {
+            scrollToNextElement(yearsOpenSelect);
+        }
     });
 
-    document.getElementById('units')?.addEventListener('change', (e) => {
+    const unitsSelect = document.getElementById('units');
+    unitsSelect?.addEventListener('change', (e) => {
         AppState.formData.units = e.target.value;
+        if (e.target.value) {
+            scrollToNextElement(unitsSelect);
+        }
     });
 
     // 具体的入力フィールド
@@ -318,6 +370,11 @@ function selectPriority(button) {
     AppState.formData.priority = button.dataset.value;
     // 送信ボタンを有効化
     document.getElementById('submitButton').disabled = false;
+    // 次の入力エリア（その他のお悩みフィールド）へスクロール
+    const priorityGrid = button.closest('.form-group');
+    if (priorityGrid) {
+        scrollToNextElement(priorityGrid);
+    }
 }
 
 
