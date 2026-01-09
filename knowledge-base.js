@@ -679,6 +679,291 @@ const KnowledgeBase = {
     },
 
     // ========================================
+    // 分岐条件別の追加アドバイス（出力精度向上用）
+    // ========================================
+    BRANCHING_CONDITIONS: {
+        // 地域×課題の組み合わせ別アドバイス
+        regional: {
+            // 都市部（競合多い）
+            urban: {
+                regions: ['kanto', 'kinki'],
+                newPatient: {
+                    emphasis: '差別化',
+                    additionalAdvice: '競合が多い地域では、MEOでの上位表示に加え「専門性」のアピールが重要です。矯正専門、小児専門など、強みを明確に打ち出しましょう。',
+                    specificActions: [
+                        'ホームページのファーストビューに専門性を明記',
+                        'Googleビジネスプロフィールのサービス説明に専門キーワードを追加',
+                        '症例写真を週2回以上アップロードして専門性をアピール'
+                    ]
+                },
+                selfPay: {
+                    emphasis: '価値訴求',
+                    additionalAdvice: '都市部の患者は情報収集能力が高いため、治療の価値を論理的に説明することが効果的です。',
+                    specificActions: [
+                        '治療別の比較資料（費用対効果、耐久年数）を作成',
+                        '症例写真付きのビフォーアフター集を整備',
+                        'デンタルローンの月々払い金額を明示'
+                    ]
+                }
+            },
+            // 地方部（競合少ない）
+            rural: {
+                regions: ['hokkaido', 'tohoku', 'chugoku', 'shikoku'],
+                newPatient: {
+                    emphasis: '地域密着',
+                    additionalAdvice: '地方では「かかりつけ医」としての信頼構築が最重要。地域コミュニティとの関係強化を優先しましょう。',
+                    specificActions: [
+                        '地域の学校健診や企業健診への積極参加',
+                        '地元の祭りやイベントへの協賛・参加',
+                        '院長やスタッフの地域活動をSNSで発信'
+                    ]
+                },
+                selfPay: {
+                    emphasis: '信頼関係',
+                    additionalAdvice: '地方では「この先生が言うなら間違いない」という信頼が自費決定の鍵。長期的な関係構築を重視しましょう。',
+                    specificActions: [
+                        'メンテナンス時に丁寧な説明を重ねて信頼を蓄積',
+                        '家族単位での来院を促進し、世帯全体の信頼を獲得',
+                        '地域の方言や文化を尊重したコミュニケーション'
+                    ]
+                }
+            }
+        },
+
+        // 開業年数別アドバイス
+        yearsOpen: {
+            // 開業3年未満
+            'under3': {
+                phase: '成長期',
+                priority: '認知拡大',
+                generalAdvice: '開業3年未満は「知ってもらう」ことが最優先。広告費は惜しまず、まずは新患数を確保しましょう。',
+                recommendations: {
+                    newPatient: {
+                        additionalAdvice: '開業初期はMEO対策に加え、リスティング広告やSNS広告も併用して認知を急拡大させましょう。',
+                        specificActions: [
+                            '月間広告予算を売上の5-10%に設定',
+                            'Instagram・TikTokで院内の雰囲気を発信',
+                            '開院記念キャンペーン（ホワイトニング割引等）を実施'
+                        ]
+                    },
+                    efficiency: {
+                        additionalAdvice: '開業初期は売上拡大が優先。効率化より「患者を断らない体制」を構築しましょう。',
+                        specificActions: [
+                            '新患・急患枠を多めに確保',
+                            '柔軟な診療時間の設定',
+                            'パート採用で繁忙期に対応'
+                        ]
+                    }
+                }
+            },
+            // 開業3-5年
+            '3to5': {
+                phase: '確立期',
+                priority: '収益基盤強化',
+                generalAdvice: '開業3-5年は「稼ぐ力」を身につける時期。自費率向上とリピート率強化に注力しましょう。',
+                recommendations: {
+                    selfPay: {
+                        additionalAdvice: '基盤患者ができてきた時期。既存患者への自費提案を強化し、客単価を上げましょう。',
+                        specificActions: [
+                            'メンテナンス患者への審美提案を仕組み化',
+                            'カウンセリングルームの整備',
+                            '補綴説明用の模型・資料を充実'
+                        ]
+                    },
+                    staff: {
+                        additionalAdvice: '成長期のスタッフ育成が今後の医院を決めます。幹部候補の育成を始めましょう。',
+                        specificActions: [
+                            '将来の幹部候補を選定し、マネジメント研修に参加',
+                            '業務の標準化（マニュアル作成）を開始',
+                            'スタッフ評価制度の導入'
+                        ]
+                    }
+                }
+            },
+            // 開業5-10年
+            '5to10': {
+                phase: '成熟期',
+                priority: 'システム化',
+                generalAdvice: '開業5-10年は「院長がいなくても回る仕組み」を作る時期。属人化を排除しましょう。',
+                recommendations: {
+                    efficiency: {
+                        additionalAdvice: 'この時期に仕組み化を怠ると、院長の時間がボトルネックになります。タスクシフトを断行しましょう。',
+                        specificActions: [
+                            '院長しかできない業務を棚卸し',
+                            'DHへの権限委譲（浸潤麻酔等）',
+                            '幹部に経営数値を共有し、経営参画意識を醸成'
+                        ]
+                    },
+                    cancel: {
+                        additionalAdvice: '患者数が安定してきたら、質の向上にシフト。キャンセル率の改善で収益性を高めましょう。',
+                        specificActions: [
+                            'キャンセルポリシーの明文化と運用開始',
+                            'リマインド自動化システムの導入',
+                            'キャンセル常習者への対応ルール策定'
+                        ]
+                    }
+                }
+            },
+            // 開業10-20年
+            '10to20': {
+                phase: '最適化期',
+                priority: '世代交代準備',
+                generalAdvice: '開業10-20年は次の10年を見据えた体制構築の時期。設備更新と人材の若返りを計画的に進めましょう。',
+                recommendations: {
+                    staff: {
+                        additionalAdvice: '長年のスタッフが退職すると大きな穴が開きます。計画的な採用と育成で、スムーズな世代交代を準備しましょう。',
+                        specificActions: [
+                            '3年後の組織図を描き、必要な人材を逆算採用',
+                            'ベテランスタッフの暗黙知を動画マニュアル化',
+                            '若手への段階的な権限委譲'
+                        ]
+                    },
+                    efficiency: {
+                        additionalAdvice: '古い設備やシステムが足かせになっていませんか？大規模な設備更新を検討する時期です。',
+                        specificActions: [
+                            'ユニット・レントゲンの更新計画を策定',
+                            '電子カルテ・予約システムの見直し',
+                            '院内LAN・WiFi環境の整備'
+                        ]
+                    }
+                }
+            },
+            // 開業20年以上
+            'over20': {
+                phase: '継承期',
+                priority: '事業承継',
+                generalAdvice: '開業20年以上は事業承継を意識する時期。第三者承継も含めた選択肢を検討しましょう。',
+                recommendations: {
+                    newPatient: {
+                        additionalAdvice: '長年の信頼がある一方、若い患者層の取り込みが課題に。SNS活用など新しい集患方法を取り入れましょう。',
+                        specificActions: [
+                            '若手スタッフ主導でSNS運用を開始',
+                            'ホームページのデザインリニューアル',
+                            '若年層向けメニュー（ホワイトニング、矯正）の強化'
+                        ]
+                    },
+                    efficiency: {
+                        additionalAdvice: '長年の「当たり前」を見直す良い機会です。外部コンサルタントの客観的な視点を活用しましょう。',
+                        specificActions: [
+                            '業務フローの棚卸しと無駄の洗い出し',
+                            'デジタル化への投資（DX）',
+                            '事業承継コンサルタントへの相談'
+                        ]
+                    }
+                }
+            }
+        },
+
+        // 売上規模別アドバイス
+        revenue: {
+            // 月商300万円未満
+            small: {
+                threshold: 300,
+                compare: 'less',
+                generalAdvice: '月商300万円未満の場合、まずは新患数の増加が最優先。経費削減より売上拡大に注力しましょう。',
+                recommendations: {
+                    newPatient: {
+                        emphasis: '集患最優先',
+                        additionalAdvice: '広告費・MEO対策への投資を惜しまず、まずは来院数を確保することが先決です。',
+                        specificActions: [
+                            'MEO対策を最優先で実施',
+                            '月間広告予算を売上の10%以上に設定',
+                            '急患・新患を断らない体制構築'
+                        ]
+                    }
+                }
+            },
+            // 月商500万円以上
+            medium: {
+                threshold: 500,
+                compare: 'greaterOrEqual',
+                generalAdvice: '月商500万円を超えたら、自費率向上による客単価アップが次のステージへの鍵です。',
+                recommendations: {
+                    selfPay: {
+                        emphasis: '客単価向上',
+                        additionalAdvice: '新患数は安定しています。既存患者への自費提案を強化し、LTV（顧客生涯価値）を高めましょう。',
+                        specificActions: [
+                            'メンテナンス時の自費提案ルーティン化',
+                            'カウンセリングスキル研修の実施',
+                            '補綴メニューの見直しと単価アップ'
+                        ]
+                    }
+                }
+            },
+            // 月商1000万円以上
+            large: {
+                threshold: 1000,
+                compare: 'greaterOrEqual',
+                generalAdvice: '月商1000万円を超える医院は、効率化と人材育成が成長の鍵。院長の時間を経営に振り向けましょう。',
+                recommendations: {
+                    efficiency: {
+                        emphasis: '経営最適化',
+                        additionalAdvice: '売上が安定した今こそ、仕組み化と効率化で利益率を高める時期です。',
+                        specificActions: [
+                            '勤務医の採用を検討',
+                            'タスクシフトの徹底',
+                            '経営数値のKPI管理を導入'
+                        ]
+                    },
+                    staff: {
+                        emphasis: '組織強化',
+                        additionalAdvice: 'スタッフ数が増える段階では、マネジメント体制の構築が必須です。',
+                        specificActions: [
+                            'チーフ・主任など中間管理職の設置',
+                            '評価制度と給与体系の整備',
+                            '幹部合宿や経営会議の定例化'
+                        ]
+                    }
+                }
+            }
+        },
+
+        // ユニット数別アドバイス
+        units: {
+            // 3台以下
+            small: {
+                threshold: 3,
+                compare: 'lessOrEqual',
+                generalAdvice: 'ユニット3台以下はアットホームさが強み。少数精鋭で患者満足度を高めましょう。',
+                recommendations: {
+                    efficiency: {
+                        additionalAdvice: 'ユニット数が少ない分、回転率を上げることが重要。アポイント管理を徹底しましょう。',
+                        specificActions: [
+                            '1アポあたりの処置内容を最適化',
+                            '準備・片付け時間の短縮',
+                            '予約枠の細分化（15分単位）'
+                        ]
+                    }
+                }
+            },
+            // 6台以上
+            large: {
+                threshold: 6,
+                compare: 'greaterOrEqual',
+                generalAdvice: 'ユニット6台以上は組織としての運営が必要。システムと役割分担を明確にしましょう。',
+                recommendations: {
+                    staff: {
+                        additionalAdvice: 'スタッフ数が多くなると、情報共有とチームワークが課題に。定期ミーティングを仕組み化しましょう。',
+                        specificActions: [
+                            '朝礼・終礼の内容を標準化',
+                            '週1回のケースカンファレンス',
+                            'スタッフ間の役割分担表作成'
+                        ]
+                    },
+                    efficiency: {
+                        additionalAdvice: '複数ユニットを効率的に稼働させるため、ゾーニングとフロー設計が重要です。',
+                        specificActions: [
+                            'Dr動線とDH動線を分離',
+                            'ユニットごとの担当制（ゾーニング）',
+                            '器具・材料のユニット配置最適化'
+                        ]
+                    }
+                }
+            }
+        }
+    },
+
+    // ========================================
     // パーセンタイル計算用データ
     // ========================================
     PERCENTILE_DATA: {
@@ -732,9 +1017,13 @@ const KnowledgeBase = {
         const recommendations = this.RECOMMENDATIONS[priority];
         if (!recommendations) return null;
 
-        const customizedItems = recommendations.items.map(item => {
+        // 分岐条件を取得
+        const branchingAdvice = this.getBranchingAdvice(priority, formData);
+
+        const customizedItems = recommendations.items.map((item, index) => {
             const customItem = { ...item };
 
+            // 地域に基づく追加アドバイス
             if (formData.region && this.REGIONAL_DATA[formData.region]) {
                 const regional = this.REGIONAL_DATA[formData.region];
                 if (regional.competition === 'high' && priority === 'newPatient') {
@@ -742,6 +1031,7 @@ const KnowledgeBase = {
                 }
             }
 
+            // 開業年数に基づく追加アドバイス
             if (formData.yearsOpen && this.YEARS_DATA[formData.yearsOpen]) {
                 const yearsData = this.YEARS_DATA[formData.yearsOpen];
                 if (yearsData.phase === 'growth') {
@@ -749,13 +1039,120 @@ const KnowledgeBase = {
                 }
             }
 
+            // 分岐条件からの追加アクションを最初の提案に追加
+            if (index === 0 && branchingAdvice.specificActions && branchingAdvice.specificActions.length > 0) {
+                if (!customItem.detailedActions) {
+                    customItem.detailedActions = [];
+                }
+                customItem.detailedActions.push({
+                    category: '貴院の状況に合わせた追加アドバイス',
+                    actions: branchingAdvice.specificActions
+                });
+            }
+
             return customItem;
         });
 
         return {
             ...recommendations,
-            items: customizedItems
+            items: customizedItems,
+            situationalAdvice: branchingAdvice.situationalAdvice || null,
+            phaseAdvice: branchingAdvice.phaseAdvice || null
         };
+    },
+
+    // 分岐条件に基づく追加アドバイスを取得
+    getBranchingAdvice(priority, formData) {
+        const result = {
+            specificActions: [],
+            situationalAdvice: null,
+            phaseAdvice: null
+        };
+
+        const branching = this.BRANCHING_CONDITIONS;
+
+        // 1. 地域別アドバイス
+        if (formData.region) {
+            // 都市部チェック
+            if (branching.regional.urban.regions.includes(formData.region)) {
+                const urbanAdvice = branching.regional.urban[priority];
+                if (urbanAdvice) {
+                    result.situationalAdvice = urbanAdvice.additionalAdvice;
+                    result.specificActions.push(...(urbanAdvice.specificActions || []));
+                }
+            }
+            // 地方部チェック
+            else if (branching.regional.rural.regions.includes(formData.region)) {
+                const ruralAdvice = branching.regional.rural[priority];
+                if (ruralAdvice) {
+                    result.situationalAdvice = ruralAdvice.additionalAdvice;
+                    result.specificActions.push(...(ruralAdvice.specificActions || []));
+                }
+            }
+        }
+
+        // 2. 開業年数別アドバイス
+        if (formData.yearsOpen && branching.yearsOpen[formData.yearsOpen]) {
+            const yearsAdvice = branching.yearsOpen[formData.yearsOpen];
+            result.phaseAdvice = yearsAdvice.generalAdvice;
+
+            if (yearsAdvice.recommendations && yearsAdvice.recommendations[priority]) {
+                const priorityAdvice = yearsAdvice.recommendations[priority];
+                if (priorityAdvice.specificActions) {
+                    result.specificActions.push(...priorityAdvice.specificActions);
+                }
+                if (!result.situationalAdvice && priorityAdvice.additionalAdvice) {
+                    result.situationalAdvice = priorityAdvice.additionalAdvice;
+                }
+            }
+        }
+
+        // 3. 売上規模別アドバイス
+        if (formData.totalRevenue) {
+            const revenue = parseFloat(formData.totalRevenue);
+            // 大規模（1000万以上）を優先
+            if (revenue >= branching.revenue.large.threshold) {
+                const largeAdvice = branching.revenue.large;
+                if (largeAdvice.recommendations && largeAdvice.recommendations[priority]) {
+                    result.specificActions.push(...(largeAdvice.recommendations[priority].specificActions || []));
+                }
+            }
+            // 中規模（500万以上）
+            else if (revenue >= branching.revenue.medium.threshold) {
+                const mediumAdvice = branching.revenue.medium;
+                if (mediumAdvice.recommendations && mediumAdvice.recommendations[priority]) {
+                    result.specificActions.push(...(mediumAdvice.recommendations[priority].specificActions || []));
+                }
+            }
+            // 小規模（300万未満）
+            else if (revenue < branching.revenue.small.threshold) {
+                const smallAdvice = branching.revenue.small;
+                if (smallAdvice.recommendations && smallAdvice.recommendations[priority]) {
+                    result.specificActions.push(...(smallAdvice.recommendations[priority].specificActions || []));
+                }
+            }
+        }
+
+        // 4. ユニット数別アドバイス
+        if (formData.units) {
+            const units = parseInt(formData.units);
+            if (units >= branching.units.large.threshold) {
+                const largeAdvice = branching.units.large;
+                if (largeAdvice.recommendations && largeAdvice.recommendations[priority]) {
+                    result.specificActions.push(...(largeAdvice.recommendations[priority].specificActions || []));
+                }
+            } else if (units <= branching.units.small.threshold) {
+                const smallAdvice = branching.units.small;
+                if (smallAdvice.recommendations && smallAdvice.recommendations[priority]) {
+                    result.specificActions.push(...(smallAdvice.recommendations[priority].specificActions || []));
+                }
+            }
+        }
+
+        // 重複を除去し、最大5件に制限
+        result.specificActions = [...new Set(result.specificActions)].slice(0, 5);
+
+        return result;
     },
 
     generateComparison(formData) {

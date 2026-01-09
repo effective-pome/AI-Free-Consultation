@@ -2486,6 +2486,341 @@ input[type="checkbox"] {
     }
 }
 
+/* Newsletter Notice */
+.newsletter-notice {
+    font-size: 0.7rem !important;
+    color: var(--gray-400) !important;
+    margin-top: var(--space-2);
+    line-height: 1.5;
+}
+
+/* ========================================
+   Free Support Section
+   ======================================== */
+.free-support-section {
+    background: linear-gradient(135deg, var(--primary-50) 0%, white 100%) !important;
+    border: 2px solid var(--primary-200) !important;
+}
+
+.free-support-badge {
+    display: inline-block;
+    padding: var(--space-2) var(--space-4);
+    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-4);
+}
+
+.free-support-section .cta-title {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+}
+
+.support-checkbox-wrapper {
+    margin-bottom: var(--space-6);
+}
+
+.support-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.support-checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--primary-500);
+    border-radius: var(--radius-sm);
+    position: relative;
+    transition: all var(--transition-fast);
+}
+
+.support-checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+    background: var(--primary-500);
+}
+
+.support-checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkbox-text {
+    color: var(--gray-800);
+}
+
+.support-note {
+    margin-top: var(--space-4);
+    font-size: 0.8rem;
+    color: var(--gray-500);
+}
+
+/* ========================================
+   Improved Results Screen - White Background
+   ======================================== */
+.ai-recommendations {
+    background: white !important;
+    color: var(--gray-800) !important;
+}
+
+.ai-recommendations::before {
+    display: none;
+}
+
+.ai-recommendations .results-section-title {
+    color: var(--gray-800) !important;
+    border-bottom-color: var(--gray-200) !important;
+}
+
+.ai-recommendations .recommendation-card {
+    background: var(--gray-50) !important;
+    border: 1px solid var(--gray-200) !important;
+}
+
+.ai-recommendations .recommendation-card:hover {
+    background: var(--gray-100) !important;
+    border-color: var(--gray-300) !important;
+}
+
+.ai-recommendations .recommendation-title {
+    color: var(--gray-900) !important;
+}
+
+.ai-recommendations .recommendation-description {
+    color: var(--gray-600) !important;
+}
+
+.ai-recommendations .steps-header {
+    color: var(--primary-600) !important;
+    border-bottom-color: var(--gray-200) !important;
+}
+
+.ai-recommendations .step-number {
+    background: var(--primary-100) !important;
+    color: var(--primary-700) !important;
+    border-color: var(--primary-300) !important;
+}
+
+.ai-recommendations .recommendation-step {
+    color: var(--gray-700) !important;
+}
+
+.ai-recommendations .recommendation-info {
+    color: var(--gray-500) !important;
+}
+
+.ai-recommendations .detail-toggle-btn {
+    color: var(--primary-600) !important;
+    background: var(--primary-50) !important;
+    border-color: var(--primary-200) !important;
+}
+
+.ai-recommendations .detail-toggle-btn:hover {
+    background: var(--primary-100) !important;
+    border-color: var(--primary-300) !important;
+}
+
+.ai-recommendations .detailed-actions-container {
+    background: white !important;
+    border: 1px solid var(--gray-200) !important;
+}
+
+.ai-recommendations .detailed-category-title {
+    color: var(--primary-700) !important;
+    border-bottom-color: var(--primary-100) !important;
+}
+
+.ai-recommendations .detailed-action-item {
+    background: var(--gray-50) !important;
+    color: var(--gray-700) !important;
+}
+
+.ai-recommendations .detailed-action-item:hover {
+    background: var(--gray-100) !important;
+}
+
+.ai-recommendations .detailed-category:last-child .detailed-action-item {
+    background: var(--success-50) !important;
+    border-left: 3px solid var(--success-500);
+}
+
+.ai-recommendations .detailed-category:last-child .detailed-action-item:hover {
+    background: var(--success-100) !important;
+}
+
+.ai-recommendations .detailed-category:last-child .detailed-category-title {
+    color: var(--success-700) !important;
+    border-bottom-color: var(--success-200) !important;
+}
+
+/* ========================================
+   無料サポート送信成功メッセージ
+   ======================================== */
+.support-success {
+    text-align: center;
+    padding: var(--space-8) var(--space-6);
+}
+
+.support-success .success-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--success-400), var(--success-500));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-6);
+    animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.support-success .success-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+    stroke-width: 3;
+}
+
+.support-success .success-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--success-600);
+    margin-bottom: var(--space-4);
+}
+
+.support-success .success-message {
+    font-size: 1rem;
+    color: var(--gray-600);
+    margin-bottom: var(--space-6);
+    line-height: 1.7;
+}
+
+.calendar-link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-8);
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    box-shadow: 0 4px 15px rgba(42, 163, 255, 0.3);
+}
+
+.calendar-link-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(42, 163, 255, 0.4);
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+}
+
+.calendar-link-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+.support-success .support-contact {
+    margin-top: var(--space-6);
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+/* ========================================
+   状況別アドバイスカード
+   ======================================== */
+.situational-advice-card {
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
+    border: 1px solid var(--primary-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-md);
+}
+
+.situational-advice-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    color: var(--primary-700);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.situational-advice-header svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--primary-500);
+}
+
+.situational-advice-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.phase-advice {
+    background: white;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-500);
+    font-size: 0.95rem;
+    color: var(--gray-700);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.situational-advice {
+    background: white;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-500);
+    font-size: 0.95rem;
+    color: var(--gray-700);
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* 白背景バージョン用 */
+.ai-recommendations .situational-advice-card {
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%) !important;
+    border-color: var(--primary-300) !important;
+}
+
+.ai-recommendations .situational-advice-header {
+    color: var(--primary-800) !important;
+}
+
+.ai-recommendations .phase-advice,
+.ai-recommendations .situational-advice {
+    background: white !important;
+    color: var(--gray-800) !important;
+}
+
 /* Print styles */
 @media print {
     .settings-button,

@@ -20,6 +20,35 @@ const AppState = {
 const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwZZVAm0UjDw_bZD4-OpjOG89ScUzCi2yh-q2XxTHH7vRqYT9gJm_1Qi_-zHsXBSmnH6A/exec';
 
 // ========================================
+// メール送信設定
+// ========================================
+// 診断結果をCCで送信する追加の宛先（スプレッドシートで設定可能）
+// スプレッドシートの「設定」シートから読み込まれます
+let EMAIL_CC_RECIPIENTS = [];
+
+// Googleカレンダー日程調整URL（スプレッドシートで設定可能）
+let CALENDAR_SCHEDULING_URL = '';
+
+// 設定をスプレッドシートから読み込む
+async function loadSettingsFromSpreadsheet() {
+    try {
+        const response = await fetch(GAS_WEBAPP_URL + '?action=getSettings');
+        if (response.ok) {
+            const settings = await response.json();
+            if (settings.ccRecipients) {
+                EMAIL_CC_RECIPIENTS = settings.ccRecipients;
+            }
+            if (settings.schedulingUrl) {
+                CALENDAR_SCHEDULING_URL = settings.schedulingUrl;
+            }
+            console.log('設定を読み込みました:', settings);
+        }
+    } catch (error) {
+        console.log('設定の読み込みをスキップ:', error.message);
+    }
+}
+
+// ========================================
 // 初期化
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -40,6 +69,9 @@ function initializeApp() {
 
     // API設定の読み込み
     loadApiSettings();
+
+    // スプレッドシートから設定を読み込み
+    loadSettingsFromSpreadsheet();
 
     // フォームデータの復元（保存されている場合）
     restoreFormData();
@@ -585,6 +617,26 @@ function displayRecommendations(recommendations, isApiGenerated) {
     // AIによる分析がある場合は先に表示
     let html = '';
 
+    // 状況別アドバイス（分岐条件からの追加情報）
+    if (recommendations.phaseAdvice || recommendations.situationalAdvice) {
+        html += `
+            <div class="situational-advice-card">
+                <div class="situational-advice-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+                    <span>貴院の状況に基づくアドバイス</span>
+                </div>
+                <div class="situational-advice-content">
+                    ${recommendations.phaseAdvice ? `<p class="phase-advice">${recommendations.phaseAdvice}</p>` : ''}
+                    ${recommendations.situationalAdvice ? `<p class="situational-advice">${recommendations.situationalAdvice}</p>` : ''}
+                </div>
+            </div>
+        `;
+    }
+
     if (recommendations.aiAnalysis) {
         html += `
             <div class="recommendation-card" style="border-left: 4px solid var(--success-500);">
@@ -990,6 +1042,81 @@ async function sendApplicationEmail(formData) {
     // window.location.href = `mailto:${formData.email}?subject=${subject}&body=${body}`;
 
     return Promise.resolve();
+}
+
+// ========================================
+// 無料サポートリクエスト送信
+// ========================================
+async function submitSupportRequest() {
+    const checkbox = document.getElementById('supportRequestCheckbox');
+    const button = document.getElementById('supportRequestButton');
+
+    // チェックボックスが選択されていない場合
+    if (!checkbox || !checkbox.checked) {
+        alert('無料サポートを希望する場合はチェックを入れてください。');
+        return;
+    }
+
+    // ボタンを無効化してローディング表示
+    button.disabled = true;
+    button.innerHTML = '<span>送信中...</span>';
+
+    try {
+        // GASにサポートリクエストを送信
+        const payload = {
+            action: 'supportRequest',
+            userName: AppState.formData.userName,
+            userEmail: AppState.formData.userEmail,
+            clinicName: AppState.formData.clinicName,
+            timestamp: new Date().toISOString()
+        };
+
+        if (GAS_WEBAPP_URL && GAS_WEBAPP_URL !== 'YOUR_GAS_WEBAPP_URL_HERE') {
+            await fetch(GAS_WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        // 成功メッセージを表示
+        const supportSection = document.querySelector('.free-support-section');
+        if (supportSection) {
+            supportSection.innerHTML = `
+                <div class="support-success">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="success-title">送信完了</h3>
+                    <p class="success-message">無料サポートのご希望を承りました。<br>日程調整のご案内をメールでお送りしました。</p>
+                    ${CALENDAR_SCHEDULING_URL ? `
+                        <a href="${CALENDAR_SCHEDULING_URL}" target="_blank" class="calendar-link-button">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            <span>日程を選択する</span>
+                        </a>
+                    ` : ''}
+                    <p class="support-contact">ご不明点は 045-440-0322 までお電話ください</p>
+                </div>
+            `;
+        }
+
+        console.log('サポートリクエスト送信完了');
+
+    } catch (error) {
+        console.error('サポートリクエスト送信エラー:', error);
+        button.disabled = false;
+        button.innerHTML = '<span>送信する</span>';
+        alert('送信中にエラーが発生しました。もう一度お試しください。');
+    }
 }
 
 // ========================================
