@@ -1465,6 +1465,20 @@ body {
     color: var(--accent-700);
 }
 
+.comparison-badge.neutral {
+    background: var(--gray-100);
+    color: var(--gray-500);
+}
+
+.comparison-card.no-data {
+    background: var(--gray-50);
+    border-color: var(--gray-200);
+}
+
+.comparison-card.no-data .comparison-value {
+    color: var(--gray-400);
+}
+
 /* Recommendations */
 .ai-recommendations {
     background: var(--gray-950);

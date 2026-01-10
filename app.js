@@ -647,6 +647,17 @@ function displayComparison(comparison) {
     ];
 
     container.innerHTML = items.map(item => {
+        // データがない場合は「-」を表示
+        if (item.percentile === null || item.status === 'noData') {
+            return `
+                <div class="comparison-card no-data">
+                    <div class="comparison-label">${item.label}</div>
+                    <div class="comparison-value">ー</div>
+                    <span class="comparison-badge neutral">データなし</span>
+                </div>
+            `;
+        }
+
         // 上位パーセントを計算（0%にならないように最低0.1%を保証）
         let topPercent = 100 - item.percentile;
         if (topPercent <= 0) {

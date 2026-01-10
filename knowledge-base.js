@@ -1313,9 +1313,9 @@ const KnowledgeBase = {
 
     generateComparison(formData) {
         const comparison = {
-            newPatientPower: { percentile: 50, status: 'average' },
-            selfPayPower: { percentile: 50, status: 'average' },
-            patientRetention: { percentile: 50, status: 'average' }
+            newPatientPower: { percentile: null, status: 'noData' },
+            selfPayPower: { percentile: null, status: 'noData' },
+            patientRetention: { percentile: null, status: 'noData' }
         };
 
         if (formData.newPatient) {
