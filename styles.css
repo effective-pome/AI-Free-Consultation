@@ -2479,7 +2479,21 @@ input[type="checkbox"] {
 
 @media (max-width: 600px) {
     .landing-page {
-        padding: var(--space-4);
+        padding: var(--space-3);
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: auto;
+    }
+
+    .landing-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: calc(100dvh - var(--space-6));
+    }
+
+    .main-title-section {
+        margin-bottom: var(--space-4);
     }
 
     .tagline {
@@ -2487,59 +2501,95 @@ input[type="checkbox"] {
     }
 
     .tagline-logo {
-        margin-bottom: var(--space-3);
+        margin-bottom: var(--space-2);
     }
 
     .tagline-logo-image {
-        height: 24px;
+        height: 20px;
+    }
+
+    .main-title {
+        margin-bottom: var(--space-2);
     }
 
     .title-ai {
-        font-size: 2.75rem;
+        font-size: 2.25rem;
     }
 
     .title-text {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     .main-subtitle {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         padding: 0 var(--space-2);
+        margin-bottom: 0;
     }
 
     .hero-title {
         font-size: 1.5rem;
     }
 
+    /* 統計は横並びを維持して縦スペースを節約 */
     .stats-row {
-        flex-direction: column;
-        gap: var(--space-4);
+        flex-direction: row;
+        gap: var(--space-3);
+        margin-bottom: var(--space-4);
     }
 
     .stat-divider {
-        width: 60px;
-        height: 1px;
-        background: linear-gradient(90deg, transparent 0%, var(--gray-700) 50%, transparent 100%);
+        width: 1px;
+        height: 30px;
+        background: linear-gradient(180deg, transparent 0%, var(--gray-700) 50%, transparent 100%);
     }
 
     .stat-number {
-        font-size: 2.25rem;
+        font-size: 1.5rem;
+    }
+
+    .stat-unit {
+        font-size: 0.75rem;
+    }
+
+    .stat-label {
+        font-size: 0.6rem;
     }
 
     .growth-chart-container {
-        padding: var(--space-4);
+        padding: var(--space-3);
+        margin-bottom: var(--space-4);
     }
 
     .growth-chart {
-        height: 50px;
+        height: 40px;
     }
 
     .growth-bar {
-        width: 5px;
+        width: 4px;
     }
 
     .growth-chart-bars {
         gap: var(--space-2);
+    }
+
+    /* CTAボタンのマージン調整 */
+    .cta-button.primary {
+        margin-bottom: var(--space-3);
+    }
+
+    /* 信頼バッジ */
+    .trust-badges {
+        margin-top: var(--space-4);
+        gap: var(--space-2);
+    }
+
+    .badge {
+        font-size: 0.7rem;
+    }
+
+    .badge svg {
+        width: 12px;
+        height: 12px;
     }
 
     .form-container {
@@ -2560,6 +2610,89 @@ input[type="checkbox"] {
 
     .recommendation-body {
         padding-left: 0;
+    }
+}
+
+/* 小さいスマートフォン（400px以下） */
+@media (max-width: 400px) {
+    .landing-page {
+        padding: var(--space-2);
+    }
+
+    .landing-content {
+        min-height: calc(100dvh - var(--space-4));
+    }
+
+    .main-title-section {
+        margin-bottom: var(--space-3);
+    }
+
+    .tagline-logo {
+        margin-bottom: var(--space-1);
+    }
+
+    .tagline-logo-image {
+        height: 16px;
+    }
+
+    .main-title {
+        margin-bottom: var(--space-1);
+    }
+
+    .title-ai {
+        font-size: 2rem;
+    }
+
+    .title-text {
+        font-size: 1.5rem;
+    }
+
+    .main-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .growth-chart-container {
+        padding: var(--space-2);
+        margin-bottom: var(--space-3);
+    }
+
+    .growth-chart {
+        height: 30px;
+    }
+
+    .stats-row {
+        gap: var(--space-2);
+        margin-bottom: var(--space-3);
+    }
+
+    .stat-number {
+        font-size: 1.25rem;
+    }
+
+    .stat-unit {
+        font-size: 0.65rem;
+    }
+
+    .stat-label {
+        font-size: 0.55rem;
+    }
+
+    .stat-divider {
+        height: 24px;
+    }
+
+    .cta-button.primary {
+        padding: var(--space-3) var(--space-5);
+        font-size: 0.9rem;
+    }
+
+    .trust-badges {
+        margin-top: var(--space-3);
+        gap: var(--space-1);
+    }
+
+    .badge {
+        font-size: 0.65rem;
     }
 }
 
@@ -3505,42 +3638,10 @@ input[type="checkbox"] {
 
 /* 中型スマートフォン（600px以下）追加調整 */
 @media (max-width: 600px) {
-    /* ランディングページのパディング調整 */
-    .landing-page {
-        padding: var(--space-4) var(--space-3);
-    }
-
-    /* 成長チャート */
-    .growth-chart-container {
-        padding: var(--space-4);
-        margin-bottom: var(--space-6);
-    }
-
-    /* 統計数値 */
-    .stats-row {
-        gap: var(--space-4);
-        margin-bottom: var(--space-8);
-    }
-
-    .stat-number {
-        font-size: 1.75rem;
-    }
-
-    .stat-unit {
-        font-size: 1rem;
-    }
-
     /* CTAボタン */
     .cta-button.primary {
         padding: var(--space-4) var(--space-6);
         font-size: 0.95rem;
-    }
-
-    /* 信頼バッジ */
-    .trust-badges {
-        flex-direction: column;
-        align-items: center;
-        gap: var(--space-3);
     }
 
     /* モーダル */
