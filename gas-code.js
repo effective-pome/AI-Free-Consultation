@@ -485,6 +485,17 @@ function formatRecommendationsHtml(recommendations) {
   var recs = recommendations.recommendations;
   var itemsHtml = '';
 
+  // アクション項目を文字列に変換するヘルパー関数
+  function actionToString(action) {
+    if (typeof action === 'string') {
+      return action;
+    } else if (action && typeof action === 'object') {
+      // オブジェクトの場合、text, title, name, description の順で探す
+      return action.text || action.title || action.name || action.description || action.action || JSON.stringify(action);
+    }
+    return String(action);
+  }
+
   if (Array.isArray(recs)) {
     // API生成の場合
     for (var i = 0; i < recs.length; i++) {
@@ -497,7 +508,7 @@ function formatRecommendationsHtml(recommendations) {
         itemsHtml += '<p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0; font-weight: 600;">📋 今週からできること:</p>';
         itemsHtml += '<ul style="color: #475569; font-size: 13px; line-height: 1.8; margin: 0; padding-left: 16px;">';
         for (var j = 0; j < rec.actions.length; j++) {
-          itemsHtml += '<li>' + rec.actions[j] + '</li>';
+          itemsHtml += '<li>' + actionToString(rec.actions[j]) + '</li>';
         }
         itemsHtml += '</ul></div>';
       }
@@ -514,9 +525,24 @@ function formatRecommendationsHtml(recommendations) {
         itemsHtml += '<div style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
         itemsHtml += '<p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0; font-weight: 600;">📋 今週からできること:</p>';
         itemsHtml += '<ul style="color: #475569; font-size: 13px; line-height: 1.8; margin: 0; padding-left: 16px;">';
-        var actions = item.detailedActions.slice(0, 3);
-        for (var j = 0; j < actions.length; j++) {
-          itemsHtml += '<li>' + actions[j] + '</li>';
+        // detailedActionsはカテゴリオブジェクトの配列: [{category: string, actions: string[]}, ...]
+        // 「今週からすぐできること」カテゴリを探すか、最初のカテゴリのactionsを使用
+        var weeklyActions = [];
+        for (var k = 0; k < item.detailedActions.length; k++) {
+          var category = item.detailedActions[k];
+          if (category && category.category && category.category.indexOf('今週') !== -1) {
+            weeklyActions = category.actions || [];
+            break;
+          }
+        }
+        // 見つからなければ最後のカテゴリ（通常「今週からすぐできること」）を使用
+        if (weeklyActions.length === 0 && item.detailedActions.length > 0) {
+          var lastCategory = item.detailedActions[item.detailedActions.length - 1];
+          weeklyActions = (lastCategory && lastCategory.actions) ? lastCategory.actions : [];
+        }
+        var actionsToShow = weeklyActions.slice(0, 3);
+        for (var j = 0; j < actionsToShow.length; j++) {
+          itemsHtml += '<li>' + actionToString(actionsToShow[j]) + '</li>';
         }
         itemsHtml += '</ul></div>';
       }
