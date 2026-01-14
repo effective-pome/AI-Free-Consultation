@@ -500,29 +500,33 @@ function formatRecommendationsHtml(recommendations) {
     // API生成の場合
     for (var i = 0; i < recs.length; i++) {
       var rec = recs[i];
-      itemsHtml += '<div style="margin-bottom: 20px; padding: 20px; background: #ffffff; border-radius: 8px; border-left: 4px solid #1485f7;">';
+      itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;"><tr>';
+      itemsHtml += '<td style="width: 4px; background: #1485f7; border-radius: 4px 0 0 4px;"></td>';
+      itemsHtml += '<td style="padding: 20px; background: #ffffff; border-radius: 0 8px 8px 0;">';
       itemsHtml += '<h4 style="color: #1485f7; font-size: 15px; margin: 0 0 12px 0; font-weight: 600;">' + (i + 1) + '. ' + (rec.title || rec.name || '提案') + '</h4>';
       itemsHtml += '<p style="color: #475569; font-size: 14px; line-height: 1.7; margin: 0 0 12px 0;">' + (rec.description || rec.summary || '') + '</p>';
       if (rec.actions && rec.actions.length > 0) {
-        itemsHtml += '<div style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
+        itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0"><tr><td style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
         itemsHtml += '<p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0; font-weight: 600;">📋 今週からできること:</p>';
         itemsHtml += '<ul style="color: #475569; font-size: 13px; line-height: 1.8; margin: 0; padding-left: 16px;">';
         for (var j = 0; j < rec.actions.length; j++) {
           itemsHtml += '<li>' + actionToString(rec.actions[j]) + '</li>';
         }
-        itemsHtml += '</ul></div>';
+        itemsHtml += '</ul></td></tr></table>';
       }
-      itemsHtml += '</div>';
+      itemsHtml += '</td></tr></table>';
     }
   } else if (recs.items && Array.isArray(recs.items)) {
     // ローカル生成の場合（オブジェクト形式）
     for (var i = 0; i < recs.items.length; i++) {
       var item = recs.items[i];
-      itemsHtml += '<div style="margin-bottom: 20px; padding: 20px; background: #ffffff; border-radius: 8px; border-left: 4px solid #1485f7;">';
+      itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;"><tr>';
+      itemsHtml += '<td style="width: 4px; background: #1485f7; border-radius: 4px 0 0 4px;"></td>';
+      itemsHtml += '<td style="padding: 20px; background: #ffffff; border-radius: 0 8px 8px 0;">';
       itemsHtml += '<h4 style="color: #1485f7; font-size: 15px; margin: 0 0 12px 0; font-weight: 600;">' + (i + 1) + '. ' + (item.title || '提案') + '</h4>';
       itemsHtml += '<p style="color: #475569; font-size: 14px; line-height: 1.7; margin: 0 0 12px 0;">' + (item.description || '') + '</p>';
       if (item.detailedActions && item.detailedActions.length > 0) {
-        itemsHtml += '<div style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
+        itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0"><tr><td style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
         itemsHtml += '<p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0; font-weight: 600;">📋 今週からできること:</p>';
         itemsHtml += '<ul style="color: #475569; font-size: 13px; line-height: 1.8; margin: 0; padding-left: 16px;">';
         // detailedActionsはカテゴリオブジェクトの配列: [{category: string, actions: string[]}, ...]
@@ -544,9 +548,9 @@ function formatRecommendationsHtml(recommendations) {
         for (var j = 0; j < actionsToShow.length; j++) {
           itemsHtml += '<li>' + actionToString(actionsToShow[j]) + '</li>';
         }
-        itemsHtml += '</ul></div>';
+        itemsHtml += '</ul></td></tr></table>';
       }
-      itemsHtml += '</div>';
+      itemsHtml += '</td></tr></table>';
     }
   }
 
