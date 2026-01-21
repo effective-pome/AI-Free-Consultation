@@ -1122,10 +1122,76 @@ const KnowledgeBase = {
     // ========================================
     // パーセンタイル計算用データ
     // ========================================
-    PERCENTILE_DATA: {
-        newPatient: [5, 8, 10, 12, 15, 18, 20, 22, 25, 28, 30, 33, 35, 38, 40, 45, 50, 60, 70, 85],
-        selfPayRate: [3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 23, 26, 30, 35, 40, 48, 55],
-        recall: [15, 20, 25, 28, 32, 35, 38, 42, 45, 48, 52, 55, 58, 62, 66, 70, 75, 80, 85, 92]
+    // パーセンタイル閾値データ（上位X% → 100-X パーセンタイル）
+    // 各配列は [閾値, パーセンタイル] のペア（値が大きいほど良い指標用）
+    PERCENTILE_THRESHOLDS: {
+        // 新患人数（月間・ユニット4台規模想定）
+        newPatient: [
+            [120, 99],  // 120人以上 → 上位1%
+            [90, 95],   // 90〜120人 → 上位5%
+            [70, 90],   // 70〜90人 → 上位10%
+            [60, 85],   // 60〜70人 → 上位15%
+            [50, 80],   // 50〜60人 → 上位20%
+            [45, 75],   // 45〜50人 → 上位25%
+            [40, 70],   // 40〜45人 → 上位30%
+            [38, 65],   // 38〜40人 → 上位35%
+            [35, 60],   // 35〜38人 → 上位40%
+            [32, 55],   // 32〜35人 → 上位45%
+            [30, 50],   // 30〜32人 → 上位50%
+            [27, 45],   // 27〜30人 → 上位55%
+            [25, 40],   // 25〜27人 → 上位60%
+            [22, 35],   // 22〜25人 → 上位65%
+            [20, 30],   // 20〜22人 → 上位70%
+            [18, 25],   // 18〜20人 → 上位75%
+            [15, 20],   // 15〜18人 → 上位80%
+            [12, 15],   // 12〜15人 → 上位85%
+            [10, 10],   // 10人以下 → 上位90%
+            [0, 5]      // 0人 → 上位95%以下
+        ],
+        // 自費率（医業収入に占める自費診療の割合）
+        selfPayRate: [
+            [60, 99],   // 60%以上 → 上位1%
+            [50, 95],   // 50〜60% → 上位5%
+            [45, 90],   // 45〜50% → 上位10%
+            [40, 85],   // 40〜45% → 上位15%
+            [35, 80],   // 35〜40% → 上位20%
+            [32, 75],   // 32〜35% → 上位25%
+            [30, 70],   // 30〜32% → 上位30%
+            [27, 65],   // 27〜30% → 上位35%
+            [25, 60],   // 25〜27% → 上位40%
+            [22, 55],   // 22〜25% → 上位45%
+            [20, 50],   // 20〜22% → 上位50%
+            [18, 45],   // 18〜20% → 上位55%
+            [15, 40],   // 15〜18% → 上位60%
+            [13, 35],   // 13〜15% → 上位65%
+            [10, 30],   // 10〜13% → 上位70%
+            [8, 25],    // 8〜10% → 上位75%
+            [6, 20],    // 6〜8% → 上位80%
+            [4, 15],    // 4〜6% → 上位85%
+            [0, 10]     // 4%以下 → 上位90%
+        ],
+        // リコール率（定期検診への再来院率）
+        recall: [
+            [90, 99],   // 90%以上 → 上位1%
+            [85, 95],   // 85〜90% → 上位5%
+            [80, 90],   // 80〜85% → 上位10%
+            [75, 85],   // 75〜80% → 上位15%
+            [70, 80],   // 70〜75% → 上位20%
+            [65, 75],   // 65〜70% → 上位25%
+            [60, 70],   // 60〜65% → 上位30%
+            [55, 65],   // 55〜60% → 上位35%
+            [52, 60],   // 52〜55% → 上位40%
+            [48, 55],   // 48〜52% → 上位45%
+            [45, 50],   // 45〜48% → 上位50%
+            [40, 45],   // 40〜45% → 上位55%
+            [35, 40],   // 35〜40% → 上位60%
+            [30, 35],   // 30〜35% → 上位65%
+            [25, 30],   // 25〜30% → 上位70%
+            [20, 25],   // 20〜25% → 上位75%
+            [15, 20],   // 15〜20% → 上位80%
+            [10, 15],   // 10〜15% → 上位85%
+            [0, 10]     // 10%以下 → 上位90%
+        ]
     },
 
     // ========================================
@@ -1141,32 +1207,34 @@ const KnowledgeBase = {
     // ヘルパー関数
     // ========================================
 
-    calculatePercentile(value, dataArray) {
-        const sorted = [...dataArray].sort((a, b) => a - b);
-        const n = sorted.length;
+    // 閾値ベースのパーセンタイル計算
+    calculatePercentileFromThresholds(value, thresholdType) {
+        const thresholds = this.PERCENTILE_THRESHOLDS[thresholdType];
+        if (!thresholds || !value) return null;
 
-        if (value <= sorted[0]) {
-            const ratio = Math.max(0, value / sorted[0]);
-            return Math.round(ratio * (100 / n) * 10) / 10;
+        const numValue = parseFloat(value);
+        if (isNaN(numValue)) return null;
+
+        // 最高閾値以上の場合
+        if (numValue >= thresholds[0][0]) {
+            return thresholds[0][1];
         }
 
-        if (value >= sorted[n - 1]) {
-            const excess = (value - sorted[n - 1]) / sorted[n - 1];
-            const percentile = 95 + Math.min(4.9, excess * 10);
-            return Math.round(percentile * 10) / 10;
-        }
+        // 閾値間を線形補間
+        for (let i = 0; i < thresholds.length - 1; i++) {
+            const [upperThreshold, upperPercentile] = thresholds[i];
+            const [lowerThreshold, lowerPercentile] = thresholds[i + 1];
 
-        for (let i = 0; i < n - 1; i++) {
-            if (value >= sorted[i] && value < sorted[i + 1]) {
-                const lowerPercentile = ((i + 1) / n) * 100;
-                const upperPercentile = ((i + 2) / n) * 100;
-                const ratio = (value - sorted[i]) / (sorted[i + 1] - sorted[i]);
+            if (numValue >= lowerThreshold && numValue < upperThreshold) {
+                // 線形補間でパーセンタイルを計算
+                const ratio = (numValue - lowerThreshold) / (upperThreshold - lowerThreshold);
                 const percentile = lowerPercentile + ratio * (upperPercentile - lowerPercentile);
                 return Math.round(percentile * 10) / 10;
             }
         }
 
-        return Math.round((n / n) * 100 * 10) / 10;
+        // 最低閾値以下の場合
+        return thresholds[thresholds.length - 1][1];
     },
 
     getRecommendations(priority, formData) {
@@ -1319,25 +1387,25 @@ const KnowledgeBase = {
         };
 
         if (formData.newPatient) {
-            comparison.newPatientPower.percentile = this.calculatePercentile(
+            comparison.newPatientPower.percentile = this.calculatePercentileFromThresholds(
                 formData.newPatient,
-                this.PERCENTILE_DATA.newPatient
+                'newPatient'
             );
             comparison.newPatientPower.status = this.getStatus(comparison.newPatientPower.percentile);
         }
 
         if (formData.selfPayRate) {
-            comparison.selfPayPower.percentile = this.calculatePercentile(
+            comparison.selfPayPower.percentile = this.calculatePercentileFromThresholds(
                 formData.selfPayRate,
-                this.PERCENTILE_DATA.selfPayRate
+                'selfPayRate'
             );
             comparison.selfPayPower.status = this.getStatus(comparison.selfPayPower.percentile);
         }
 
         if (formData.recall) {
-            comparison.patientRetention.percentile = this.calculatePercentile(
+            comparison.patientRetention.percentile = this.calculatePercentileFromThresholds(
                 formData.recall,
-                this.PERCENTILE_DATA.recall
+                'recall'
             );
             comparison.patientRetention.status = this.getStatus(comparison.patientRetention.percentile);
         }
