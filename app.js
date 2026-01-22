@@ -599,12 +599,16 @@ function displayResults(results) {
 
 function displaySummary(summary) {
     const container = document.getElementById('resultsSummary');
+
+    // 値が有効かどうかを確認するヘルパー関数
+    const hasValue = (val) => val !== null && val !== undefined && val !== '' && val !== 0;
+
     const items = [
-        { label: '新患数', value: summary.newPatient ? `${summary.newPatient}人/月` : '--' },
-        { label: '月間医業収入', value: summary.totalRevenue ? `${summary.totalRevenue}万円` : '--', highlight: true },
-        { label: '自費率', value: summary.selfPayRate ? `${Math.floor(summary.selfPayRate)}%` : '--', highlight: true },
-        { label: 'キャンセル率', value: summary.cancel ? `${Math.floor(summary.cancel)}%` : '--' },
-        { label: 'リコール率', value: summary.recall ? `${Math.floor(summary.recall)}%` : '--' }
+        { label: '新患数', value: hasValue(summary.newPatient) ? `${summary.newPatient}人/月` : 'ー' },
+        { label: '月間医業収入', value: hasValue(summary.totalRevenue) ? `${summary.totalRevenue}万円` : 'ー', highlight: true },
+        { label: '自費率', value: hasValue(summary.selfPayRate) ? `${Math.floor(summary.selfPayRate)}%` : 'ー', highlight: true },
+        { label: 'キャンセル率', value: hasValue(summary.cancel) ? `${Math.floor(summary.cancel)}%` : 'ー' },
+        { label: 'リコール率', value: hasValue(summary.recall) ? `${Math.floor(summary.recall)}%` : 'ー' }
     ];
 
     container.innerHTML = items.map(item => `

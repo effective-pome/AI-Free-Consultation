@@ -1386,7 +1386,14 @@ const KnowledgeBase = {
             patientRetention: { percentile: null, status: 'noData' }
         };
 
-        if (formData.newPatient) {
+        // 有効な数値かどうかを確認するヘルパー関数
+        const isValidNumber = (val) => {
+            if (val === null || val === undefined || val === '') return false;
+            const num = parseFloat(val);
+            return !isNaN(num) && num > 0;
+        };
+
+        if (isValidNumber(formData.newPatient)) {
             comparison.newPatientPower.percentile = this.calculatePercentileFromThresholds(
                 formData.newPatient,
                 'newPatient'
@@ -1394,7 +1401,7 @@ const KnowledgeBase = {
             comparison.newPatientPower.status = this.getStatus(comparison.newPatientPower.percentile);
         }
 
-        if (formData.selfPayRate) {
+        if (isValidNumber(formData.selfPayRate)) {
             comparison.selfPayPower.percentile = this.calculatePercentileFromThresholds(
                 formData.selfPayRate,
                 'selfPayRate'
@@ -1402,7 +1409,7 @@ const KnowledgeBase = {
             comparison.selfPayPower.status = this.getStatus(comparison.selfPayPower.percentile);
         }
 
-        if (formData.recall) {
+        if (isValidNumber(formData.recall)) {
             comparison.patientRetention.percentile = this.calculatePercentileFromThresholds(
                 formData.recall,
                 'recall'
