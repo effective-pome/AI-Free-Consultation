@@ -205,13 +205,13 @@ function sendDiagnosisEmail(data) {
   // CTAボタンセクション
   var ctaSection = '';
   if (schedulingUrl) {
-    ctaSection = '<tr><td style="padding: 10px 40px 40px;"><table width="100%" cellpadding="0" cellspacing="0" style="background: #fef3c7; border-radius: 12px; border: 1px solid #fcd34d;"><tr><td style="padding: 24px; text-align: center;"><p style="color: #92400e; font-size: 14px; margin: 0 0 16px 0;">経営コンサルタントによる30分の無料フォローをご提供</p><a href="' + schedulingUrl + '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(20, 133, 247, 0.4);">日程調整をする</a></td></tr></table></td></tr>';
+    ctaSection = '<tr><td style="padding: 10px 40px 40px;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef3c7; border-radius: 12px; border: 1px solid #fcd34d; table-layout: fixed;"><tr><td width="100%" style="padding: 24px; text-align: center;"><p style="color: #92400e; font-size: 14px; margin: 0 0 16px 0;">経営コンサルタントによる30分の無料フォローをご提供</p><a href="' + schedulingUrl + '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(20, 133, 247, 0.4);">日程調整をする</a></td></tr></table></td></tr>';
   }
 
   var htmlBody = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
   htmlBody += '<body style="margin: 0; padding: 0; font-family: Helvetica Neue, Arial, Hiragino Kaku Gothic ProN, Hiragino Sans, Meiryo, sans-serif; background-color: #f5f7fa;">';
-  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f7fa; padding: 40px 20px;"><tr><td align="center">';
-  htmlBody += '<table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">';
+  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f7fa; padding: 40px 20px;"><tr><td align="center">';
+  htmlBody += '<table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; table-layout: fixed;">';
 
   // Header
   htmlBody += '<tr><td style="background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); padding: 40px 40px 30px; text-align: center;">';
@@ -228,10 +228,10 @@ function sendDiagnosisEmail(data) {
 
   // Summary Card
   htmlBody += '<tr><td style="padding: 0 40px 30px;">';
-  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #f8fafc 0%, #eef9ff 100%); border-radius: 12px; border: 1px solid #e2e8f0;">';
-  htmlBody += '<tr><td style="padding: 24px;">';
+  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #f8fafc 0%, #eef9ff 100%); border-radius: 12px; border: 1px solid #e2e8f0; table-layout: fixed;">';
+  htmlBody += '<tr><td width="100%" style="padding: 24px;">';
   htmlBody += '<h2 style="color: #1485f7; font-size: 16px; margin: 0 0 16px 0; font-weight: 600;">📊 診断結果サマリー</h2>';
-  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0">';
+  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;">';
   htmlBody += '<tr><td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #e2e8f0;">医院名</td>';
   htmlBody += '<td style="padding: 8px 0; color: #334155; font-size: 14px; font-weight: 600; text-align: right; border-bottom: 1px solid #e2e8f0;">' + (data.clinicName || '未入力') + '</td></tr>';
   htmlBody += '<tr><td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #e2e8f0;">月間新患数</td>';
@@ -319,8 +319,8 @@ function sendSchedulingEmail(data) {
 
   var htmlBody = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
   htmlBody += '<body style="margin: 0; padding: 0; font-family: Helvetica Neue, Arial, Hiragino Kaku Gothic ProN, Hiragino Sans, Meiryo, sans-serif; background-color: #f5f7fa;">';
-  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f7fa; padding: 40px 20px;"><tr><td align="center">';
-  htmlBody += '<table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden;">';
+  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f5f7fa; padding: 40px 20px;"><tr><td align="center">';
+  htmlBody += '<table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow: hidden; table-layout: fixed;">';
 
   // Header
   htmlBody += '<tr><td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 40px 30px; text-align: center;">';
@@ -337,8 +337,8 @@ function sendSchedulingEmail(data) {
 
   // CTA Button
   htmlBody += '<tr><td style="padding: 0 40px 30px;">';
-  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 12px; border: 1px solid #10b981;">';
-  htmlBody += '<tr><td style="padding: 30px; text-align: center;">';
+  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 12px; border: 1px solid #10b981; table-layout: fixed;">';
+  htmlBody += '<tr><td width="100%" style="padding: 30px; text-align: center;">';
   htmlBody += '<p style="color: #065f46; font-size: 16px; font-weight: 600; margin: 0 0 8px 0;">📅 日程調整</p>';
   htmlBody += '<p style="color: #047857; font-size: 14px; margin: 0 0 20px 0;">下記ボタンより、ご都合の良い日時をお選びください</p>';
   htmlBody += ctaButtonHtml;
@@ -346,8 +346,8 @@ function sendSchedulingEmail(data) {
 
   // Support Content
   htmlBody += '<tr><td style="padding: 0 40px 30px;">';
-  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">';
-  htmlBody += '<tr><td style="padding: 24px;">';
+  htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; table-layout: fixed;">';
+  htmlBody += '<tr><td width="100%" style="padding: 24px;">';
   htmlBody += '<h2 style="color: #334155; font-size: 16px; margin: 0 0 16px 0; font-weight: 600;">🎯 無料サポートの内容</h2>';
   htmlBody += '<ul style="color: #475569; font-size: 14px; line-height: 2; margin: 0; padding-left: 20px;">';
   htmlBody += '<li>AI診断結果の詳細解説</li>';
@@ -500,13 +500,13 @@ function formatRecommendationsHtml(recommendations) {
     // API生成の場合
     for (var i = 0; i < recs.length; i++) {
       var rec = recs[i];
-      itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;"><tr>';
-      itemsHtml += '<td style="width: 4px; background: #1485f7; border-radius: 4px 0 0 4px;"></td>';
-      itemsHtml += '<td style="padding: 20px; background: #ffffff; border-radius: 0 8px 8px 0;">';
+      itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px; table-layout: fixed;"><tr>';
+      itemsHtml += '<td width="4" style="width: 4px; background: #1485f7; border-radius: 4px 0 0 4px;"></td>';
+      itemsHtml += '<td width="96%" style="padding: 20px; background: #ffffff; border-radius: 0 8px 8px 0;">';
       itemsHtml += '<h4 style="color: #1485f7; font-size: 15px; margin: 0 0 12px 0; font-weight: 600;">' + (i + 1) + '. ' + (rec.title || rec.name || '提案') + '</h4>';
       itemsHtml += '<p style="color: #475569; font-size: 14px; line-height: 1.7; margin: 0 0 12px 0;">' + (rec.description || rec.summary || '') + '</p>';
       if (rec.actions && rec.actions.length > 0) {
-        itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0"><tr><td style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
+        itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;"><tr><td style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
         itemsHtml += '<p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0; font-weight: 600;">📋 今週からできること:</p>';
         itemsHtml += '<ul style="color: #475569; font-size: 13px; line-height: 1.8; margin: 0; padding-left: 16px;">';
         for (var j = 0; j < rec.actions.length; j++) {
@@ -520,13 +520,13 @@ function formatRecommendationsHtml(recommendations) {
     // ローカル生成の場合（オブジェクト形式）
     for (var i = 0; i < recs.items.length; i++) {
       var item = recs.items[i];
-      itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;"><tr>';
-      itemsHtml += '<td style="width: 4px; background: #1485f7; border-radius: 4px 0 0 4px;"></td>';
-      itemsHtml += '<td style="padding: 20px; background: #ffffff; border-radius: 0 8px 8px 0;">';
+      itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px; table-layout: fixed;"><tr>';
+      itemsHtml += '<td width="4" style="width: 4px; background: #1485f7; border-radius: 4px 0 0 4px;"></td>';
+      itemsHtml += '<td width="96%" style="padding: 20px; background: #ffffff; border-radius: 0 8px 8px 0;">';
       itemsHtml += '<h4 style="color: #1485f7; font-size: 15px; margin: 0 0 12px 0; font-weight: 600;">' + (i + 1) + '. ' + (item.title || '提案') + '</h4>';
       itemsHtml += '<p style="color: #475569; font-size: 14px; line-height: 1.7; margin: 0 0 12px 0;">' + (item.description || '') + '</p>';
       if (item.detailedActions && item.detailedActions.length > 0) {
-        itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0"><tr><td style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
+        itemsHtml += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;"><tr><td style="background: #f1f5f9; border-radius: 6px; padding: 12px 16px;">';
         itemsHtml += '<p style="color: #64748b; font-size: 12px; margin: 0 0 8px 0; font-weight: 600;">📋 今週からできること:</p>';
         itemsHtml += '<ul style="color: #475569; font-size: 13px; line-height: 1.8; margin: 0; padding-left: 16px;">';
         // detailedActionsはカテゴリオブジェクトの配列: [{category: string, actions: string[]}, ...]
@@ -559,8 +559,8 @@ function formatRecommendationsHtml(recommendations) {
   }
 
   var result = '<tr><td style="padding: 0 40px 30px;">';
-  result += '<table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #f8fafc 0%, #eef9ff 100%); border-radius: 12px; border: 1px solid #e2e8f0;">';
-  result += '<tr><td style="padding: 24px;">';
+  result += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #f8fafc 0%, #eef9ff 100%); border-radius: 12px; border: 1px solid #e2e8f0; table-layout: fixed;">';
+  result += '<tr><td width="100%" style="padding: 24px;">';
   result += '<h2 style="color: #1485f7; font-size: 16px; margin: 0 0 20px 0; font-weight: 600;">💡 AIによる改善提案</h2>';
   result += itemsHtml;
   result += '</td></tr></table></td></tr>';
