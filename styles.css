@@ -219,26 +219,11 @@ body {
 }
 
 .tagline {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    color: var(--gray-500);
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: var(--space-4);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-}
-
-/* ロゴ画像をtaglineとして表示 */
-.tagline-logo {
-    margin-bottom: var(--space-4);
-    display: flex;
-    justify-content: center;
-}
-
-.tagline-logo-image {
-    height: 32px;
-    width: auto;
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
+    letter-spacing: 0.15em;
 }
 
 .main-title {
@@ -2499,15 +2484,8 @@ input[type="checkbox"] {
     }
 
     .tagline {
-        font-size: 0.65rem;
-    }
-
-    .tagline-logo {
+        font-size: 0.75rem;
         margin-bottom: var(--space-3);
-    }
-
-    .tagline-logo-image {
-        height: 22px;
     }
 
     .main-title {
@@ -2635,12 +2613,9 @@ input[type="checkbox"] {
         margin-bottom: var(--space-4);
     }
 
-    .tagline-logo {
+    .tagline {
+        font-size: 0.7rem;
         margin-bottom: var(--space-2);
-    }
-
-    .tagline-logo-image {
-        height: 18px;
     }
 
     .main-title {
