@@ -1140,12 +1140,22 @@ async function submitSupportRequest() {
     button.innerHTML = '<span>送信中...</span>';
 
     try {
-        // GASにサポートリクエストを送信
+        // GASにサポートリクエストを送信（すべての診断データを含む）
         const payload = {
             action: 'supportRequest',
             userName: AppState.formData.userName,
             userEmail: AppState.formData.userEmail,
             clinicName: AppState.formData.clinicName,
+            region: AppState.formData.region,
+            yearsOpen: AppState.formData.yearsOpen,
+            units: AppState.formData.units,
+            newPatient: AppState.formData.newPatient,
+            totalRevenue: AppState.formData.totalRevenue,
+            selfPayRate: AppState.formData.selfPayRate,
+            cancel: AppState.formData.cancel,
+            recall: AppState.formData.recall,
+            priority: AppState.formData.priority,
+            otherConcerns: AppState.formData.otherConcerns,
             recommendations: AppState.recommendations,
             timestamp: new Date().toISOString()
         };

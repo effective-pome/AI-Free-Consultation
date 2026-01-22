@@ -166,16 +166,36 @@ function handleSupportRequest(data) {
       'お名前',
       'メールアドレス',
       '医院名',
+      '地域',
+      '開業年数',
+      'ユニット数',
+      '新患数',
+      '月間医業収入',
+      '自費率',
+      'キャンセル率',
+      'リコール率',
+      '優先課題',
+      'その他お悩み',
       'ステータス'
     ]);
   }
 
-  // データを追加
+  // データを追加（すべての診断データを含む）
   sheet.appendRow([
     new Date(),
     data.userName || '',
     data.userEmail || '',
     data.clinicName || '',
+    data.region || '',
+    data.yearsOpen || '',
+    data.units || '',
+    data.newPatient || '',
+    data.totalRevenue || '',
+    data.selfPayRate || '',
+    data.cancel || '',
+    data.recall || '',
+    data.priority || '',
+    data.otherConcerns || '',
     '未対応'
   ]);
 
