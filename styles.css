@@ -233,7 +233,7 @@ body {
 }
 
 .landing-logo .logo-image {
-    height: 36px;
+    height: 54px;
     filter: brightness(0) invert(1);
     opacity: 0.9;
 }
@@ -634,7 +634,7 @@ body {
 }
 
 .form-logo-center .logo-image.small {
-    height: 28px;
+    height: 42px;
 }
 
 .back-button {
@@ -1305,7 +1305,7 @@ body {
 }
 
 .results-logo-center .logo-image.small {
-    height: 24px;
+    height: 36px;
 }
 
 .results-header-spacer {
@@ -3612,7 +3612,7 @@ input[type="checkbox"] {
     }
 
     .results-logo-center .logo-image.small {
-        height: 20px;
+        height: 30px;
     }
 
     .results-header-spacer {
