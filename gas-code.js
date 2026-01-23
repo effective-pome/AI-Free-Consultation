@@ -232,7 +232,7 @@ function sendDiagnosisEmail(data) {
   if (schedulingUrl) {
     var bannerHtml = '';
     if (bannerImageUrl) {
-      bannerHtml = '<a href="' + schedulingUrl + '" target="_blank" style="display: block; margin-bottom: 16px;"><img src="' + bannerImageUrl + '" alt="無料相談のご案内" style="display: block; width: 200px; height: 200px; margin: 0 auto; border-radius: 12px; border: 3px solid #f59e0b; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></a>';
+      bannerHtml = '<a href="' + schedulingUrl + '" target="_blank" style="display: block; margin-bottom: 16px;"><img src="' + bannerImageUrl + '" alt="無料相談のご案内" style="display: block; width: 300px; height: 300px; margin: 0 auto; border-radius: 12px; border: 3px solid #f59e0b; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></a>';
     }
     ctaSection = '<tr><td style="padding: 10px 40px 40px;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef3c7; border-radius: 12px; border: 1px solid #fcd34d; table-layout: fixed;"><tr><td width="100%" style="padding: 24px; text-align: center;">' + bannerHtml + '<p style="color: #92400e; font-size: 14px; margin: 0 0 16px 0;">経営コンサルタントによる30分の無料フォローをご提供</p><a href="' + schedulingUrl + '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(20, 133, 247, 0.4);">日程調整をする</a><p style="color: #92400e; font-size: 11px; margin: 16px 0 0 0;">※当社が定期支援をしている医院が近隣にある、または当社が既に定期支援を行っている場合、無料相談をお断りする場合がございます。</p></td></tr></table></td></tr>';
   }
@@ -345,7 +345,7 @@ function sendSchedulingEmail(data) {
   // バナー画像HTML
   var bannerHtml = '';
   if (bannerImageUrl && schedulingUrl) {
-    bannerHtml = '<a href="' + schedulingUrl + '" target="_blank" style="display: block; margin-bottom: 16px;"><img src="' + bannerImageUrl + '" alt="無料相談のご案内" style="display: block; width: 200px; height: 200px; margin: 0 auto; border-radius: 12px; border: 3px solid #10b981; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></a>';
+    bannerHtml = '<a href="' + schedulingUrl + '" target="_blank" style="display: block; margin-bottom: 16px;"><img src="' + bannerImageUrl + '" alt="無料相談のご案内" style="display: block; width: 300px; height: 300px; margin: 0 auto; border-radius: 12px; border: 3px solid #10b981; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></a>';
   }
 
   // CTAボタンセクション
