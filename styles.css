@@ -607,10 +607,22 @@ body {
 .form-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--space-4);
     margin-bottom: var(--space-8);
     padding-bottom: var(--space-6);
     border-bottom: 1px solid var(--gray-200);
+}
+
+.form-logo-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.form-logo-center .logo-image.small {
+    height: 28px;
 }
 
 .back-button {
