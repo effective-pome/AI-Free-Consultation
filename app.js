@@ -18,7 +18,7 @@ const AppState = {
 // GAS連携設定
 // ========================================
 // Google Apps ScriptのウェブアプリURL（デプロイ後に設定してください）
-const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxKunfK3m1h1X19qTpd2ZEHGU5USTu10FmqFSID3sNb_5i2Z_9BLTBvLwkC9YaMLHDEEw/exec';
+const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzBTdZwrBnwKaoRUJ9tjUpMZCj5_r1707BZdMHYDFPKK0LF620txCORYRLY_hSWzI6C3A/exec';
 
 // ========================================
 // メール送信設定
