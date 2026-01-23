@@ -21,7 +21,8 @@ const CONFIG = {
   EMAIL: {
     FROM_NAME: '歯科医院地域一番実践会',
     FROM_EMAIL: 'info@consuldent.jp',  // 送信元メールアドレス
-    ADMIN_EMAIL: 'admin@example.com'  // 管理者メールアドレス
+    ADMIN_EMAIL: 'admin@example.com',  // 管理者メールアドレス
+    BANNER_IMAGE_URL: ''  // バナー画像URL（Google DriveやCloudflare等で公開した画像URL）
   }
 };
 
@@ -223,10 +224,17 @@ function sendDiagnosisEmail(data) {
   // AI提案の内容を整形
   const recommendationsHtml = formatRecommendationsHtml(data.recommendations);
 
-  // CTAボタンセクション
+  // バナー画像URL
+  const bannerImageUrl = CONFIG.EMAIL.BANNER_IMAGE_URL || '';
+
+  // CTAボタンセクション（バナー画像付き）
   var ctaSection = '';
   if (schedulingUrl) {
-    ctaSection = '<tr><td style="padding: 10px 40px 40px;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef3c7; border-radius: 12px; border: 1px solid #fcd34d; table-layout: fixed;"><tr><td width="100%" style="padding: 24px; text-align: center;"><p style="color: #92400e; font-size: 14px; margin: 0 0 16px 0;">経営コンサルタントによる30分の無料フォローをご提供</p><a href="' + schedulingUrl + '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(20, 133, 247, 0.4);">日程調整をする</a><p style="color: #92400e; font-size: 11px; margin: 16px 0 0 0;">※当社が定期支援をしている医院が近隣にある、または当社が既に定期支援を行っている場合、無料相談をお断りする場合がございます。</p></td></tr></table></td></tr>';
+    var bannerHtml = '';
+    if (bannerImageUrl) {
+      bannerHtml = '<a href="' + schedulingUrl + '" target="_blank" style="display: block; margin-bottom: 16px;"><img src="' + bannerImageUrl + '" alt="無料相談のご案内" style="display: block; width: 200px; height: 200px; margin: 0 auto; border-radius: 12px; border: 3px solid #f59e0b; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></a>';
+    }
+    ctaSection = '<tr><td style="padding: 10px 40px 40px;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef3c7; border-radius: 12px; border: 1px solid #fcd34d; table-layout: fixed;"><tr><td width="100%" style="padding: 24px; text-align: center;">' + bannerHtml + '<p style="color: #92400e; font-size: 14px; margin: 0 0 16px 0;">経営コンサルタントによる30分の無料フォローをご提供</p><a href="' + schedulingUrl + '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(20, 133, 247, 0.4);">日程調整をする</a><p style="color: #92400e; font-size: 11px; margin: 16px 0 0 0;">※当社が定期支援をしている医院が近隣にある、または当社が既に定期支援を行っている場合、無料相談をお断りする場合がございます。</p></td></tr></table></td></tr>';
   }
 
   var htmlBody = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
@@ -331,6 +339,15 @@ function sendSchedulingEmail(data) {
   // AI提案の内容を整形
   const recommendationsHtml = formatRecommendationsHtml(data.recommendations);
 
+  // バナー画像URL
+  const bannerImageUrl = CONFIG.EMAIL.BANNER_IMAGE_URL || '';
+
+  // バナー画像HTML
+  var bannerHtml = '';
+  if (bannerImageUrl && schedulingUrl) {
+    bannerHtml = '<a href="' + schedulingUrl + '" target="_blank" style="display: block; margin-bottom: 16px;"><img src="' + bannerImageUrl + '" alt="無料相談のご案内" style="display: block; width: 200px; height: 200px; margin: 0 auto; border-radius: 12px; border: 3px solid #10b981; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></a>';
+  }
+
   // CTAボタンセクション
   var ctaButtonHtml = '';
   if (schedulingUrl) {
@@ -357,10 +374,11 @@ function sendSchedulingEmail(data) {
   htmlBody += '無料サポートにお申し込みいただき、誠にありがとうございます。<br>';
   htmlBody += '経営コンサルタントによる<strong>30分の無料フォロー</strong>をご提供いたします。</p></td></tr>';
 
-  // CTA Button
+  // CTA Button（バナー画像付き）
   htmlBody += '<tr><td style="padding: 0 40px 30px;">';
   htmlBody += '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 12px; border: 1px solid #10b981; table-layout: fixed;">';
   htmlBody += '<tr><td width="100%" style="padding: 30px; text-align: center;">';
+  htmlBody += bannerHtml;
   htmlBody += '<p style="color: #065f46; font-size: 16px; font-weight: 600; margin: 0 0 8px 0;">📅 日程調整</p>';
   htmlBody += '<p style="color: #047857; font-size: 14px; margin: 0 0 20px 0;">下記ボタンより、ご都合の良い日時をお選びください</p>';
   htmlBody += ctaButtonHtml;
