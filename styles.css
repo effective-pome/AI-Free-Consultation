@@ -3284,11 +3284,32 @@ input[type="checkbox"] {
     max-width: 300px;
     margin: var(--space-4) auto 0;
     text-decoration: none;
-    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    cursor: pointer;
+    position: relative;
+    animation: banner-pulse 2s ease-in-out infinite;
+}
+
+.scheduling-banner-link::before {
+    content: '▶ タップして日程を選ぶ';
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--success-600);
+    white-space: nowrap;
+    animation: bounce-text 1.5s ease-in-out infinite;
 }
 
 .scheduling-banner-link:hover {
-    transform: scale(1.02);
+    animation: none;
+    transform: scale(1.05);
+}
+
+.scheduling-banner-link:hover .scheduling-banner-image {
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.3);
+    border-color: var(--success-500);
 }
 
 .scheduling-banner-image {
@@ -3298,13 +3319,37 @@ input[type="checkbox"] {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
-    border: 3px solid var(--success-400);
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.25), 0 0 15px rgba(16, 185, 129, 0.15);
+    border: 4px solid var(--success-400);
+    transition: all 0.3s ease;
+}
+
+@keyframes banner-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+}
+
+@keyframes bounce-text {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-3px);
+    }
 }
 
 @media (max-width: 768px) {
     .scheduling-banner-link {
         max-width: 200px;
+    }
+
+    .scheduling-banner-link::before {
+        font-size: 0.7rem;
+        bottom: -24px;
     }
 }
 
