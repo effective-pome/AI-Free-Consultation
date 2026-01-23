@@ -20,6 +20,7 @@ const CONFIG = {
   // メール設定
   EMAIL: {
     FROM_NAME: '歯科医院地域一番実践会',
+    FROM_EMAIL: 'info@consuldent.jp',  // 送信元メールアドレス
     ADMIN_EMAIL: 'admin@example.com'  // 管理者メールアドレス
   }
 };
@@ -312,7 +313,8 @@ function sendDiagnosisEmail(data) {
       subject: subject,
       body: plainBody,
       htmlBody: htmlBody,
-      name: CONFIG.EMAIL.FROM_NAME
+      name: CONFIG.EMAIL.FROM_NAME,
+      from: CONFIG.EMAIL.FROM_EMAIL
     });
   } catch (error) {
     console.error('メール送信エラー:', error);
@@ -412,7 +414,8 @@ function sendSchedulingEmail(data) {
       subject: subject,
       body: plainBody,
       htmlBody: htmlBody,
-      name: CONFIG.EMAIL.FROM_NAME
+      name: CONFIG.EMAIL.FROM_NAME,
+      from: CONFIG.EMAIL.FROM_EMAIL
     });
   } catch (error) {
     console.error('日程調整メール送信エラー:', error);
@@ -450,7 +453,8 @@ function sendAdminNotification(data) {
       to: adminRecipients.concat(bccList).join(','),
       subject: subject,
       body: body,
-      name: CONFIG.EMAIL.FROM_NAME
+      name: CONFIG.EMAIL.FROM_NAME,
+      from: CONFIG.EMAIL.FROM_EMAIL
     });
   } catch (error) {
     console.error('管理者通知エラー:', error);
