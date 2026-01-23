@@ -3224,6 +3224,9 @@ input[type="checkbox"] {
 .sticky-support-banner.success-state {
     background: var(--success-50);
     border-top-color: var(--success-400);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: var(--space-6);
 }
 
 .sticky-success {
@@ -3272,6 +3275,37 @@ input[type="checkbox"] {
 .sticky-calendar-button svg {
     width: 18px;
     height: 18px;
+}
+
+/* Scheduling Banner Image */
+.scheduling-banner-link {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: var(--space-4) auto 0;
+    text-decoration: none;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.scheduling-banner-link:hover {
+    transform: scale(1.02);
+}
+
+.scheduling-banner-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: 3px solid var(--success-400);
+}
+
+@media (max-width: 768px) {
+    .scheduling-banner-link {
+        max-width: 200px;
+    }
 }
 
 /* Print styles */

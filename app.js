@@ -1196,6 +1196,11 @@ async function submitSupportRequest() {
                         </a>
                     ` : ''}
                 </div>
+                ${CALENDAR_SCHEDULING_URL ? `
+                    <a href="${CALENDAR_SCHEDULING_URL}" target="_blank" class="scheduling-banner-link">
+                        <img src="assets/scheduling-banner.jpg" alt="無料相談の日程調整" class="scheduling-banner-image" onerror="this.parentElement.style.display='none'">
+                    </a>
+                ` : ''}
             `;
             stickyBanner.classList.add('success-state');
         }
