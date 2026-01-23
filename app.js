@@ -57,6 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializeApp() {
+    // 前回のフォームデータをクリア（毎回新規入力）
+    localStorage.removeItem('dentalAIFormData');
+
     // ランディングページのアニメーション
     animateStatNumbers();
     animateGrowthChart();
@@ -74,8 +77,8 @@ function initializeApp() {
     // スプレッドシートから設定を読み込み
     loadSettingsFromSpreadsheet();
 
-    // フォームデータの復元（保存されている場合）
-    restoreFormData();
+    // フォームデータの復元は行わない（毎回新規入力のため）
+    // restoreFormData();
 }
 
 // ========================================
