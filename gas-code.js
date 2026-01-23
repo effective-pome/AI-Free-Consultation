@@ -280,7 +280,7 @@ function sendDiagnosisEmail(data) {
   htmlBody += '<tr><td style="background: #f8fafc; padding: 30px 40px; border-top: 1px solid #e2e8f0;">';
   htmlBody += '<p style="color: #64748b; font-size: 13px; line-height: 1.8; margin: 0; text-align: center;">';
   htmlBody += 'ご不明点がございましたら、お気軽にお問い合わせください。<br><br>';
-  htmlBody += '<strong style="color: #334155;">歯科医院地域一番実践会</strong><br>TEL: 045-440-0322</p>';
+  htmlBody += '<strong style="color: #334155;">歯科医院地域一番実践会</strong><br>TEL: 045-440-0312</p>';
   htmlBody += '</td></tr></table></td></tr></table></body></html>';
 
   // プレーンテキスト版（HTMLが表示できない環境用）
@@ -297,7 +297,7 @@ function sendDiagnosisEmail(data) {
   if (schedulingUrl) {
     plainBody += '■ 無料サポート\n日程調整はこちら: ' + schedulingUrl + '\n\n';
   }
-  plainBody += '歯科医院地域一番実践会\nTEL: 045-440-0322';
+  plainBody += '歯科医院地域一番実践会\nTEL: 045-440-0312';
 
   // 送信先リスト
   const recipients = [data.userEmail];
@@ -382,7 +382,7 @@ function sendSchedulingEmail(data) {
   htmlBody += '<tr><td style="background: #f8fafc; padding: 30px 40px; border-top: 1px solid #e2e8f0;">';
   htmlBody += '<p style="color: #64748b; font-size: 13px; line-height: 1.8; margin: 0; text-align: center;">';
   htmlBody += 'ご不明点がございましたら、お気軽にお問い合わせください。<br><br>';
-  htmlBody += '<strong style="color: #334155;">歯科医院地域一番実践会</strong><br>TEL: 045-440-0322</p>';
+  htmlBody += '<strong style="color: #334155;">歯科医院地域一番実践会</strong><br>TEL: 045-440-0312</p>';
   htmlBody += '</td></tr></table></td></tr></table></body></html>';
 
   // プレーンテキスト版
@@ -399,7 +399,7 @@ function sendSchedulingEmail(data) {
   plainBody += '・AI診断結果の詳細解説\n';
   plainBody += '・貴院の課題に対する具体的なアドバイス\n';
   plainBody += '・質疑応答\n\n';
-  plainBody += '歯科医院地域一番実践会\nTEL: 045-440-0322';
+  plainBody += '歯科医院地域一番実践会\nTEL: 045-440-0312';
 
   // BCC送信
   const bccList = settings.bccRecipients || [];
