@@ -225,7 +225,7 @@ function sendDiagnosisEmail(data) {
   // CTAボタンセクション
   var ctaSection = '';
   if (schedulingUrl) {
-    ctaSection = '<tr><td style="padding: 10px 40px 40px;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef3c7; border-radius: 12px; border: 1px solid #fcd34d; table-layout: fixed;"><tr><td width="100%" style="padding: 24px; text-align: center;"><p style="color: #92400e; font-size: 14px; margin: 0 0 16px 0;">経営コンサルタントによる30分の無料フォローをご提供</p><a href="' + schedulingUrl + '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(20, 133, 247, 0.4);">日程調整をする</a></td></tr></table></td></tr>';
+    ctaSection = '<tr><td style="padding: 10px 40px 40px;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef3c7; border-radius: 12px; border: 1px solid #fcd34d; table-layout: fixed;"><tr><td width="100%" style="padding: 24px; text-align: center;"><p style="color: #92400e; font-size: 14px; margin: 0 0 16px 0;">経営コンサルタントによる30分の無料フォローをご提供</p><a href="' + schedulingUrl + '" style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #1485f7 0%, #d946ef 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 50px; box-shadow: 0 4px 15px rgba(20, 133, 247, 0.4);">日程調整をする</a><p style="color: #92400e; font-size: 11px; margin: 16px 0 0 0;">※当社が定期支援をしている医院が近隣にある、または当社が既に定期支援を行っている場合、無料相談をお断りする場合がございます。</p></td></tr></table></td></tr>';
   }
 
   var htmlBody = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>';
@@ -362,6 +362,7 @@ function sendSchedulingEmail(data) {
   htmlBody += '<p style="color: #065f46; font-size: 16px; font-weight: 600; margin: 0 0 8px 0;">📅 日程調整</p>';
   htmlBody += '<p style="color: #047857; font-size: 14px; margin: 0 0 20px 0;">下記ボタンより、ご都合の良い日時をお選びください</p>';
   htmlBody += ctaButtonHtml;
+  htmlBody += '<p style="color: #047857; font-size: 11px; margin: 16px 0 0 0;">※当社が定期支援をしている医院が近隣にある、または当社が既に定期支援を行っている場合、無料相談をお断りする場合がございます。</p>';
   htmlBody += '</td></tr></table></td></tr>';
 
   // Support Content
