@@ -16,7 +16,9 @@
             <div class="landing-content">
                 <!-- Main Title Section -->
                 <div class="main-title-section">
-                    <div class="tagline">歯科医院地域一番実践会</div>
+                    <div class="landing-logo">
+                        <img src="assets/logo.png" alt="歯科医院地域一番実践会" class="logo-image">
+                    </div>
                     <h1 class="main-title">
                         <span class="title-ai">AI</span>
                         <span class="title-text">無料診断</span>
@@ -497,18 +499,18 @@
             <!-- Sticky Bottom Banner for Free Support -->
             <div class="sticky-support-banner" id="stickySupportBanner">
                 <div class="sticky-support-content">
+                    <button class="sticky-support-button" onclick="submitSupportRequest()" id="supportRequestButton">
+                        <span>診断内容を送信する</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
                     <span class="sticky-support-text">経営コンサルタントから30分のフォローを無料で受けられます</span>
                     <label class="sticky-checkbox-label">
                         <input type="checkbox" id="supportRequestCheckbox" checked>
                         <span class="sticky-checkbox-custom"></span>
                         <span class="sticky-checkbox-text">希望する</span>
                     </label>
-                    <button class="sticky-support-button" onclick="submitSupportRequest()" id="supportRequestButton">
-                        <span>送信する</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                        </svg>
-                    </button>
                 </div>
             </div>
         </section>

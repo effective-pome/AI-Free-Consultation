@@ -226,6 +226,18 @@ body {
     letter-spacing: 0.15em;
 }
 
+.landing-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-4);
+}
+
+.landing-logo .logo-image {
+    height: 36px;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+}
+
 .main-title {
     display: flex;
     align-items: baseline;
@@ -3080,9 +3092,10 @@ input[type="checkbox"] {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-4);
+    gap: var(--space-3);
 }
 
 .sticky-support-left {
