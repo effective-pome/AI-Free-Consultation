@@ -1196,13 +1196,13 @@ async function submitSupportRequest() {
                         </a>
                     ` : ''}
                 </div>
-                ${CALENDAR_SCHEDULING_URL ? `
-                    <a href="${CALENDAR_SCHEDULING_URL}" target="_blank" class="scheduling-banner-link">
-                        <img src="assets/scheduling-banner.jpg" alt="無料相談の日程調整" class="scheduling-banner-image" onerror="this.parentElement.style.display='none'">
-                    </a>
-                ` : ''}
             `;
             stickyBanner.classList.add('success-state');
+        }
+
+        // モーダルバナーを表示
+        if (CALENDAR_SCHEDULING_URL) {
+            showSchedulingBannerModal(CALENDAR_SCHEDULING_URL);
         }
 
         console.log('サポートリクエスト送信完了');
@@ -1212,6 +1212,59 @@ async function submitSupportRequest() {
         button.disabled = false;
         button.innerHTML = '<span>送信する</span>';
         alert('送信中にエラーが発生しました。もう一度お試しください。');
+    }
+}
+
+// ========================================
+// 日程調整バナーモーダル表示
+// ========================================
+function showSchedulingBannerModal(schedulingUrl) {
+    // 既存のモーダルがあれば削除
+    const existingModal = document.getElementById('schedulingBannerModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    // モーダルを作成
+    const modal = document.createElement('div');
+    modal.id = 'schedulingBannerModal';
+    modal.className = 'scheduling-banner-modal';
+    modal.innerHTML = `
+        <div class="scheduling-banner-overlay" onclick="closeSchedulingBannerModal()"></div>
+        <div class="scheduling-banner-container">
+            <button class="scheduling-banner-close" onclick="closeSchedulingBannerModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <a href="${schedulingUrl}" target="_blank" class="scheduling-banner-link" onclick="closeSchedulingBannerModal()">
+                <img src="assets/scheduling-banner.jpg" alt="無料相談の日程調整" class="scheduling-banner-image" onerror="this.closest('.scheduling-banner-modal').style.display='none'">
+            </a>
+            <a href="${schedulingUrl}" target="_blank" class="scheduling-banner-cta" onclick="closeSchedulingBannerModal()">
+                <span>今すぐ日程を選択する</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // アニメーション用に少し遅延
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+}
+
+function closeSchedulingBannerModal() {
+    const modal = document.getElementById('schedulingBannerModal');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.remove();
+        }, 300);
     }
 }
 

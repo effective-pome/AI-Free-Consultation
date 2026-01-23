@@ -3224,9 +3224,6 @@ input[type="checkbox"] {
 .sticky-support-banner.success-state {
     background: var(--success-50);
     border-top-color: var(--success-400);
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: var(--space-6);
 }
 
 .sticky-success {
@@ -3277,39 +3274,95 @@ input[type="checkbox"] {
     height: 18px;
 }
 
-/* Scheduling Banner Image */
-.scheduling-banner-link {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    margin: var(--space-4) auto 0;
-    text-decoration: none;
-    cursor: pointer;
-    position: relative;
-    animation: banner-pulse 2s ease-in-out infinite;
+/* Scheduling Banner Modal */
+.scheduling-banner-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.scheduling-banner-link::before {
-    content: '▶ タップして日程を選ぶ';
+.scheduling-banner-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scheduling-banner-overlay {
     position: absolute;
-    bottom: -28px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--success-600);
-    white-space: nowrap;
-    animation: bounce-text 1.5s ease-in-out infinite;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.scheduling-banner-container {
+    position: relative;
+    z-index: 1;
+    max-width: 380px;
+    width: 90%;
+    padding: var(--space-6);
+    background: white;
+    border-radius: var(--radius-2xl);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transform: scale(0.8) translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.scheduling-banner-modal.show .scheduling-banner-container {
+    transform: scale(1) translateY(0);
+}
+
+.scheduling-banner-close {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 2;
+}
+
+.scheduling-banner-close:hover {
+    transform: scale(1.1);
+    background: var(--gray-100);
+}
+
+.scheduling-banner-close svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--gray-600);
+}
+
+.scheduling-banner-link {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    margin-bottom: var(--space-4);
+    animation: banner-pulse 2s ease-in-out infinite;
 }
 
 .scheduling-banner-link:hover {
     animation: none;
-    transform: scale(1.05);
-}
-
-.scheduling-banner-link:hover .scheduling-banner-image {
-    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4), 0 0 20px rgba(16, 185, 129, 0.3);
-    border-color: var(--success-500);
+    transform: scale(1.02);
 }
 
 .scheduling-banner-image {
@@ -3319,9 +3372,43 @@ input[type="checkbox"] {
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: var(--radius-xl);
-    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.25), 0 0 15px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
     border: 4px solid var(--success-400);
     transition: all 0.3s ease;
+}
+
+.scheduling-banner-link:hover .scheduling-banner-image {
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.5), 0 0 25px rgba(16, 185, 129, 0.3);
+    border-color: var(--success-500);
+}
+
+.scheduling-banner-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-4) var(--space-6);
+    background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transition: all 0.3s ease;
+    animation: cta-glow 2s ease-in-out infinite;
+}
+
+.scheduling-banner-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
+}
+
+.scheduling-banner-cta svg {
+    width: 20px;
+    height: 20px;
+    animation: arrow-bounce 1s ease-in-out infinite;
 }
 
 @keyframes banner-pulse {
@@ -3329,27 +3416,37 @@ input[type="checkbox"] {
         transform: scale(1);
     }
     50% {
-        transform: scale(1.03);
+        transform: scale(1.02);
     }
 }
 
-@keyframes bounce-text {
+@keyframes cta-glow {
     0%, 100% {
-        transform: translateX(-50%) translateY(0);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
     }
     50% {
-        transform: translateX(-50%) translateY(-3px);
+        box-shadow: 0 6px 30px rgba(16, 185, 129, 0.6), 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+}
+
+@keyframes arrow-bounce {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(4px);
     }
 }
 
 @media (max-width: 768px) {
-    .scheduling-banner-link {
-        max-width: 200px;
+    .scheduling-banner-container {
+        max-width: 320px;
+        padding: var(--space-4);
     }
 
-    .scheduling-banner-link::before {
-        font-size: 0.7rem;
-        bottom: -24px;
+    .scheduling-banner-cta {
+        font-size: 1rem;
+        padding: var(--space-3) var(--space-4);
     }
 }
 
