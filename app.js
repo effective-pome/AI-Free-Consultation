@@ -15,6 +15,60 @@ const AppState = {
 };
 
 // ========================================
+// アクセス解析
+// ========================================
+const Analytics = {
+    sessionId: null,
+    email: null,
+
+    // セッションIDを生成
+    init() {
+        this.sessionId = this.generateSessionId();
+        this.trackEvent('page_view', 'landing');
+    },
+
+    // ユニークなセッションIDを生成
+    generateSessionId() {
+        return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    },
+
+    // メールアドレスを設定
+    setEmail(email) {
+        this.email = email;
+    },
+
+    // イベントを送信
+    async trackEvent(eventType, page, details = null) {
+        if (!GAS_WEBAPP_URL || GAS_WEBAPP_URL === 'YOUR_GAS_WEBAPP_URL_HERE') {
+            return;
+        }
+
+        try {
+            const payload = {
+                action: 'trackEvent',
+                sessionId: this.sessionId,
+                email: this.email || '',
+                eventType: eventType,
+                page: page,
+                details: details,
+                userAgent: navigator.userAgent,
+                referrer: document.referrer
+            };
+
+            // 非同期で送信（レスポンスを待たない）
+            fetch(GAS_WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(() => {}); // エラーは無視
+        } catch (e) {
+            // トラッキングエラーは無視
+        }
+    }
+};
+
+// ========================================
 // GAS連携設定
 // ========================================
 // Google Apps ScriptのウェブアプリURL（デプロイ後に設定してください）
@@ -59,6 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeApp() {
     // 前回のフォームデータをクリア（毎回新規入力）
     localStorage.removeItem('dentalAIFormData');
+
+    // アクセス解析の初期化
+    Analytics.init();
 
     // ランディングページのアニメーション
     animateStatNumbers();
@@ -161,6 +218,9 @@ function startDiagnosis() {
     document.getElementById('landing').classList.add('hidden');
     document.getElementById('formSection').classList.remove('hidden');
     updateProgress();
+
+    // アクセス解析：フォーム開始
+    Analytics.trackEvent('form_start', 'step1');
 }
 
 // ========================================
@@ -183,6 +243,11 @@ function nextStep() {
 
         // 自動スクロール（ページトップへ）
         scrollToTop();
+
+        // アクセス解析：ステップ遷移
+        Analytics.trackEvent('step_view', `step${AppState.currentStep}`, {
+            fromStep: AppState.currentStep - 1
+        });
     }
 }
 
@@ -286,6 +351,15 @@ function setupInputListeners() {
     const userEmailInput = document.getElementById('userEmail');
     userEmailInput?.addEventListener('input', (e) => {
         AppState.formData.userEmail = e.target.value;
+    });
+    userEmailInput?.addEventListener('blur', (e) => {
+        // メールアドレス入力完了時にアクセス解析に設定
+        if (e.target.value && e.target.value.includes('@')) {
+            Analytics.setEmail(e.target.value);
+            Analytics.trackEvent('email_entered', 'step1', {
+                hasEmail: true
+            });
+        }
     });
     userEmailInput?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -419,6 +493,13 @@ async function submitForm() {
 
     // 結果を表示
     displayResults(recommendations);
+
+    // 診断結果表示をトラッキング
+    Analytics.trackEvent('diagnosis_complete', 'results', {
+        totalRevenue: recommendations.summary?.totalRevenue,
+        selfPayRate: recommendations.summary?.selfPayRate,
+        isApiGenerated: recommendations.isApiGenerated
+    });
 
     // GASにデータを送信（PDFアドバイスシートをメール送信）
     if (AppState.formData.userEmail) {
@@ -1204,6 +1285,12 @@ async function submitSupportRequest() {
         if (CALENDAR_SCHEDULING_URL) {
             showSchedulingBannerModal(CALENDAR_SCHEDULING_URL);
         }
+
+        // サポートリクエスト送信をトラッキング
+        Analytics.trackEvent('support_request', 'results', {
+            clinicName: AppState.formData.clinicName,
+            region: AppState.formData.region
+        });
 
         console.log('サポートリクエスト送信完了');
 

@@ -14,7 +14,8 @@ const CONFIG = {
   SHEETS: {
     DIAGNOSIS: '診断データ',      // 診断結果を保存
     SUPPORT: 'サポート申込',      // 無料サポート申込を保存
-    SETTINGS: '設定'              // 各種設定
+    SETTINGS: '設定',             // 各種設定
+    ANALYTICS: 'アクセス解析'     // アクセス解析データ
   },
 
   // メール設定
@@ -57,6 +58,8 @@ function doPost(e) {
         return saveDiagnosis(data);
       case 'supportRequest':
         return handleSupportRequest(data);
+      case 'trackEvent':
+        return handleTrackEvent(data);
       default:
         return createJsonResponse({ error: 'Unknown action' });
     }
@@ -208,6 +211,85 @@ function handleSupportRequest(data) {
   sendAdminNotification(data);
 
   return createJsonResponse({ success: true });
+}
+
+// ========================================
+// アクセス解析
+// ========================================
+function handleTrackEvent(data) {
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(CONFIG.SHEETS.ANALYTICS);
+
+  // シートがなければ作成
+  if (!sheet) {
+    sheet = ss.insertSheet(CONFIG.SHEETS.ANALYTICS);
+    sheet.appendRow([
+      'タイムスタンプ',
+      'セッションID',
+      'メールアドレス',
+      'イベント種別',
+      'ページ/ステップ',
+      '詳細データ',
+      'ユーザーエージェント',
+      'リファラー'
+    ]);
+    // 列幅を調整
+    sheet.setColumnWidth(1, 150);
+    sheet.setColumnWidth(2, 120);
+    sheet.setColumnWidth(3, 200);
+    sheet.setColumnWidth(4, 100);
+    sheet.setColumnWidth(5, 120);
+    sheet.setColumnWidth(6, 300);
+  }
+
+  // データを追加
+  sheet.appendRow([
+    new Date(),
+    data.sessionId || '',
+    data.email || '',
+    data.eventType || '',
+    data.page || '',
+    data.details ? JSON.stringify(data.details) : '',
+    data.userAgent || '',
+    data.referrer || ''
+  ]);
+
+  return createJsonResponse({ success: true });
+}
+
+// アクセス解析シートを初期化（手動実行用）
+function initializeAnalyticsSheet() {
+  const ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  let sheet = ss.getSheetByName(CONFIG.SHEETS.ANALYTICS);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(CONFIG.SHEETS.ANALYTICS);
+  }
+
+  // ヘッダーと初期データを設定
+  sheet.clear();
+  sheet.appendRow([
+    'タイムスタンプ',
+    'セッションID',
+    'メールアドレス',
+    'イベント種別',
+    'ページ/ステップ',
+    '詳細データ',
+    'ユーザーエージェント',
+    'リファラー'
+  ]);
+
+  // 列幅を調整
+  sheet.setColumnWidth(1, 150);
+  sheet.setColumnWidth(2, 120);
+  sheet.setColumnWidth(3, 200);
+  sheet.setColumnWidth(4, 100);
+  sheet.setColumnWidth(5, 120);
+  sheet.setColumnWidth(6, 300);
+  sheet.setColumnWidth(7, 200);
+  sheet.setColumnWidth(8, 200);
+
+  console.log('アクセス解析シートを初期化しました');
 }
 
 // ========================================
