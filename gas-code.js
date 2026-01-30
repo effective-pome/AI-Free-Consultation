@@ -8,7 +8,7 @@
 // ========================================
 const CONFIG = {
   // スプレッドシートID（URLから取得）
-  SPREADSHEET_ID: 'YOUR_SPREADSHEET_ID_HERE',
+  SPREADSHEET_ID: '16n1zhkQ1IRMhb79cOYAOIE_CpTGXfEKDfWTSSIpaWSU',
 
   // シート名
   SHEETS: {
@@ -22,8 +22,8 @@ const CONFIG = {
   EMAIL: {
     FROM_NAME: '歯科医院地域一番実践会',
     FROM_EMAIL: 'info@consuldent.jp',  // 送信元メールアドレス
-    ADMIN_EMAIL: 'admin@example.com',  // 管理者メールアドレス
-    BANNER_IMAGE_URL: ''  // バナー画像URL（Google DriveやCloudflare等で公開した画像URL）
+    ADMIN_EMAIL: 'info@consuldent.jp',  // 管理者メールアドレス
+    BANNER_IMAGE_URL: 'https://i.imgur.com/zyi6rr6.jpg'  // バナー画像URL（Google DriveやCloudflare等で公開した画像URL）
   }
 };
 
