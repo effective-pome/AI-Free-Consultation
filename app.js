@@ -72,7 +72,7 @@ const Analytics = {
 // GAS連携設定
 // ========================================
 // Google Apps ScriptのウェブアプリURL（デプロイ後に設定してください）
-const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzbHVX5EtQTW6VZHWMU9IVlLbAbVPGJuwQMxJv7-R8pEgiS1BB8BES7O4rBf5gqgKnpKA/exec';
+const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyo_rPZuHOfX5CBODCKi4UKTxT_QCjRfXMTW-Ll1K_grp_Nssb-slnV7dZMl5fWoO3fZA/exec';
 
 // ========================================
 // メール送信設定
